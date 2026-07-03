@@ -1,0 +1,968 @@
+{
+  "filters": {
+    "profile_ids": [10240693]
+  },
+  "game_id": 95475970,
+  "started_at": "2023-11-12T12:43:09.000Z",
+  "updated_at": "2023-11-12T14:52:33.885Z",
+  "duration": 1021,
+  "map": "Dry Arabia",
+  "kind": "rm_1v1",
+  "leaderboard": "rm_solo",
+  "mmr_leaderboard": "rm_1v1",
+  "season": 5,
+  "server": "UK",
+  "patch": 218,
+  "average_rating": 1183,
+  "average_rating_deviation": null,
+  "average_mmr": 1255,
+  "average_mmr_deviation": 16,
+  "ongoing": false,
+  "just_finished": false,
+  "teams": [
+    [
+      {
+        "result": "loss",
+        "civilization": "abbasid_dynasty",
+        "civilization_randomized": false,
+        "rating": null,
+        "rating_diff": null,
+        "mmr": 1238,
+        "mmr_diff": -23,
+        "input_type": "keyboard",
+        "name": "Beastyqt",
+        "profile_id": 10240693,
+        "steam_id": "76561199296565792",
+        "site_url": "http://aoe4world.com/players/10240693",
+        "avatars": {
+          "small": null,
+          "medium": null,
+          "full": null
+        },
+        "country": "se",
+        "social": {},
+        "modes": {
+          "rm_solo": {
+            "rank_level": "unranked",
+            "streak": 0,
+            "games_count": 0,
+            "wins_count": 0,
+            "losses_count": 0,
+            "season": 13,
+            "previous_seasons": [
+              {
+                "rating": 864,
+                "rank": 23522,
+                "rank_level": "gold_2",
+                "streak": -2,
+                "games_count": 5,
+                "wins_count": 2,
+                "losses_count": 3,
+                "disputes_count": 0,
+                "drops_count": 0,
+                "last_game_at": "2023-11-12T13:00:10.000Z",
+                "win_rate": 40,
+                "season": 5
+              },
+              {
+                "rating": 944,
+                "rank": 17330,
+                "rank_level": "gold_2",
+                "streak": -1,
+                "games_count": 7,
+                "wins_count": 5,
+                "losses_count": 2,
+                "disputes_count": 0,
+                "drops_count": 0,
+                "last_game_at": "2022-05-29T10:00:21.000Z",
+                "win_rate": 71.4,
+                "season": 1
+              }
+            ]
+          },
+          "rm_team": {
+            "rank_level": "unranked",
+            "streak": 0,
+            "games_count": 0,
+            "wins_count": 0,
+            "losses_count": 0,
+            "season": 13,
+            "previous_seasons": [
+              {
+                "rating": 1150,
+                "rank": 11857,
+                "rank_level": "platinum_3",
+                "streak": -1,
+                "games_count": 15,
+                "wins_count": 10,
+                "losses_count": 5,
+                "disputes_count": 0,
+                "drops_count": 0,
+                "last_game_at": "2023-11-06T18:51:57.000Z",
+                "win_rate": 66.7,
+                "season": 5
+              },
+              {
+                "rating": 1069,
+                "rank": 13462,
+                "rank_level": "platinum_1",
+                "streak": -2,
+                "games_count": 20,
+                "wins_count": 11,
+                "losses_count": 9,
+                "disputes_count": 0,
+                "drops_count": 0,
+                "last_game_at": "2023-03-19T13:31:37.000Z",
+                "win_rate": 55,
+                "season": 4
+              },
+              {
+                "rating": 1218,
+                "rank": 4563,
+                "rank_level": "diamond_1",
+                "streak": 1,
+                "games_count": 27,
+                "wins_count": 21,
+                "losses_count": 6,
+                "disputes_count": 0,
+                "drops_count": 0,
+                "last_game_at": "2023-01-29T22:44:00.000Z",
+                "win_rate": 77.8,
+                "season": 3
+              }
+            ]
+          },
+          "rm_1v1_elo": {
+            "rating": 1215,
+            "max_rating": 1272,
+            "max_rating_7d": 1215,
+            "max_rating_1m": 1215,
+            "rank": null,
+            "rank_level": null,
+            "streak": -2,
+            "games_count": 15,
+            "wins_count": 10,
+            "losses_count": 5,
+            "disputes_count": 0,
+            "drops_count": 0,
+            "last_game_at": "2023-11-12T13:00:10.000Z",
+            "win_rate": 66.7,
+            "rating_history": {
+              "1673281328": {
+                "rating": 1204,
+                "streak": 2,
+                "wins_count": 7,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 9
+              },
+              "1675006487": {
+                "rating": 1237,
+                "streak": 3,
+                "wins_count": 8,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 10
+              },
+              "1699091907": {
+                "rating": 1272,
+                "streak": 4,
+                "wins_count": 9,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 11
+              },
+              "1699790749": {
+                "rating": 1238,
+                "streak": -1,
+                "wins_count": 9,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 12
+              },
+              "1699791862": {
+                "rating": 1266,
+                "streak": 1,
+                "wins_count": 10,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 13
+              },
+              "1699792880": {
+                "rating": 1238,
+                "streak": -1,
+                "wins_count": 10,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 14
+              },
+              "1699794010": {
+                "rating": 1215,
+                "streak": -2,
+                "wins_count": 10,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 15
+              }
+            }
+          },
+          "rm_2v2_elo": {
+            "rating": 1280,
+            "max_rating": 1299,
+            "max_rating_7d": 1280,
+            "max_rating_1m": 1280,
+            "rank": null,
+            "rank_level": null,
+            "streak": -1,
+            "games_count": 21,
+            "wins_count": 14,
+            "losses_count": 7,
+            "disputes_count": 0,
+            "drops_count": 0,
+            "last_game_at": "2023-11-06T18:51:57.000Z",
+            "win_rate": 66.7,
+            "rating_history": {
+              "1690459903": {
+                "rating": 1244,
+                "streak": 3,
+                "wins_count": 9,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 12
+              },
+              "1690462514": {
+                "rating": 1206,
+                "streak": -2,
+                "wins_count": 9,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 14
+              },
+              "1698154066": {
+                "rating": 1231,
+                "streak": 1,
+                "wins_count": 10,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 15
+              },
+              "1698155575": {
+                "rating": 1256,
+                "streak": 2,
+                "wins_count": 11,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 16
+              },
+              "1699184171": {
+                "rating": 1279,
+                "streak": 3,
+                "wins_count": 12,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 17
+              },
+              "1699185518": {
+                "rating": 1299,
+                "streak": 4,
+                "wins_count": 13,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 18
+              },
+              "1699293522": {
+                "rating": 1282,
+                "streak": -1,
+                "wins_count": 13,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 19
+              },
+              "1699294807": {
+                "rating": 1297,
+                "streak": 1,
+                "wins_count": 14,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 20
+              },
+              "1699296717": {
+                "rating": 1280,
+                "streak": -1,
+                "wins_count": 14,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 21
+              }
+            }
+          },
+          "rm_3v3_elo": {
+            "rating": 1405,
+            "max_rating": 1435,
+            "max_rating_7d": 1405,
+            "max_rating_1m": 1405,
+            "rank": null,
+            "rank_level": null,
+            "streak": -1,
+            "games_count": 16,
+            "wins_count": 15,
+            "losses_count": 1,
+            "disputes_count": 0,
+            "drops_count": 0,
+            "last_game_at": "2023-07-27T14:30:38.000Z",
+            "win_rate": 93.8,
+            "rating_history": {
+              "1673373706": {
+                "rating": 1265,
+                "streak": 7,
+                "wins_count": 7,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 7
+              },
+              "1673708708": {
+                "rating": 1292,
+                "streak": 8,
+                "wins_count": 8,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 8
+              },
+              "1673730128": {
+                "rating": 1313,
+                "streak": 9,
+                "wins_count": 9,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 9
+              },
+              "1675026057": {
+                "rating": 1340,
+                "streak": 10,
+                "wins_count": 10,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 10
+              },
+              "1676664014": {
+                "rating": 1357,
+                "streak": 11,
+                "wins_count": 11,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 11
+              },
+              "1676665685": {
+                "rating": 1376,
+                "streak": 12,
+                "wins_count": 12,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 12
+              },
+              "1678826915": {
+                "rating": 1398,
+                "streak": 13,
+                "wins_count": 13,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 13
+              },
+              "1690466422": {
+                "rating": 1435,
+                "streak": 15,
+                "wins_count": 15,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 15
+              },
+              "1690468238": {
+                "rating": 1405,
+                "streak": -1,
+                "wins_count": 15,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 16
+              }
+            }
+          },
+          "rm_4v4_elo": {
+            "rating": 1070,
+            "max_rating": 1151,
+            "max_rating_7d": 1070,
+            "max_rating_1m": 1070,
+            "rank": null,
+            "rank_level": null,
+            "streak": 1,
+            "games_count": 25,
+            "wins_count": 13,
+            "losses_count": 12,
+            "disputes_count": 0,
+            "drops_count": 0,
+            "last_game_at": "2023-03-05T15:23:06.000Z",
+            "win_rate": 52,
+            "rating_history": {
+              "1676930919": {
+                "rating": 1064,
+                "streak": 1,
+                "wins_count": 8,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 15
+              },
+              "1677416679": {
+                "rating": 1067,
+                "streak": -1,
+                "wins_count": 9,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 17
+              },
+              "1677420572": {
+                "rating": 1052,
+                "streak": -2,
+                "wins_count": 10,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 20
+              },
+              "1677422377": {
+                "rating": 1038,
+                "streak": -3,
+                "wins_count": 10,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 21
+              },
+              "1678025044": {
+                "rating": 1069,
+                "streak": 2,
+                "wins_count": 12,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 23
+              },
+              "1678027275": {
+                "rating": 1054,
+                "streak": -1,
+                "wins_count": 12,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 24
+              },
+              "1678029786": {
+                "rating": 1070,
+                "streak": 1,
+                "wins_count": 13,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 25
+              }
+            }
+          },
+          "qm_2v2": {
+            "rating": 1235,
+            "max_rating": 1235,
+            "max_rating_7d": 1235,
+            "max_rating_1m": 1235,
+            "rank": null,
+            "rank_level": null,
+            "streak": 3,
+            "games_count": 10,
+            "wins_count": 8,
+            "losses_count": 2,
+            "disputes_count": 0,
+            "drops_count": 0,
+            "last_game_at": "2023-02-17T19:30:02.000Z",
+            "win_rate": 80,
+            "rating_history": {
+              "1653318472": {
+                "rating": 1049,
+                "streak": 1,
+                "wins_count": 1,
+                "games_count": 1
+              },
+              "1653321509": {
+                "rating": 1093,
+                "streak": 2,
+                "wins_count": 2,
+                "games_count": 2
+              },
+              "1653322762": {
+                "rating": 1138,
+                "streak": 3,
+                "wins_count": 3,
+                "games_count": 3
+              },
+              "1653322959": {
+                "rating": 1091,
+                "streak": null,
+                "wins_count": 3,
+                "games_count": 4
+              },
+              "1653324589": {
+                "rating": 1134,
+                "streak": 1,
+                "wins_count": 4,
+                "games_count": 5
+              },
+              "1653326599": {
+                "rating": 1176,
+                "streak": 2,
+                "wins_count": 5,
+                "games_count": 6
+              },
+              "1653329598": {
+                "rating": 1136,
+                "streak": null,
+                "wins_count": 5,
+                "games_count": 7
+              },
+              "1653331714": {
+                "rating": 1170,
+                "streak": 1,
+                "wins_count": 6,
+                "games_count": 8
+              },
+              "1653335726": {
+                "rating": 1208,
+                "streak": 2,
+                "wins_count": 7,
+                "games_count": 9
+              },
+              "1676662202": {
+                "rating": 1235,
+                "streak": 3,
+                "wins_count": 8,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 10
+              }
+            }
+          },
+          "rm_1v1": {
+            "_notice_": "Deprecated entry, rm_1v1 will be removed later, please use rm_solo instead",
+            "rank_level": "unranked",
+            "streak": 0,
+            "games_count": 0,
+            "wins_count": 0,
+            "losses_count": 0,
+            "season": 13,
+            "previous_seasons": [
+              {
+                "rating": 864,
+                "rank": 23522,
+                "rank_level": "gold_2",
+                "streak": -2,
+                "games_count": 5,
+                "wins_count": 2,
+                "losses_count": 3,
+                "disputes_count": 0,
+                "drops_count": 0,
+                "last_game_at": "2023-11-12T13:00:10.000Z",
+                "win_rate": 40,
+                "season": 5
+              },
+              {
+                "rating": 944,
+                "rank": 17330,
+                "rank_level": "gold_2",
+                "streak": -1,
+                "games_count": 7,
+                "wins_count": 5,
+                "losses_count": 2,
+                "disputes_count": 0,
+                "drops_count": 0,
+                "last_game_at": "2022-05-29T10:00:21.000Z",
+                "win_rate": 71.4,
+                "season": 1
+              }
+            ]
+          }
+        }
+      }
+    ],
+    [
+      {
+        "result": "win",
+        "civilization": "mongols",
+        "civilization_randomized": false,
+        "rating": 1183,
+        "rating_diff": 21,
+        "mmr": 1271,
+        "mmr_diff": 14,
+        "input_type": "keyboard",
+        "name": "AmeDim78",
+        "profile_id": 10694733,
+        "steam_id": "76561197998434298",
+        "site_url": "http://aoe4world.com/players/10694733",
+        "avatars": {
+          "small": "https://avatars.akamai.steamstatic.com/9739b739794bc78acc2849da88ac2fc23357baa2.jpg",
+          "medium": "https://avatars.akamai.steamstatic.com/9739b739794bc78acc2849da88ac2fc23357baa2_medium.jpg",
+          "full": "https://avatars.akamai.steamstatic.com/9739b739794bc78acc2849da88ac2fc23357baa2_full.jpg"
+        },
+        "country": "fr",
+        "social": {},
+        "modes": {
+          "rm_solo": {
+            "rank_level": "unranked",
+            "streak": 0,
+            "games_count": 0,
+            "wins_count": 0,
+            "losses_count": 0,
+            "season": 13,
+            "previous_seasons": [
+              {
+                "rating": 1129,
+                "rank": 6439,
+                "rank_level": "platinum_2",
+                "streak": -3,
+                "games_count": 398,
+                "wins_count": 197,
+                "losses_count": 201,
+                "disputes_count": 0,
+                "drops_count": 1,
+                "last_game_at": "2024-03-13T17:54:46.000Z",
+                "win_rate": 49.5,
+                "season": 6
+              },
+              {
+                "rating": 1191,
+                "rank": 5568,
+                "rank_level": "platinum_3",
+                "streak": -3,
+                "games_count": 192,
+                "wins_count": 98,
+                "losses_count": 94,
+                "disputes_count": 0,
+                "drops_count": 5,
+                "last_game_at": "2023-11-14T01:18:43.000Z",
+                "win_rate": 51,
+                "season": 5
+              },
+              {
+                "rating": 1090,
+                "rank": 6779,
+                "rank_level": "platinum_1",
+                "streak": 2,
+                "games_count": 722,
+                "wins_count": 355,
+                "losses_count": 367,
+                "disputes_count": 0,
+                "drops_count": 2,
+                "last_game_at": "2023-06-14T20:46:56.000Z",
+                "win_rate": 49.2,
+                "season": 4
+              },
+              {
+                "rating": 1142,
+                "rank": 5125,
+                "rank_level": "platinum_2",
+                "streak": 2,
+                "games_count": 725,
+                "wins_count": 366,
+                "losses_count": 359,
+                "disputes_count": 0,
+                "drops_count": 0,
+                "last_game_at": "2023-02-15T00:22:48.000Z",
+                "win_rate": 50.5,
+                "season": 3
+              },
+              {
+                "rating": 985,
+                "rank": 11241,
+                "rank_level": "gold_3",
+                "streak": 2,
+                "games_count": 472,
+                "wins_count": 238,
+                "losses_count": 234,
+                "disputes_count": 0,
+                "drops_count": 3,
+                "last_game_at": "2022-10-24T23:50:01.000Z",
+                "win_rate": 50.4,
+                "season": 2
+              }
+            ]
+          },
+          "rm_1v1_elo": {
+            "rating": 1232,
+            "max_rating": 1395,
+            "max_rating_7d": 1232,
+            "max_rating_1m": 1232,
+            "rank": null,
+            "rank_level": null,
+            "streak": -3,
+            "games_count": 2510,
+            "wins_count": 1255,
+            "losses_count": 1255,
+            "disputes_count": 0,
+            "drops_count": 11,
+            "last_game_at": "2024-03-13T17:54:45.000Z",
+            "win_rate": 50,
+            "rating_history": {
+              "1704904877": {
+                "rating": 1258,
+                "streak": -2,
+                "wins_count": 1251,
+                "drops_count": 10,
+                "disputes_count": 0,
+                "games_count": 2500
+              },
+              "1704906644": {
+                "rating": 1247,
+                "streak": -3,
+                "wins_count": 1251,
+                "drops_count": 10,
+                "disputes_count": 0,
+                "games_count": 2501
+              },
+              "1704908374": {
+                "rating": 1235,
+                "streak": -4,
+                "wins_count": 1251,
+                "drops_count": 10,
+                "disputes_count": 0,
+                "games_count": 2502
+              },
+              "1704971531": {
+                "rating": 1252,
+                "streak": 1,
+                "wins_count": 1252,
+                "drops_count": 10,
+                "disputes_count": 0,
+                "games_count": 2503
+              },
+              "1704973132": {
+                "rating": 1265,
+                "streak": 2,
+                "wins_count": 1253,
+                "drops_count": 10,
+                "disputes_count": 0,
+                "games_count": 2504
+              },
+              "1704990238": {
+                "rating": 1279,
+                "streak": 3,
+                "wins_count": 1254,
+                "drops_count": 10,
+                "disputes_count": 0,
+                "games_count": 2505
+              },
+              "1704991326": {
+                "rating": 1264,
+                "streak": -1,
+                "wins_count": 1254,
+                "drops_count": 10,
+                "disputes_count": 0,
+                "games_count": 2506
+              },
+              "1706918741": {
+                "rating": 1278,
+                "streak": 1,
+                "wins_count": 1255,
+                "drops_count": 10,
+                "disputes_count": 0,
+                "games_count": 2507
+              },
+              "1706920276": {
+                "rating": 1264,
+                "streak": -1,
+                "wins_count": 1255,
+                "drops_count": 10,
+                "disputes_count": 0,
+                "games_count": 2508
+              },
+              "1710351317": {
+                "rating": 1248,
+                "streak": -2,
+                "wins_count": 1255,
+                "drops_count": 11,
+                "disputes_count": 0,
+                "games_count": 2509
+              },
+              "1710352485": {
+                "rating": 1232,
+                "streak": -3,
+                "wins_count": 1255,
+                "drops_count": 11,
+                "disputes_count": 0,
+                "games_count": 2510
+              }
+            }
+          },
+          "qm_1v1": {
+            "rating": 1137,
+            "max_rating": 1231,
+            "max_rating_7d": 1137,
+            "max_rating_1m": 1137,
+            "rank": null,
+            "rank_level": null,
+            "streak": -1,
+            "games_count": 18,
+            "wins_count": 10,
+            "losses_count": 8,
+            "disputes_count": 0,
+            "drops_count": 0,
+            "last_game_at": "2023-02-17T10:25:19.000Z",
+            "win_rate": 55.6,
+            "rating_history": {
+              "1657645682": {
+                "rating": 1176,
+                "streak": 2,
+                "wins_count": 6,
+                "games_count": 8
+              },
+              "1657651200": {
+                "rating": 1205,
+                "streak": 3,
+                "wins_count": 7,
+                "games_count": 9
+              },
+              "1657652925": {
+                "rating": 1231,
+                "streak": 4,
+                "wins_count": 8,
+                "games_count": 10
+              },
+              "1657734148": {
+                "rating": 1200,
+                "streak": -1,
+                "wins_count": 8,
+                "games_count": 11
+              },
+              "1657752879": {
+                "rating": 1231,
+                "streak": 1,
+                "wins_count": 9,
+                "games_count": 12
+              },
+              "1657755596": {
+                "rating": 1204,
+                "streak": -1,
+                "wins_count": 9,
+                "games_count": 13
+              },
+              "1657757984": {
+                "rating": 1176,
+                "streak": null,
+                "wins_count": 9,
+                "games_count": 14
+              },
+              "1666737616": {
+                "rating": 1151,
+                "streak": -3,
+                "wins_count": 9,
+                "drops_count": 0,
+                "games_count": 15
+              },
+              "1666738460": {
+                "rating": 1132,
+                "streak": -4,
+                "wins_count": 9,
+                "drops_count": 0,
+                "games_count": 16
+              },
+              "1676625333": {
+                "rating": 1151,
+                "streak": 1,
+                "wins_count": 10,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 17
+              },
+              "1676629519": {
+                "rating": 1137,
+                "streak": -1,
+                "wins_count": 10,
+                "drops_count": 0,
+                "disputes_count": 0,
+                "games_count": 18
+              }
+            }
+          },
+          "rm_1v1": {
+            "_notice_": "Deprecated entry, rm_1v1 will be removed later, please use rm_solo instead",
+            "rank_level": "unranked",
+            "streak": 0,
+            "games_count": 0,
+            "wins_count": 0,
+            "losses_count": 0,
+            "season": 13,
+            "previous_seasons": [
+              {
+                "rating": 1129,
+                "rank": 6439,
+                "rank_level": "platinum_2",
+                "streak": -3,
+                "games_count": 398,
+                "wins_count": 197,
+                "losses_count": 201,
+                "disputes_count": 0,
+                "drops_count": 1,
+                "last_game_at": "2024-03-13T17:54:46.000Z",
+                "win_rate": 49.5,
+                "season": 6
+              },
+              {
+                "rating": 1191,
+                "rank": 5568,
+                "rank_level": "platinum_3",
+                "streak": -3,
+                "games_count": 192,
+                "wins_count": 98,
+                "losses_count": 94,
+                "disputes_count": 0,
+                "drops_count": 5,
+                "last_game_at": "2023-11-14T01:18:43.000Z",
+                "win_rate": 51,
+                "season": 5
+              },
+              {
+                "rating": 1090,
+                "rank": 6779,
+                "rank_level": "platinum_1",
+                "streak": 2,
+                "games_count": 722,
+                "wins_count": 355,
+                "losses_count": 367,
+                "disputes_count": 0,
+                "drops_count": 2,
+                "last_game_at": "2023-06-14T20:46:56.000Z",
+                "win_rate": 49.2,
+                "season": 4
+              },
+              {
+                "rating": 1142,
+                "rank": 5125,
+                "rank_level": "platinum_2",
+                "streak": 2,
+                "games_count": 725,
+                "wins_count": 366,
+                "losses_count": 359,
+                "disputes_count": 0,
+                "drops_count": 0,
+                "last_game_at": "2023-02-15T00:22:48.000Z",
+                "win_rate": 50.5,
+                "season": 3
+              },
+              {
+                "rating": 985,
+                "rank": 11241,
+                "rank_level": "gold_3",
+                "streak": 2,
+                "games_count": 472,
+                "wins_count": 238,
+                "losses_count": 234,
+                "disputes_count": 0,
+                "drops_count": 3,
+                "last_game_at": "2022-10-24T23:50:01.000Z",
+                "win_rate": 50.4,
+                "season": 2
+              }
+            ]
+          }
+        }
+      }
+    ]
+  ]
+}

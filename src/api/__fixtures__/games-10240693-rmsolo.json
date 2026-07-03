@@ -1,0 +1,676 @@
+{
+  "total_count": 15,
+  "page": 1,
+  "per_page": 12,
+  "count": 12,
+  "offset": 0,
+  "filters": {
+    "leaderboard": "rm_solo",
+    "since": null,
+    "profile_ids": [10240693],
+    "opponent_profile_id": null,
+    "opponent_profile_ids": null
+  },
+  "games": [
+    {
+      "game_id": 95475970,
+      "started_at": "2023-11-12T12:43:09.000Z",
+      "updated_at": "2023-11-12T14:52:33.885Z",
+      "duration": 1021,
+      "map": "Dry Arabia",
+      "kind": "rm_1v1",
+      "leaderboard": "rm_solo",
+      "mmr_leaderboard": "rm_1v1",
+      "season": 5,
+      "server": "UK",
+      "patch": 218,
+      "average_rating": 1183,
+      "average_rating_deviation": null,
+      "average_mmr": 1255,
+      "average_mmr_deviation": 16,
+      "ongoing": false,
+      "just_finished": false,
+      "teams": [
+        [
+          {
+            "player": {
+              "profile_id": 10240693,
+              "name": "Beastyqt",
+              "country": "se",
+              "result": "loss",
+              "civilization": "abbasid_dynasty",
+              "civilization_randomized": false,
+              "rating": null,
+              "rating_diff": null,
+              "mmr": 1238,
+              "mmr_diff": -23,
+              "input_type": "keyboard"
+            }
+          }
+        ],
+        [
+          {
+            "player": {
+              "profile_id": 10694733,
+              "name": "AmeDim78",
+              "country": "fr",
+              "result": "win",
+              "civilization": "mongols",
+              "civilization_randomized": false,
+              "rating": 1183,
+              "rating_diff": 21,
+              "mmr": 1271,
+              "mmr_diff": 14,
+              "input_type": "keyboard"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "game_id": 95473565,
+      "started_at": "2023-11-12T12:28:26.000Z",
+      "updated_at": "2023-11-12T13:07:04.386Z",
+      "duration": 775,
+      "map": "Altai",
+      "kind": "rm_1v1",
+      "leaderboard": "rm_solo",
+      "mmr_leaderboard": "rm_1v1",
+      "season": 5,
+      "server": "UK",
+      "patch": 218,
+      "average_rating": null,
+      "average_rating_deviation": null,
+      "average_mmr": 1261,
+      "average_mmr_deviation": 5,
+      "ongoing": false,
+      "just_finished": false,
+      "teams": [
+        [
+          {
+            "player": {
+              "profile_id": 10694733,
+              "name": "AmeDim78",
+              "country": "fr",
+              "result": "win",
+              "civilization": "delhi_sultanate",
+              "civilization_randomized": false,
+              "rating": null,
+              "rating_diff": null,
+              "mmr": 1255,
+              "mmr_diff": 16,
+              "input_type": "keyboard"
+            }
+          }
+        ],
+        [
+          {
+            "player": {
+              "profile_id": 10240693,
+              "name": "Beastyqt",
+              "country": "se",
+              "result": "loss",
+              "civilization": "delhi_sultanate",
+              "civilization_randomized": false,
+              "rating": null,
+              "rating_diff": null,
+              "mmr": 1266,
+              "mmr_diff": -28,
+              "input_type": null
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "game_id": 95470332,
+      "started_at": "2023-11-12T12:07:13.000Z",
+      "updated_at": "2023-11-12T12:33:17.756Z",
+      "duration": 1029,
+      "map": "Lipany",
+      "kind": "rm_1v1",
+      "leaderboard": "rm_solo",
+      "mmr_leaderboard": "rm_1v1",
+      "season": 5,
+      "server": "UK",
+      "patch": 218,
+      "average_rating": null,
+      "average_rating_deviation": null,
+      "average_mmr": 1235,
+      "average_mmr_deviation": 3,
+      "ongoing": false,
+      "just_finished": false,
+      "teams": [
+        [
+          {
+            "player": {
+              "profile_id": 3684950,
+              "name": "aMan832",
+              "country": "us",
+              "result": "loss",
+              "civilization": "english",
+              "civilization_randomized": false,
+              "rating": null,
+              "rating_diff": null,
+              "mmr": 1232,
+              "mmr_diff": -15,
+              "input_type": "keyboard"
+            }
+          }
+        ],
+        [
+          {
+            "player": {
+              "profile_id": 10240693,
+              "name": "Beastyqt",
+              "country": "se",
+              "result": "win",
+              "civilization": "french",
+              "civilization_randomized": true,
+              "rating": null,
+              "rating_diff": null,
+              "mmr": 1238,
+              "mmr_diff": 28,
+              "input_type": "keyboard"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "game_id": 95465822,
+      "started_at": "2023-11-12T11:35:34.000Z",
+      "updated_at": "2023-11-12T13:53:03.236Z",
+      "duration": 1816,
+      "map": "Dry Arabia",
+      "kind": "rm_1v1",
+      "leaderboard": "rm_solo",
+      "mmr_leaderboard": "rm_1v1",
+      "season": 5,
+      "server": "UK",
+      "patch": 218,
+      "average_rating": 1125,
+      "average_rating_deviation": null,
+      "average_mmr": 1250,
+      "average_mmr_deviation": 22,
+      "ongoing": false,
+      "just_finished": false,
+      "teams": [
+        [
+          {
+            "player": {
+              "profile_id": 1284854,
+              "name": "Jjcasmar",
+              "country": "es",
+              "result": "win",
+              "civilization": "english",
+              "civilization_randomized": false,
+              "rating": 1125,
+              "rating_diff": 31,
+              "mmr": 1228,
+              "mmr_diff": 18,
+              "input_type": "keyboard"
+            }
+          }
+        ],
+        [
+          {
+            "player": {
+              "profile_id": 10240693,
+              "name": "Beastyqt",
+              "country": "se",
+              "result": "loss",
+              "civilization": "ottomans",
+              "civilization_randomized": false,
+              "rating": null,
+              "rating_diff": null,
+              "mmr": 1272,
+              "mmr_diff": -34,
+              "input_type": null
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "game_id": 94284999,
+      "started_at": "2023-11-04T09:38:04.000Z",
+      "updated_at": "2023-11-04T11:39:23.923Z",
+      "duration": 1223,
+      "map": "Dry Arabia",
+      "kind": "rm_1v1",
+      "leaderboard": "rm_solo",
+      "mmr_leaderboard": "rm_1v1",
+      "season": 5,
+      "server": "USA (W)",
+      "patch": 218,
+      "average_rating": 1143,
+      "average_rating_deviation": null,
+      "average_mmr": 1257,
+      "average_mmr_deviation": 19,
+      "ongoing": false,
+      "just_finished": false,
+      "teams": [
+        [
+          {
+            "player": {
+              "profile_id": 10240693,
+              "name": "Beastyqt",
+              "country": "se",
+              "result": "win",
+              "civilization": "abbasid_dynasty",
+              "civilization_randomized": false,
+              "rating": null,
+              "rating_diff": null,
+              "mmr": 1237,
+              "mmr_diff": 35,
+              "input_type": "keyboard"
+            }
+          }
+        ],
+        [
+          {
+            "player": {
+              "profile_id": 17454948,
+              "name": "YDGYHW",
+              "country": "cn",
+              "result": "loss",
+              "civilization": "chinese",
+              "civilization_randomized": false,
+              "rating": 1143,
+              "rating_diff": -20,
+              "mmr": 1276,
+              "mmr_diff": -30,
+              "input_type": "keyboard"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "game_id": 61452081,
+      "started_at": "2023-01-29T15:23:15.000Z",
+      "updated_at": "2023-10-05T11:42:39.406Z",
+      "duration": 693,
+      "map": "Wetlands",
+      "kind": "rm_1v1",
+      "leaderboard": "rm_solo",
+      "mmr_leaderboard": "rm_1v1",
+      "season": 3,
+      "server": "UK",
+      "patch": 131,
+      "average_rating": 1133,
+      "average_rating_deviation": null,
+      "average_mmr": 1204,
+      "average_mmr_deviation": null,
+      "ongoing": false,
+      "just_finished": false,
+      "teams": [
+        [
+          {
+            "player": {
+              "profile_id": 6918882,
+              "name": "Uncleray",
+              "country": "se",
+              "result": "loss",
+              "civilization": "abbasid_dynasty",
+              "civilization_randomized": false,
+              "rating": 1133,
+              "rating_diff": -24,
+              "mmr": null,
+              "mmr_diff": null,
+              "input_type": null
+            }
+          }
+        ],
+        [
+          {
+            "player": {
+              "profile_id": 10240693,
+              "name": "Beastyqt",
+              "country": "se",
+              "result": "win",
+              "civilization": "chinese",
+              "civilization_randomized": false,
+              "rating": null,
+              "rating_diff": null,
+              "mmr": 1204,
+              "mmr_diff": 33,
+              "input_type": null
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "game_id": 59146793,
+      "started_at": "2023-01-09T15:55:12.000Z",
+      "updated_at": "2023-10-04T00:52:26.843Z",
+      "duration": 1615,
+      "map": "Wetlands",
+      "kind": "rm_1v1",
+      "leaderboard": "rm_solo",
+      "mmr_leaderboard": "rm_1v1",
+      "season": 3,
+      "server": "UK",
+      "patch": 148,
+      "average_rating": 1075,
+      "average_rating_deviation": null,
+      "average_mmr": 1155,
+      "average_mmr_deviation": null,
+      "ongoing": false,
+      "just_finished": false,
+      "teams": [
+        [
+          {
+            "player": {
+              "profile_id": 10240693,
+              "name": "Beastyqt",
+              "country": "se",
+              "result": "win",
+              "civilization": "abbasid_dynasty",
+              "civilization_randomized": false,
+              "rating": null,
+              "rating_diff": null,
+              "mmr": null,
+              "mmr_diff": null,
+              "input_type": null
+            }
+          }
+        ],
+        [
+          {
+            "player": {
+              "profile_id": 4782973,
+              "name": "Bobo30+",
+              "country": "pl",
+              "result": "loss",
+              "civilization": "english",
+              "civilization_randomized": false,
+              "rating": 1075,
+              "rating_diff": -23,
+              "mmr": 1155,
+              "mmr_diff": -15,
+              "input_type": null
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "game_id": 59144653,
+      "started_at": "2023-01-09T15:31:20.000Z",
+      "updated_at": "2023-01-09T16:05:47.993Z",
+      "duration": 1367,
+      "map": "Mongolian Heights",
+      "kind": "rm_1v1",
+      "leaderboard": "rm_solo",
+      "mmr_leaderboard": "rm_1v1",
+      "season": 3,
+      "server": "UK",
+      "patch": 148,
+      "average_rating": 1039,
+      "average_rating_deviation": null,
+      "average_mmr": null,
+      "average_mmr_deviation": null,
+      "ongoing": false,
+      "just_finished": false,
+      "teams": [
+        [
+          {
+            "player": {
+              "profile_id": 8570159,
+              "name": "arkenproje",
+              "country": "tr",
+              "result": "loss",
+              "civilization": "french",
+              "civilization_randomized": false,
+              "rating": 1039,
+              "rating_diff": -23,
+              "mmr": null,
+              "mmr_diff": null,
+              "input_type": null
+            }
+          }
+        ],
+        [
+          {
+            "player": {
+              "profile_id": 10240693,
+              "name": "Beastyqt",
+              "country": "se",
+              "result": "win",
+              "civilization": "chinese",
+              "civilization_randomized": false,
+              "rating": null,
+              "rating_diff": null,
+              "mmr": null,
+              "mmr_diff": null,
+              "input_type": null
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "game_id": 37224143,
+      "started_at": "2022-05-29T09:54:07.000Z",
+      "updated_at": "2023-09-22T02:03:53.445Z",
+      "duration": 374,
+      "map": "Hill and Dale",
+      "kind": "rm_1v1",
+      "leaderboard": "rm_solo",
+      "mmr_leaderboard": "rm_1v1",
+      "season": 1,
+      "server": "UK",
+      "patch": 15965,
+      "average_rating": 888,
+      "average_rating_deviation": null,
+      "average_mmr": null,
+      "average_mmr_deviation": null,
+      "ongoing": false,
+      "just_finished": false,
+      "teams": [
+        [
+          {
+            "player": {
+              "profile_id": 8250834,
+              "name": "Ripah",
+              "country": "es",
+              "result": "win",
+              "civilization": "english",
+              "civilization_randomized": false,
+              "rating": null,
+              "rating_diff": null,
+              "mmr": null,
+              "mmr_diff": null,
+              "input_type": null
+            }
+          }
+        ],
+        [
+          {
+            "player": {
+              "profile_id": 10240693,
+              "name": "Beastyqt",
+              "country": "se",
+              "result": "loss",
+              "civilization": "english",
+              "civilization_randomized": false,
+              "rating": 888,
+              "rating_diff": 56,
+              "mmr": null,
+              "mmr_diff": null,
+              "input_type": null
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "game_id": 37153098,
+      "started_at": "2022-05-28T15:04:24.000Z",
+      "updated_at": "2022-05-28T15:28:33.661Z",
+      "duration": 767,
+      "map": "High View",
+      "kind": "rm_1v1",
+      "leaderboard": "rm_solo",
+      "mmr_leaderboard": "rm_1v1",
+      "season": 1,
+      "server": "UK",
+      "patch": 15965,
+      "average_rating": 870,
+      "average_rating_deviation": null,
+      "average_mmr": null,
+      "average_mmr_deviation": null,
+      "ongoing": false,
+      "just_finished": false,
+      "teams": [
+        [
+          {
+            "player": {
+              "profile_id": 1751953,
+              "name": "LittleYellowFIsh",
+              "country": "gb",
+              "result": "loss",
+              "civilization": "chinese",
+              "civilization_randomized": false,
+              "rating": null,
+              "rating_diff": null,
+              "mmr": null,
+              "mmr_diff": null,
+              "input_type": null
+            }
+          }
+        ],
+        [
+          {
+            "player": {
+              "profile_id": 10240693,
+              "name": "Beastyqt",
+              "country": "se",
+              "result": "win",
+              "civilization": "chinese",
+              "civilization_randomized": true,
+              "rating": 870,
+              "rating_diff": 18,
+              "mmr": null,
+              "mmr_diff": null,
+              "input_type": null
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "game_id": 36968095,
+      "started_at": "2022-05-26T14:54:08.000Z",
+      "updated_at": "2022-05-26T15:10:16.082Z",
+      "duration": 922,
+      "map": "Lipany",
+      "kind": "rm_1v1",
+      "leaderboard": "rm_solo",
+      "mmr_leaderboard": "rm_1v1",
+      "season": 1,
+      "server": "UK",
+      "patch": 15965,
+      "average_rating": null,
+      "average_rating_deviation": null,
+      "average_mmr": null,
+      "average_mmr_deviation": null,
+      "ongoing": false,
+      "just_finished": false,
+      "teams": [
+        [
+          {
+            "player": {
+              "profile_id": 8246032,
+              "name": "draytan",
+              "country": "ci",
+              "result": "loss",
+              "civilization": "holy_roman_empire",
+              "civilization_randomized": false,
+              "rating": null,
+              "rating_diff": null,
+              "mmr": null,
+              "mmr_diff": null,
+              "input_type": null
+            }
+          }
+        ],
+        [
+          {
+            "player": {
+              "profile_id": 10240693,
+              "name": "Beastyqt",
+              "country": "se",
+              "result": "win",
+              "civilization": "chinese",
+              "civilization_randomized": false,
+              "rating": null,
+              "rating_diff": null,
+              "mmr": null,
+              "mmr_diff": null,
+              "input_type": null
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "game_id": 36964073,
+      "started_at": "2022-05-26T14:09:51.000Z",
+      "updated_at": "2022-05-26T15:04:21.284Z",
+      "duration": 2570,
+      "map": "Altai",
+      "kind": "rm_1v1",
+      "leaderboard": "rm_solo",
+      "mmr_leaderboard": "rm_1v1",
+      "season": 1,
+      "server": "UK",
+      "patch": 15965,
+      "average_rating": 797,
+      "average_rating_deviation": null,
+      "average_mmr": null,
+      "average_mmr_deviation": null,
+      "ongoing": false,
+      "just_finished": false,
+      "teams": [
+        [
+          {
+            "player": {
+              "profile_id": 10240693,
+              "name": "Beastyqt",
+              "country": "se",
+              "result": "loss",
+              "civilization": "chinese",
+              "civilization_randomized": false,
+              "rating": null,
+              "rating_diff": null,
+              "mmr": null,
+              "mmr_diff": null,
+              "input_type": null
+            }
+          }
+        ],
+        [
+          {
+            "player": {
+              "profile_id": 840105,
+              "name": "Monkey",
+              "country": "be",
+              "result": "win",
+              "civilization": "english",
+              "civilization_randomized": true,
+              "rating": 797,
+              "rating_diff": 18,
+              "mmr": null,
+              "mmr_diff": null,
+              "input_type": null
+            }
+          }
+        ]
+      ]
+    }
+  ]
+}

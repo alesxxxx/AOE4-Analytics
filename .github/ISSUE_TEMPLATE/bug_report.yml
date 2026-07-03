@@ -1,0 +1,61 @@
+name: Bug report
+description: Something isn't working right in RTSLytics.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a bug! Please fill in what you can.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+      placeholder: The overlay didn't appear when my ranked match started...
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Launch RTSLytics
+        2. Start a Quick Match
+        3. ...
+    validations:
+      required: true
+  - type: dropdown
+    id: game-mode
+    attributes:
+      label: Game mode (if relevant)
+      options:
+        - Not relevant
+        - Ranked
+        - Quick Match
+        - Custom game
+        - vs AI
+    validations:
+      required: false
+  - type: input
+    id: version
+    attributes:
+      label: RTSLytics version
+      description: Shown on the About screen (e.g. 0.2.3).
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Windows version
+      placeholder: Windows 11 23H2
+    validations:
+      required: false
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output or screenshots
+      description: |
+        Optional. Do NOT paste anything sensitive (Steam tokens, credentials).
+      render: shell
+    validations:
+      required: false

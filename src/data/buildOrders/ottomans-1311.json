@@ -1,0 +1,179 @@
+{
+  "name": "Ottoman 1-3-1-1",
+  "civilization": "Ottomans",
+  "author": "Ainswurf",
+  "source": "https://aoe4guides.com/builds/xvvUiGnj11be3owLmu9k",
+  "archetype": "Standard opening",
+  "difficulty": "easy",
+  "reasoning": "THE Ottoman fundamental (from Beasty's 1-3-1-1 vizier order): military schools give free units while you macro. If you only learn one Ottoman build, it's this one.",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": {
+        "food": 1,
+        "wood": 3,
+        "gold": 1,
+        "stone": 1
+      },
+      "notes": [
+        "All villager ottomans on sheep then go into the 1-3-1-1 Split and rally point food"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 5,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 3,
+        "gold": 1,
+        "stone": 1
+      },
+      "notes": [
+        "At 50 wood build house with sheep villager ottomans"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 5,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 3,
+        "gold": 1,
+        "stone": 1
+      },
+      "notes": [
+        "At 200 stone Move stone villager ottomans to gold and build military school 1"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 5,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 3,
+        "gold": 1,
+        "stone": 1
+      },
+      "notes": [
+        "Military school 1 -> spearman 1"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 16,
+      "age": 1,
+      "resources": {
+        "food": 4,
+        "wood": 10,
+        "gold": 2,
+        "stone": 0
+      },
+      "notes": [
+        "4 or 5 sheep villager ottomans -> twin minaret medrese 1 then rally point wood until 10"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 12,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 10,
+        "gold": 2,
+        "stone": 0
+      },
+      "notes": [
+        "5 villager ottomans -> twin minaret medrese 1 berries and rally point sheep"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 12,
+      "age": 2,
+      "resources": {
+        "food": 0,
+        "wood": 10,
+        "gold": 2,
+        "stone": 0
+      },
+      "notes": [
+        "Build 2nd military school 1 then military school 1 -> mehter 2 and sipahi 2"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 13,
+      "age": 2,
+      "resources": {
+        "food": 0,
+        "wood": 10,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "Move 1 villager ottomans -> gold Build stable archery range blacksmith"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 13,
+      "age": 2,
+      "resources": {
+        "food": 0,
+        "wood": 10,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "Get double broadaxe horticulture -> iron undermesh steeled arrow as you see fit ( twin minaret medrese 1 can support 5 villagers - level of horticulture )"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 30,
+      "age": 2,
+      "resources": {
+        "food": 17,
+        "wood": 10,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "At 15-17 food villager ottomans . rally point gold for Age Up"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 37,
+      "age": 2,
+      "resources": {
+        "food": 17,
+        "wood": 6,
+        "gold": 10,
+        "stone": 4
+      },
+      "notes": [
+        "When close to mehmed imperial armory 2 4 wood villager ottomans -> stone for military school 1"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 0,
+      "age": 3,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Continue the plan."
+      ]
+    }
+  ]
+}

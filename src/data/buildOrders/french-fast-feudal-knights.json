@@ -1,0 +1,139 @@
+{
+  "name": "French Fast Feudal Knights",
+  "civilization": "French",
+  "author": "aoe4guides community",
+  "source": "https://aoe4guides.com/builds/Rv9oFQn354X31wZYjPaW",
+  "archetype": "Feudal aggression",
+  "difficulty": "easy",
+  "reasoning": "The fundamental French plan and the community's most-followed French build this season: a clean fast Feudal into Royal Knight pressure. Simple decisions, constant villager production, and the knights punish every unwalled base at low ranks.",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": {
+        "food": 6,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "All villager to sheep"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 7,
+      "age": 1,
+      "resources": {
+        "food": 7,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Rally point 1 villager to sheep"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 3,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "Rally point 3 villager to gold with first one building house and mining camp"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 13,
+      "age": 1,
+      "resources": {
+        "food": 10,
+        "wood": 0,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "Rally point to sheep until age 2"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 8,
+      "age": 1,
+      "resources": {
+        "food": 5,
+        "wood": 0,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "Build school of cavalry with 5 villager from sheep"
+      ],
+      "time": "2:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 8,
+      "age": 1,
+      "resources": {
+        "food": 5,
+        "wood": 0,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "Keep rally point to sheep"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 8,
+      "age": 1,
+      "resources": {
+        "food": 5,
+        "wood": 0,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "Que villager repair school of cavalry to build house and then lumber camp"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 20,
+      "age": 2,
+      "resources": {
+        "food": 12,
+        "wood": 5,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "From here macro out under constant pressure with knight production",
+        "At 12 villager on food rally to gold"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 25,
+      "age": 2,
+      "resources": {
+        "food": 12,
+        "wood": 5,
+        "gold": 8,
+        "stone": 0
+      },
+      "notes": [
+        "Rally point back to food and build mill for wheelbarrow and archery range"
+      ]
+    }
+  ]
+}

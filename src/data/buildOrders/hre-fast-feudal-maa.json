@@ -1,0 +1,168 @@
+{
+  "name": "Holy Roman Empire Fast Feudal Men-at-Arms",
+  "civilization": ["Holy Roman Empire", "Order of the Dragon"],
+  "author": "RTSLytics",
+  "source": "https://rtslytics.app/builds/hre-fast-feudal-maa",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": {
+        "food": 6,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Send all 6 starting villagers to sheep and keep producing villagers nonstop.",
+        "Scout the map to find sheep, gold, and your opponent's base."
+      ],
+      "time": "0:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 8,
+      "age": 1,
+      "resources": {
+        "food": 6,
+        "wood": 2,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Send 2 villagers to wood and build a Lumber Camp.",
+        "Build a House so you do not get housed early."
+      ],
+      "time": "1:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 10,
+      "age": 1,
+      "resources": {
+        "food": 6,
+        "wood": 2,
+        "gold": 2,
+        "stone": 0
+      },
+      "notes": [
+        "Send 2 villagers to gold and build a Mining Camp. You need gold for Men-at-Arms.",
+        "HRE villagers near a Town Center build faster, so keep them grouped when constructing."
+      ],
+      "time": "2:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 12,
+      "age": 1,
+      "resources": {
+        "food": 8,
+        "wood": 2,
+        "gold": 2,
+        "stone": 0
+      },
+      "notes": [
+        "Put new villagers on food to push for a fast Feudal Age.",
+        "Build a Mill on berries when your sheep start to run out."
+      ],
+      "time": "2:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 14,
+      "age": 1,
+      "resources": {
+        "food": 8,
+        "wood": 2,
+        "gold": 4,
+        "stone": 0
+      },
+      "notes": [
+        "With about 400 food and 200 wood, click up to the Feudal Age.",
+        "Choose the Aachen Chapel landmark to buff nearby units, or Meinwerk Palace for cheaper upgrades."
+      ],
+      "time": "4:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 16,
+      "age": 1,
+      "resources": {
+        "food": 7,
+        "wood": 3,
+        "gold": 6,
+        "stone": 0
+      },
+      "notes": [
+        "Keep gathering gold and food while the Feudal Age completes.",
+        "Build a Barracks slightly forward so your Men-at-Arms reach the enemy faster."
+      ],
+      "time": "5:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 18,
+      "age": 2,
+      "resources": {
+        "food": 7,
+        "wood": 3,
+        "gold": 8,
+        "stone": 0
+      },
+      "notes": [
+        "When you reach Feudal Age, research Men-at-Arms at the Barracks and start producing them.",
+        "Men-at-Arms are tough melee units that beat Spearmen and raid villagers well."
+      ],
+      "time": "6:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 20,
+      "age": 2,
+      "resources": {
+        "food": 8,
+        "wood": 3,
+        "gold": 9,
+        "stone": 0
+      },
+      "notes": [
+        "Send your first 3 to 4 Men-at-Arms to attack enemy villagers on an outer resource.",
+        "Use the Emergency Repairs or Inspired Warriors abilities if available to keep units healthy."
+      ],
+      "time": "7:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 23,
+      "age": 2,
+      "resources": {
+        "food": 10,
+        "wood": 4,
+        "gold": 9,
+        "stone": 0
+      },
+      "notes": [
+        "Keep producing Men-at-Arms and add a few Archers or Spearmen for support.",
+        "Research Blacksmith armor and weapon upgrades to make your Men-at-Arms even stronger."
+      ],
+      "time": "8:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 26,
+      "age": 2,
+      "resources": {
+        "food": 11,
+        "wood": 4,
+        "gold": 11,
+        "stone": 0
+      },
+      "notes": [
+        "If your attack is winning, keep the pressure on and delay aging up.",
+        "Otherwise, build your economy and prepare to advance to the Castle Age."
+      ],
+      "time": "10:30"
+    }
+  ]
+}

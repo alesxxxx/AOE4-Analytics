@@ -1,0 +1,118 @@
+{
+  "name": "Jeanne d'Arc Knight Pressure",
+  "civilization": ["Jeanne d'Arc"],
+  "author": "RTSLytics",
+  "source": "https://rtslytics.app/builds/jeanne-darc-knight-pressure",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": { "food": 5, "wood": 0, "gold": 1, "stone": 0 },
+      "notes": [
+        "Send 5 starting villagers to sheep. Send Jeanne straight to gold: build the Mining Camp, then the first House, then mine gold.",
+        "Keep the Town Center making villagers nonstop while Jeanne starts the gold income for your Feudal landmark."
+      ],
+      "time": "0:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 9,
+      "age": 1,
+      "resources": { "food": 6, "wood": 2, "gold": 1, "stone": 0 },
+      "notes": [
+        "Put the next villagers onto wood for houses and the School of Cavalry follow-up.",
+        "Jeanne can stay on gold until you have enough for the age-up, then help build or return to food."
+      ],
+      "time": "1:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 12,
+      "age": 1,
+      "resources": { "food": 8, "wood": 3, "gold": 1, "stone": 0 },
+      "notes": [
+        "Most new villagers go to food so the Feudal click is not delayed.",
+        "Use Jeanne safely: do not lose her scouting or trying to fight too early."
+      ],
+      "time": "2:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 14,
+      "age": 1,
+      "resources": { "food": 9, "wood": 3, "gold": 2, "stone": 0 },
+      "notes": [
+        "With about 400 food and 200 gold, age up with School of Cavalry for early Royal Knights.",
+        "Use 3 to 4 villagers on the landmark; keep enough on food that villager production never stops."
+      ],
+      "time": "4:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 16,
+      "age": 1,
+      "resources": { "food": 8, "wood": 4, "gold": 4, "stone": 0 },
+      "notes": [
+        "During the age-up, balance onto food and gold so the first Royal Knight starts immediately.",
+        "Add wood only for houses and a second production building later."
+      ],
+      "time": "5:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 18,
+      "age": 2,
+      "resources": { "food": 8, "wood": 4, "gold": 6, "stone": 0 },
+      "notes": [
+        "Queue Royal Knights from School of Cavalry as soon as Feudal finishes.",
+        "Keep Jeanne near safe fights or scouts so she gains experience without dying."
+      ],
+      "time": "6:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 20,
+      "age": 2,
+      "resources": { "food": 7, "wood": 3, "gold": 10, "stone": 0 },
+      "notes": [
+        "Add more villagers to gold so Knights keep producing.",
+        "Your first raids should hit exposed gold, wood, or berries; leave before Spearmen trap you."
+      ],
+      "time": "7:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 22,
+      "age": 2,
+      "resources": { "food": 9, "wood": 3, "gold": 10, "stone": 0 },
+      "notes": [
+        "Use 3 to 4 Knights to force idle time, not to fight under the enemy Town Center.",
+        "If they overbuild Spearmen, add Archers or go Castle behind the pressure."
+      ],
+      "time": "8:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 24,
+      "age": 2,
+      "resources": { "food": 9, "wood": 4, "gold": 11, "stone": 0 },
+      "notes": [
+        "Build a second Stable only if food and gold are both stable.",
+        "Keep Jeanne active but protected; leveling her is a bonus, not worth throwing the game."
+      ],
+      "time": "9:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 27,
+      "age": 2,
+      "resources": { "food": 11, "wood": 4, "gold": 12, "stone": 0 },
+      "notes": [
+        "Research key cavalry upgrades and decide: keep Feudal pressure if they are damaged, or bank for Castle if they stabilize.",
+        "Your beginner rule: Knights harass, villagers scale, Jeanne stays alive."
+      ],
+      "time": "11:00"
+    }
+  ]
+}

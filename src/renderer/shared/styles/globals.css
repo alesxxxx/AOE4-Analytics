@@ -1,0 +1,228 @@
+/* AoE4-style incised titling serif (Trajan/Perpetua family look, OFL licence).
+   Cinzel's lowercase renders as smaller capitals, so headings become the same
+   small-caps ledger labels the game's own screens use. */
+@import '@fontsource/cinzel/400.css';
+@import '@fontsource/cinzel/600.css';
+@import '@fontsource/cinzel/700.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light theme (rarely used — app defaults to dark) */
+    --background: 220 20% 97%;
+    --foreground: 222 20% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 20% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 20% 12%;
+    --primary: 199 89% 48%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 14% 92%;
+    --secondary-foreground: 222 20% 18%;
+    --muted: 220 14% 92%;
+    --muted-foreground: 220 9% 42%;
+    --accent: 199 89% 48%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 13% 86%;
+    --input: 220 13% 86%;
+    --ring: 199 89% 48%;
+    /* Squared, plate-like corners — the game's panels are near-square, not pills. */
+    --radius: 0.3rem;
+
+    --tier-s: 280 86% 66%;
+    --tier-a: 142 71% 45%;
+    --tier-b: 199 89% 48%;
+    --tier-c: 41 96% 54%;
+    --tier-d: 0 72% 51%;
+    --tier-z: 322 84% 55%;
+
+    --win: 152 58% 40%;
+    --win-foreground: 0 0% 100%;
+    --loss: 350 80% 52%;
+    --loss-foreground: 0 0% 100%;
+    --warn: 38 92% 46%;
+    --warn-foreground: 224 40% 6%;
+  }
+
+  .dark {
+    /* Dark, game-native — deep slate with a parchment-gold accent (the game's
+       own header colour). The accent (--primary / --accent / --ring) can be
+       overridden at runtime from Settings (see shared/accent.ts). */
+    --background: 222 13% 8%;
+    --foreground: 220 18% 90%;
+    --card: 222 12% 11%;
+    --card-foreground: 220 18% 90%;
+    --popover: 222 13% 10%;
+    --popover-foreground: 220 18% 90%;
+    --primary: 42 45% 61%;
+    --primary-foreground: 224 18% 10%;
+    --secondary: 220 10% 16%;
+    --secondary-foreground: 220 18% 90%;
+    --muted: 220 10% 15%;
+    --muted-foreground: 220 8% 60%;
+    --accent: 42 45% 61%;
+    --accent-foreground: 224 18% 10%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 9% 21%;
+    --input: 220 9% 21%;
+    --ring: 42 45% 61%;
+
+    --tier-s: 280 90% 70%;
+    --tier-a: 142 69% 49%;
+    --tier-b: 199 89% 52%;
+    --tier-c: 41 96% 56%;
+    --tier-d: 0 72% 55%;
+    --tier-z: 322 88% 64%;
+
+    --win: 151 39% 45%;
+    --win-foreground: 220 18% 95%;
+    --loss: 356 62% 62%;
+    --loss-foreground: 220 18% 95%;
+    --warn: 39 72% 58%;
+    --warn-foreground: 224 18% 10%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background: #101318;
+    font-feature-settings:
+      'rlig' 1,
+      'calt' 1;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Headings in the incised titling serif — the game's own screens (post-match
+     History, menus) set every header in small-caps serif over dark navy. Cinzel
+     renders lowercase as smaller capitals, so this one rule gives the whole app
+     the game's ledger-header look. Body copy stays in the sans for legibility. */
+  h1,
+  h2,
+  h3 {
+    @apply font-display;
+    letter-spacing: 0.04em;
+  }
+
+  h1 {
+    font-weight: 700;
+  }
+
+  h2,
+  h3 {
+    font-weight: 600;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground));
+  }
+}
+
+@layer components {
+  /* Flat, opaque panel. Opaque (not translucent) because the backdrop is
+     fixed-position — a see-through panel would ghost it through charts on scroll.
+     No drop shadow — the game's plates sit flat with a hairline edge. */
+  .rts-menu-card {
+    border-color: hsl(var(--border));
+    background: hsl(var(--card));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+  }
+
+  /* Small-caps gold column headers — the exact treatment of the game's own
+     post-match tables (TEAM · PLAYER · TOTAL SCORE …). */
+  .rts-ledger-head {
+    font-family: theme('fontFamily.display');
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: hsl(var(--primary) / 0.75);
+  }
+
+  /* Section label above/inside panels, same voice as the ledger heads. */
+  .rts-section-title {
+    font-family: theme('fontFamily.display');
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: hsl(var(--foreground) / 0.92);
+  }
+
+  /* Overlay coach: the "look here" pulse when a checkpoint is imminent. */
+  .rts-coach-pulse {
+    animation: rts-coach-pulse 1.1s ease-in-out infinite;
+  }
+
+  @keyframes rts-coach-pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 hsl(var(--primary) / 0.55);
+    }
+    50% {
+      box-shadow: 0 0 0 5px hsl(var(--primary) / 0);
+    }
+  }
+
+  /* The war-table art, permanently behind the app as DESATURATED texture — it
+     adds engraved-map detail without colour, keeping the UI sleek black/blue. */
+  .rts-app-backdrop {
+    background-position: center;
+    background-size: cover;
+    filter: grayscale(1) blur(1px) brightness(0.28) contrast(0.92);
+  }
+
+  .rts-app-atmosphere {
+    background: linear-gradient(180deg, rgba(16, 19, 24, 0.82), rgba(16, 19, 24, 0.9));
+  }
+
+  .chronicle-main h1 {
+    color: hsl(var(--foreground));
+    text-shadow: none;
+  }
+
+  .chronicle-main header p,
+  .chronicle-main .text-muted-foreground {
+    color: hsl(var(--muted-foreground) / 0.92);
+  }
+}
+
+@layer utilities {
+  .drag-region {
+    -webkit-app-region: drag;
+  }
+
+  .no-drag {
+    -webkit-app-region: no-drag;
+  }
+}

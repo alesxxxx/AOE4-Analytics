@@ -1,0 +1,130 @@
+{
+  "name": "Byzantine 5 Cistern into Keshiks",
+  "civilization": "Byzantines",
+  "author": "Valdemar1902",
+  "source": "https://aoe4guides.com/builds/CcaflpK0npU5ICg2l010",
+  "archetype": "Economy opening",
+  "difficulty": "medium",
+  "reasoning": "Valdemar's cistern opener: five cisterns power the Byzantine economy, then mercenary Keshiks + archers carry the mid game. The template every Byzantine build follows.",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 5,
+        "gold": 1,
+        "stone": 0
+      },
+      "notes": [
+        "1 villager to house mining camp gold & 5 villager chop 50 wood and go to mill"
+      ],
+      "time": "0:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 7,
+      "age": 1,
+      "resources": {
+        "food": 5,
+        "wood": 0,
+        "gold": 1,
+        "stone": 1
+      },
+      "notes": [
+        "Rally point 3 villager to stone and build cistern 1 with sheep villager later"
+      ],
+      "time": "0:20"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 10,
+      "age": 1,
+      "resources": {
+        "food": 6,
+        "wood": 0,
+        "gold": 1,
+        "stone": 3
+      },
+      "notes": [
+        "Rally point sheep until age 2"
+      ],
+      "time": "1:20"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 14,
+      "age": 1,
+      "resources": {
+        "food": 6,
+        "wood": 0,
+        "gold": 1,
+        "stone": 3,
+        "builder": 4
+      },
+      "notes": [
+        "Build imperial hippodrome 1 with 4 villager"
+      ],
+      "time": "3:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 12,
+      "age": 1,
+      "resources": {
+        "food": 4,
+        "wood": 4,
+        "gold": 1,
+        "stone": 3
+      },
+      "notes": [
+        "Rally point wood until 8, then food until 12, then gold until 3 -> wood again."
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 0,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Pull stone vills when 4 cistern 1 and use ageup stone for 5th on 2nd berry."
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 21,
+      "age": 2,
+      "resources": {
+        "food": 12,
+        "wood": 8,
+        "gold": 1,
+        "stone": 0
+      },
+      "notes": [
+        "Mercenary house 2 and keshik 2"
+      ],
+      "time": "5:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 24,
+      "age": 2,
+      "resources": {
+        "food": 12,
+        "wood": 9,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "Archery range / barracks if feudal v feudal, blacksmith if opp is going FC and get +1 iron undermesh and dive on ageup."
+      ],
+      "time": "7:00"
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "name": "Ayyubid Fast 2 TC (Beasty)",
+  "civilization": "Ayyubids",
+  "author": "SideboardP",
+  "source": "https://aoe4guides.com/builds/6yNmNcHfYw6sInUCF320",
+  "archetype": "Economy boom",
+  "difficulty": "medium",
+  "reasoning": "From Beasty: the Military Wing's free desert raiders cover you while an extremely fast second TC out-booms almost every civ in the game.",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": {
+        "food": 5,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0,
+        "builder": 1
+      },
+      "notes": [
+        "5 villager abbasid to sheep & 1 villager abbasid builds house of wisdom + house + mining camp on stone (goes to stone after)"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": {
+        "food": 5,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0,
+        "builder": 1
+      },
+      "notes": [
+        "Rally point first 2 villager abbasid to different trees"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 11,
+      "age": 1,
+      "resources": {
+        "food": 5,
+        "wood": 2,
+        "gold": 0,
+        "stone": 4
+      },
+      "notes": [
+        "Rally point next 3 villager abbasid to stone"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 11,
+      "age": 1,
+      "resources": {
+        "food": 4,
+        "wood": 3,
+        "gold": 0,
+        "stone": 4
+      },
+      "notes": [
+        "Age up with culture wing (Advancement) & send 1 villager abbasid from sheep to trees after producing another villager abbasid (to make sure there is no gap in villager abbasid production) & rally point next 4 villager abbasid to third trees"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 15,
+      "age": 2,
+      "resources": {
+        "food": 4,
+        "wood": 7,
+        "gold": 0,
+        "stone": 4
+      },
+      "notes": [
+        "Where to place your second TC aswell as your future worker split depend on your and your opponents strat.",
+        "Once stone is at 900 all villager abbasid force drop off & rally point to sheep"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 16,
+      "age": 2,
+      "resources": {
+        "food": 5,
+        "wood": 2,
+        "gold": 0,
+        "stone": 0,
+        "builder": 9
+      },
+      "notes": [
+        "Repair 2nd town center with all 4 villager abbasid from stone + 5 villager abbasid from trees"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 0,
+      "age": 2,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Start building barracks archery range stable & blacksmith OR transition into age 3"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 0,
+      "age": 3,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Continue the plan."
+      ]
+    }
+  ]
+}

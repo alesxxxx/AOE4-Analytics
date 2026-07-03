@@ -1,0 +1,176 @@
+{
+  "name": "Chinese Fast Aggro Tax Build",
+  "civilization": "Chinese",
+  "author": "itadvi",
+  "source": "https://aoe4guides.com/builds/ApZugI72oRvd3CLKaUcw",
+  "archetype": "Feudal aggression",
+  "difficulty": "hard",
+  "reasoning": "Chinese usually get punished before their late game arrives — this build fixes that by using the tax economy for an early Feudal army, so you're never just waiting to lose.",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": {
+        "food": 6,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "6 villager china to build a mill towards woodline (leave space for lumbercamp and imperial academy )"
+      ],
+      "time": "0:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 8,
+      "age": 1,
+      "resources": {
+        "food": 6,
+        "wood": 0,
+        "gold": 2,
+        "stone": 0
+      },
+      "notes": [
+        "Send 2 new villager china to gold"
+      ],
+      "time": "0:20"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 9,
+      "age": 1,
+      "resources": {
+        "food": 7,
+        "wood": 0,
+        "gold": 2,
+        "stone": 0
+      },
+      "notes": [
+        "Rally point back to food until age-up."
+      ],
+      "time": "1:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 12,
+      "age": 1,
+      "resources": {
+        "food": 10,
+        "wood": 0,
+        "gold": 2,
+        "stone": 0
+      },
+      "notes": [
+        "Age up with imperial academy with 5 villager china and build it facing wood and mill"
+      ],
+      "time": "2:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 8,
+      "age": 1,
+      "resources": {
+        "food": 6,
+        "wood": 0,
+        "gold": 2,
+        "stone": 0
+      },
+      "notes": [
+        "While aging you collect 35 gold for imperial official and pull away from gold to trees . You rally point villager china onto sheep until 7 villager china , then after rally point wood . Make sure you build a village and then lumber camp"
+      ],
+      "time": "2:20"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 15,
+      "age": 2,
+      "resources": {
+        "food": 7,
+        "wood": 8,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Queue up imperial official until 4. Supervise mill and lumber camp"
+      ],
+      "time": "3:12"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 16,
+      "age": 2,
+      "resources": {
+        "food": 7,
+        "wood": 9,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Village"
+      ],
+      "time": "3:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 17,
+      "age": 2,
+      "resources": {
+        "food": 7,
+        "wood": 10,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "2nd official comes out and you build a lumber camp"
+      ],
+      "time": "4:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 19,
+      "age": 2,
+      "resources": {
+        "food": 8,
+        "wood": 11,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Queue 3rd imperial official and spend wood on archery range / barracks / stable depending on what you need. Start rallying food again."
+      ],
+      "time": "4:20"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 26,
+      "age": 2,
+      "resources": {
+        "food": 12,
+        "wood": 14,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Queue professional scouts and stable with 4 scout for deer collection. Also get a blacksmith for upgrades."
+      ],
+      "time": "6:50"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 0,
+      "age": 2,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Then macro accordingly and keep collecting taxes until you get enough for pro scouts. Then research it, make scout and take deer while pressuring opponent."
+      ],
+      "time": "7:00"
+    }
+  ]
+}

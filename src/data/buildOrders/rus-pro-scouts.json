@@ -1,0 +1,169 @@
+{
+  "name": "Rus Professional Scouts",
+  "civilization": "Rus",
+  "author": "daltor",
+  "source": "https://aoe4guides.com/builds/R89acKKQHlilRsuECKIJ",
+  "archetype": "Economy opening",
+  "difficulty": "medium",
+  "reasoning": "The defining Rus opening: Professional Scouts turns your scouts into a deer-carrying food engine that funds early Knights. The standard Rus plan at every rank.",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 4,
+        "gold": 0,
+        "stone": 0,
+        "builder": 2
+      },
+      "notes": [
+        "Your vills on wood will gather 2x rounds of 40 wood",
+        "Start 4 villager on wood and 2 villager to build 2 hunting cabin"
+      ],
+      "time": "00:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 7,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 4,
+        "gold": 0,
+        "stone": 0,
+        "builder": 3
+      },
+      "notes": [
+        "Send 1st villager out of town center to build 3rd hunting cabin"
+      ],
+      "time": "00:20"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 8,
+      "age": 1,
+      "resources": {
+        "food": 7,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0,
+        "builder": 1
+      },
+      "notes": [
+        "Straggler villager to sheep and build 1 house"
+      ],
+      "time": "0:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 10,
+      "age": 1,
+      "resources": {
+        "food": 8,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0,
+        "builder": 2
+      },
+      "notes": [
+        "Scout from hunting cabin"
+      ],
+      "time": "1:06"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 13,
+      "age": 1,
+      "resources": {
+        "food": 8,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0,
+        "builder": 5
+      },
+      "notes": [
+        "Age up to feudal with the golden gate with 5 villager"
+      ],
+      "time": "2:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 14,
+      "age": 1,
+      "resources": {
+        "food": 3,
+        "wood": 6,
+        "gold": 0,
+        "stone": 0,
+        "builder": 5
+      },
+      "notes": [
+        "Send 6 villager to chop ALL 3 trees & rally point sheep ."
+      ],
+      "time": "2:50"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 16,
+      "age": 1,
+      "resources": {
+        "food": 5,
+        "wood": 6,
+        "gold": 0,
+        "stone": 0,
+        "builder": 5
+      },
+      "notes": [
+        "Build a house with a trees villager"
+      ],
+      "time": "3:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 18,
+      "age": 2,
+      "resources": {
+        "food": 12,
+        "wood": 6,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Gather sheep"
+      ],
+      "time": "4:07"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 17,
+      "age": 2,
+      "resources": {
+        "food": 11,
+        "wood": 6,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Professional scouts and queue scout"
+      ],
+      "time": "4:16"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 18,
+      "age": 2,
+      "resources": {
+        "food": 8,
+        "wood": 10,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Macro wood and make units until u take 2 deer Packs and then go castle at 11-12 mins."
+      ],
+      "time": "4:30"
+    }
+  ]
+}

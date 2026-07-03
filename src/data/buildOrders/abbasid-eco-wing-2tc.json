@@ -1,0 +1,145 @@
+{
+  "name": "Abbasid Eco Wing 2 TC",
+  "civilization": "Abbasid Dynasty",
+  "author": "daltor",
+  "source": "https://aoe4guides.com/builds/Vuy9IMhmewSrkXeO5Gb7",
+  "archetype": "Economy boom",
+  "difficulty": "easy",
+  "reasoning": "Derived from Valdemar's standard: Economy Wing into a second Town Center is the safest, most scalable Abbasid plan, with camels to blunt cavalry while you out-grow everyone.",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": {
+        "food": 6,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "6 to berries with 1 repair house + mill + house of wisdom rally point gold until 2 with mining camp"
+      ],
+      "time": "0:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 8,
+      "age": 1,
+      "resources": {
+        "food": 6,
+        "wood": 0,
+        "gold": 2,
+        "stone": 0
+      },
+      "notes": [
+        "Now rally point sheep until age up"
+      ],
+      "time": "0:40"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 12,
+      "age": 1,
+      "resources": {
+        "food": 5,
+        "wood": 5,
+        "gold": 2,
+        "stone": 0
+      },
+      "notes": [
+        "Start age 2 economic wing 5 food to wood"
+      ],
+      "time": "2:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 13,
+      "age": 1,
+      "resources": {
+        "food": 5,
+        "wood": 5,
+        "gold": 2,
+        "stone": 1
+      },
+      "notes": [
+        "Now rally point stone until 4"
+      ],
+      "time": "2:20"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 16,
+      "age": 1,
+      "resources": {
+        "food": 5,
+        "wood": 5,
+        "gold": 2,
+        "stone": 4
+      },
+      "notes": [
+        "Now rally point wood"
+      ],
+      "time": "3:40"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 18,
+      "age": 1,
+      "resources": {
+        "food": 5,
+        "wood": 7,
+        "gold": 2,
+        "stone": 4
+      },
+      "notes": [
+        "Age 2 finishes at 4:00 Research fertile crescent 2"
+      ],
+      "time": "4:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 19,
+      "age": 1,
+      "resources": {
+        "food": 5,
+        "wood": 8,
+        "gold": 2,
+        "stone": 4
+      },
+      "notes": [
+        "Research fresh foodstuffs"
+      ],
+      "time": "4:25"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 5,
+      "age": 1,
+      "resources": {
+        "food": 5,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Repair 2nd town center on food and rally point food start on stone for wall for market, market more important than traders"
+      ],
+      "time": "4:50"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 90,
+      "age": 1,
+      "resources": {
+        "food": 50,
+        "wood": 20,
+        "gold": 20,
+        "stone": 0
+      },
+      "notes": [
+        "For 10 camel rider 3 production aim for 30-40 traders, some will die"
+      ]
+    }
+  ]
+}

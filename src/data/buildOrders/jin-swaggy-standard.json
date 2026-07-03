@@ -1,0 +1,119 @@
+{
+  "name": "Jin Dynasty Standard (Swaggy)",
+  "civilization": "Jin Dynasty",
+  "author": "Niki45nk",
+  "source": "https://aoe4guides.com/builds/pj6ztHDSiVv9xpo1NsXy",
+  "archetype": "Standard opening",
+  "difficulty": "medium",
+  "reasoning": "Swaggy Professor's Jin standard — the highest-traction Jin build by far. One flexible opening that covers aggression and boom branches.",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 3,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "Send all 3 mounted villager to mining camp gold Rally mounted villager to Reindeer deer"
+      ],
+      "time": "0:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": {
+        "food": 3,
+        "wood": 0,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "When you have 300 gold , 2 gold mounted villager go to sheep 1 gold mounted villager builds house , then also goes to sheep Use your scout to scout opponent's base"
+      ],
+      "time": "2:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 7,
+      "age": 1,
+      "resources": {
+        "food": 7,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "3 food mounted villager build great pasture Send 3 food mounted villager to gold Keep rally point mounted villager to food [If you are Tower Rushed] Immediately make a few mohe tribesman from great pasture to defend"
+      ],
+      "time": "2:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 9,
+      "age": 2,
+      "resources": {
+        "food": 3,
+        "wood": 0,
+        "gold": 3,
+        "stone": 0,
+        "builder": 3
+      },
+      "notes": [
+        "Always train iron pagoda from great pasture ( mohe tribesman if you are spear rushed) Send 1 great pasture mounted villager to gold and 2 great pasture mounted villager to trees When you have 100 wood , 1 trees mounted villager builds grassland near great pasture , then goes to gold Use your iron pagoda to harass opponent's villager china or defend your own If opponent makes many spearman 1 , make a few mohe tribesman"
+      ],
+      "time": "3:55"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 14,
+      "age": 2,
+      "resources": {
+        "food": 8,
+        "wood": 1,
+        "gold": 5,
+        "stone": 0
+      },
+      "notes": [
+        "When you have 8 food mounted villager , send them all to deer / boar and build mill Get mohe ancestry -> wheelbarrow at mill rally point mounted villager to gold"
+      ],
+      "time": "6:50"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 20,
+      "age": 2,
+      "resources": {
+        "food": 8,
+        "wood": 1,
+        "gold": 11,
+        "stone": 0
+      },
+      "notes": [
+        "Send 5-8 gold mounted villager to build dragon pavilion at forward gold Send all other gold mounted villager to wood"
+      ],
+      "time": "10:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 29,
+      "age": 3,
+      "resources": {
+        "food": 8,
+        "wood": 7,
+        "gold": 7,
+        "stone": 0,
+        "builder": 7
+      },
+      "notes": [
+        "Cheers!",
+        "Send all dragon pavilion mounted villager to gold Send emissary to nearby Trade Posts Build grassland near dragon pavilion Start getting Eco Upgrades Build blacksmith and monastery"
+      ],
+      "time": "11:10"
+    }
+  ]
+}

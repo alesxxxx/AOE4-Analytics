@@ -1,0 +1,231 @@
+{
+  "name": "Classic Malians Opener",
+  "civilization": "Malians",
+  "author": "Astralfr",
+  "source": "https://aoe4guides.com/builds/HhCfM2EIEHN7ryqffWff",
+  "archetype": "Economy opening",
+  "difficulty": "medium",
+  "reasoning": "The standard Malian start: cattle + pit mines fund early aggression options. The most-liked Malian build of the season.",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 5,
+        "gold": 0,
+        "stone": 0,
+        "builder": 1
+      },
+      "notes": [
+        "5 villager malians to trees take 150 wood then back food , 1 villager malians to repair pit mine 1 and 7 house take 10 gold then back food"
+      ],
+      "time": "00:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 7,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 6,
+        "gold": 0,
+        "stone": 0,
+        "builder": 1
+      },
+      "notes": [
+        "Rally point 1 villager malians to 2nd trees to 25 wood back food , rally point food until 14"
+      ],
+      "time": "00:20"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 14,
+      "age": 1,
+      "resources": {
+        "food": 14,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "5 villager malians mansa quarry 2 back to food"
+      ],
+      "time": "02:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 14,
+      "age": 1,
+      "resources": {
+        "food": 4,
+        "wood": 5,
+        "gold": 0,
+        "stone": 0,
+        "builder": 5
+      },
+      "notes": [
+        "Gather 50 wood to trees then repair lumber camp to woodline, rally point until 10 on wood"
+      ],
+      "time": "02:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 17,
+      "age": 1,
+      "resources": {
+        "food": 4,
+        "wood": 7,
+        "gold": 0,
+        "stone": 0,
+        "builder": 6
+      },
+      "notes": [
+        "Repair mill berries then back wood"
+      ],
+      "time": "03:40"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 18,
+      "age": 2,
+      "resources": {
+        "food": 9,
+        "wood": 9,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Wheelbarrow & double broadaxe"
+      ],
+      "time": "04:11"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 19,
+      "age": 2,
+      "resources": {
+        "food": 8,
+        "wood": 10,
+        "gold": 0,
+        "stone": 0,
+        "builder": 1
+      },
+      "notes": [
+        "Barracks produce donso 1 with 1 villager malians from food , rally point food when 10 on wood"
+      ],
+      "time": "04:35"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 21,
+      "age": 2,
+      "resources": {
+        "food": 10,
+        "wood": 10,
+        "gold": 0,
+        "stone": 0,
+        "builder": 1
+      },
+      "notes": [
+        "Archery range produce javelin thrower 2"
+      ],
+      "time": "05:05"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 23,
+      "age": 2,
+      "resources": {
+        "food": 13,
+        "wood": 9,
+        "gold": 0,
+        "stone": 0,
+        "builder": 1
+      },
+      "notes": [
+        "1 villager malians from wood to repair pit mine 1 and start house (total : 7) with 2 donsos and 2 javs to protect him, repair mining camp then back food"
+      ],
+      "time": "05:50"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 24,
+      "age": 2,
+      "resources": {
+        "food": 14,
+        "wood": 9,
+        "gold": 0,
+        "stone": 0,
+        "builder": 1
+      },
+      "notes": [
+        "Upgrade horticulture keep producing unit : 07 donsos & 04 jav"
+      ],
+      "time": "06:10"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 26,
+      "age": 2,
+      "resources": {
+        "food": 15,
+        "wood": 9,
+        "gold": 0,
+        "stone": 0,
+        "builder": 2
+      },
+      "notes": [
+        "1 cattle ranch 2 from 1 villager malians food and produce 03 cattle"
+      ],
+      "time": "06:55"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 22,
+      "age": 2,
+      "resources": {
+        "food": 11,
+        "wood": 9,
+        "gold": 0,
+        "stone": 0,
+        "builder": 2
+      },
+      "notes": [
+        "5 villager malians food to deer and 4 repair mill ,1 villager malians toll outpost 1 , protect them with your army and kill deer near mill"
+      ],
+      "time": "07:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 0,
+      "age": 2,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "07 donsos & 04 jav : start again to produce Continue to make units until you have minimum 12 cows then you can go age 3, if opponent make 2tc and fast castle, don't make more units and go 20 cows to AGE 3"
+      ],
+      "time": "07:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 27,
+      "age": 2,
+      "resources": {
+        "food": 16,
+        "wood": 11,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "2 villager malians from food to wood"
+      ],
+      "time": "07:55"
+    }
+  ]
+}

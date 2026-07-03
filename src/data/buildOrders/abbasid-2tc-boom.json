@@ -1,0 +1,107 @@
+{
+  "name": "Abbasid 2 Town Center Boom",
+  "civilization": ["Abbasid Dynasty", "Ayyubids"],
+  "author": "RTSLytics",
+  "source": "https://rtslytics.app/builds/abbasid-2tc-boom",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": { "food": 6, "wood": 0, "gold": 0, "stone": 0 },
+      "notes": [
+        "Send all 6 starting villagers to sheep and keep making villagers nonstop.",
+        "Scout to find sheep, berries, and your opponent's plan."
+      ],
+      "time": "0:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 10,
+      "age": 1,
+      "resources": { "food": 6, "wood": 4, "gold": 0, "stone": 0 },
+      "notes": [
+        "Put the next 4 villagers on wood and build a Lumber Camp.",
+        "Build Houses as needed so you never get supply-blocked."
+      ],
+      "time": "1:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 13,
+      "age": 1,
+      "resources": { "food": 9, "wood": 4, "gold": 0, "stone": 0 },
+      "notes": [
+        "Keep most new villagers on food and add a Mill on berries.",
+        "Research the cheap economy upgrades — Abbasid villagers and tech are efficient."
+      ],
+      "time": "3:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 16,
+      "age": 1,
+      "resources": { "food": 10, "wood": 4, "gold": 2, "stone": 0 },
+      "notes": [
+        "Send 2 villagers to gold with a Mining Camp.",
+        "With about 400 food and 200 wood, age up through the House of Wisdom — pick the Economic Wing for a faster boom."
+      ],
+      "time": "4:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 19,
+      "age": 1,
+      "resources": { "food": 11, "wood": 6, "gold": 2, "stone": 0 },
+      "notes": [
+        "Keep gathering through the age-up and bank wood for a second Town Center.",
+        "Stay near the House of Wisdom so its Golden Age speeds your economy."
+      ],
+      "time": "5:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 23,
+      "age": 2,
+      "resources": { "food": 12, "wood": 7, "gold": 4, "stone": 0 },
+      "notes": [
+        "In Feudal, build a second Town Center to double your villager production.",
+        "Research Fresh Foodstuffs so new villagers are cheaper, and add an Archery Range or Stable for safety."
+      ],
+      "time": "7:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 27,
+      "age": 2,
+      "resources": { "food": 13, "wood": 7, "gold": 7, "stone": 0 },
+      "notes": [
+        "Pump villagers from both Town Centers and keep adding farms as sheep run out.",
+        "Make a few Spearmen or Archers to defend against early aggression."
+      ],
+      "time": "8:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 31,
+      "age": 2,
+      "resources": { "food": 12, "wood": 8, "gold": 9, "stone": 0 },
+      "notes": [
+        "Shift more villagers to gold to prepare for Castle Age units.",
+        "Begin the age-up through a second House of Wisdom wing (Military or Culture) once your economy is rolling."
+      ],
+      "time": "10:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 35,
+      "age": 3,
+      "resources": { "food": 12, "wood": 8, "gold": 12, "stone": 0 },
+      "notes": [
+        "In Castle Age, add Camel Riders or Camel Archers — they hard-counter enemy cavalry.",
+        "Reinforce with Crossbows and a Mangonel, then convert your eco lead into map control."
+      ],
+      "time": "11:30"
+    }
+  ]
+}

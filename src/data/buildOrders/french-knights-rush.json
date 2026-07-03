@@ -1,0 +1,168 @@
+{
+  "name": "French Feudal Knight Rush",
+  "civilization": ["French"],
+  "author": "RTSLytics",
+  "source": "https://rtslytics.app/builds/french-knights-rush",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": {
+        "food": 6,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Send all 6 starting villagers to sheep and keep making villagers nonstop.",
+        "Scout the map to find sheep, gold, and your opponent."
+      ],
+      "time": "0:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 9,
+      "age": 1,
+      "resources": {
+        "food": 6,
+        "wood": 3,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Put the next 3 villagers on wood and build a Lumber Camp.",
+        "Build a House to keep your population growing."
+      ],
+      "time": "1:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 12,
+      "age": 1,
+      "resources": {
+        "food": 8,
+        "wood": 4,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Keep most new villagers on food so you can age up quickly.",
+        "Build a Mill on berries when your sheep start to run out."
+      ],
+      "time": "2:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 14,
+      "age": 1,
+      "resources": {
+        "food": 8,
+        "wood": 3,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "Send 3 villagers to gold and build a Mining Camp. You need gold for Knights.",
+        "With about 400 food and 200 wood, click up to the Feudal Age."
+      ],
+      "time": "4:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 16,
+      "age": 1,
+      "resources": {
+        "food": 7,
+        "wood": 4,
+        "gold": 5,
+        "stone": 0
+      },
+      "notes": [
+        "For aggression, choose the School of Cavalry landmark which makes Stables build faster.",
+        "Keep gathering food and gold during the age-up."
+      ],
+      "time": "5:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 18,
+      "age": 2,
+      "resources": {
+        "food": 7,
+        "wood": 4,
+        "gold": 7,
+        "stone": 0
+      },
+      "notes": [
+        "When you reach Feudal Age, build a Stable right away.",
+        "Start producing Knights as soon as the Stable is finished."
+      ],
+      "time": "6:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 20,
+      "age": 2,
+      "resources": {
+        "food": 6,
+        "wood": 3,
+        "gold": 11,
+        "stone": 0
+      },
+      "notes": [
+        "Add more villagers to gold so you can make Knights continuously.",
+        "French Knights are cheaper, so you can build them faster than your opponent."
+      ],
+      "time": "7:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 22,
+      "age": 2,
+      "resources": {
+        "food": 8,
+        "wood": 3,
+        "gold": 11,
+        "stone": 0
+      },
+      "notes": [
+        "Send your first group of 3 to 4 Knights to attack enemy villagers on gold or wood.",
+        "Hit and run, then retreat your Knights before they take damage from defenders."
+      ],
+      "time": "8:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 24,
+      "age": 2,
+      "resources": {
+        "food": 8,
+        "wood": 3,
+        "gold": 13,
+        "stone": 0
+      },
+      "notes": [
+        "Keep Knights pressuring the enemy economy while your villagers gather safely at home.",
+        "Build a second Stable if your gold income can support it."
+      ],
+      "time": "9:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 27,
+      "age": 2,
+      "resources": {
+        "food": 10,
+        "wood": 4,
+        "gold": 13,
+        "stone": 0
+      },
+      "notes": [
+        "Research Horsemanship at the Stable to give your Knights more health.",
+        "If the enemy is crippled, push toward the Castle Age to add more powerful units."
+      ],
+      "time": "11:00"
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "name": "Macedonian Standard (Beasty)",
+  "civilization": "Macedonian Dynasty",
+  "author": "lyvant",
+  "source": "https://aoe4guides.com/builds/zfRxFHWu96eLqnyTdeC0",
+  "archetype": "Standard opening",
+  "difficulty": "medium",
+  "reasoning": "Beasty's Macedonian order, the reference build for the civ's hybrid economy and Riddari power spike.",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": {
+        "food": 5,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0,
+        "builder": 1
+      },
+      "notes": [
+        "At spawn, 5 villager on sheep | 1 villager repair varangian warcamp , rally point villager on gold until 2 then rally point on food until age 2"
+      ],
+      "time": "00:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 13,
+      "age": 1,
+      "resources": {
+        "food": 5,
+        "wood": 2,
+        "gold": 2,
+        "stone": 0,
+        "builder": 4
+      },
+      "notes": [
+        "Go age 2 with 4 villager from food then back to food ( imperial hippodrome 1 )| Send 2 villager from food to wood until 6 then rally point food | repair house | repair outpost to gold when possible on 4:00 min"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 17,
+      "age": 1,
+      "resources": {
+        "food": 9,
+        "wood": 6,
+        "gold": 2,
+        "stone": 0
+      },
+      "notes": [
+        "Queue 2 horseman 1 immediately"
+      ],
+      "time": "04:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 21,
+      "age": 1,
+      "resources": {
+        "food": 11,
+        "wood": 0,
+        "gold": 5,
+        "stone": 5
+      },
+      "notes": [
+        "As soon as 2nd horseman 1 is queued, send 5 villager from food to stone until 50 stone then food when 150 wood , 3 villager from wood to gold and 3 villager to food Once 50 stone , upgrade arrow slits YOU NEED 290 wood for 2 horsemen/warcamp/2 house /tower"
+      ],
+      "time": "04:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 21,
+      "age": 1,
+      "resources": {
+        "food": 16,
+        "wood": 0,
+        "gold": 5,
+        "stone": 0
+      },
+      "notes": [
+        "Once varangian arsenal done, get scale barding 2 ASAP | Keep rally point villager on food"
+      ],
+      "time": "05:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 25,
+      "age": 1,
+      "resources": {
+        "food": 15,
+        "wood": 0,
+        "gold": 10,
+        "stone": 0
+      },
+      "notes": [
+        "When close to enough gold to age 3 (around 450 gold ), move 5 villager from food to gold"
+      ],
+      "time": "06:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 0,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Age up to age 3 ASAP, send 8) villager repair golden horn tower 2 around ressources like gold , deer or berries"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 22,
+      "age": 2,
+      "resources": {
+        "food": 0,
+        "wood": 10,
+        "gold": 12,
+        "stone": 0
+      },
+      "notes": [
+        "Once age 3 , just chilling, Macro villager to gold and wood + rally point on food Get the military upgrades and the eco upgrades ASAP specialized pick double broadaxe survival techniques horticulture Start to produce riddari 3 with imperial hippodrome 1 | Set varangian warcamp on riddari 3 Build monastery ASAP and go get relics (protect relics with riddari 3 if needed) Later on you can add stable varangian stronghold to produce more riddari 3"
+      ]
+    }
+  ]
+}

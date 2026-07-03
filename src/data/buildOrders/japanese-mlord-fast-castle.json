@@ -1,0 +1,351 @@
+{
+  "name": "Japanese Fast Castle (MarineLord)",
+  "civilization": "Japanese",
+  "author": "Aherys",
+  "source": "https://aoe4guides.com/builds/R2DHQeQ3nnUybF7dXTmP",
+  "archetype": "Fast Castle",
+  "difficulty": "medium",
+  "reasoning": "MarineLord's fast Castle: shrine gold and forge economy race to Castle Age where Japanese units spike hard. Punishes passive opponents; wall against early aggression.",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 5,
+      "age": 1,
+      "resources": {
+        "food": 3,
+        "wood": 2,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "The two villager japanese on trees should be on town center close trees",
+        "Use first villager japanese to build barracks Then farmhouse 1 . rally point on food"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 0,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Send immediatly 2 villager japanese from food to trees close of town center"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 0,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "2x spearman 1 (SpearRush to enemy gold )"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 8,
+      "age": 1,
+      "resources": {
+        "food": 6,
+        "wood": 2,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "When farmhouse 1 done towara 1"
+      ],
+      "time": "1:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 12,
+      "age": 1,
+      "resources": {
+        "food": 6,
+        "wood": 2,
+        "gold": 4,
+        "stone": 0
+      },
+      "notes": [
+        "When enough wood build mining camp and take 4 villager japanese of food"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 12,
+      "age": 1,
+      "resources": {
+        "food": 8,
+        "wood": 0,
+        "gold": 4,
+        "stone": 0
+      },
+      "notes": [
+        "Villager japanese of wood go food All villager japanese Of food to berries . You can keep 1/2 on sheep . Build a farmhouse 1 next"
+      ],
+      "time": "2:29"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 15,
+      "age": 1,
+      "resources": {
+        "food": 11,
+        "wood": 0,
+        "gold": 4,
+        "stone": 0
+      },
+      "notes": [
+        "Only One villager japanese to build kura storehouse 1 (two is against agressive)"
+      ],
+      "time": "3:26"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 16,
+      "age": 1,
+      "resources": {
+        "food": 9,
+        "wood": 3,
+        "gold": 4,
+        "stone": 0
+      },
+      "notes": [
+        "3 villager japanese (always close trees of town center ) just for one trees Then rally to food"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 18,
+      "age": 1,
+      "resources": {
+        "food": 12,
+        "wood": 3,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "1 villager japanese (or more) to build outpost close to gold . Next villager japanese on gold"
+      ],
+      "time": "4:46"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 19,
+      "age": 1,
+      "resources": {
+        "food": 15,
+        "wood": 0,
+        "gold": 4,
+        "stone": 0
+      },
+      "notes": [
+        "Once the trees cut down, don't forget the 3 villager japanese on food (Queue Action)"
+      ],
+      "time": "5:05"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 25,
+      "age": 2,
+      "resources": {
+        "food": 19,
+        "wood": 0,
+        "gold": 6,
+        "stone": 0
+      },
+      "notes": [
+        "Use farm of kura storehouse 1 when avaible."
+      ],
+      "time": "6:40"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 17,
+      "age": 2,
+      "resources": {
+        "food": 11,
+        "wood": 0,
+        "gold": 6,
+        "stone": 0
+      },
+      "notes": [
+        "Take 7x villager japanese from food and build floating gate 2"
+      ],
+      "time": "6:54"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 19,
+      "age": 2,
+      "resources": {
+        "food": 9,
+        "wood": 4,
+        "gold": 6,
+        "stone": 0
+      },
+      "notes": [
+        "Take 4x villager japanese to wood"
+      ],
+      "time": "7:01"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 21,
+      "age": 2,
+      "resources": {
+        "food": 11,
+        "wood": 4,
+        "gold": 6,
+        "stone": 0
+      },
+      "notes": [
+        "On outpost fortify outpost arrow slits"
+      ],
+      "time": "7:25"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 23,
+      "age": 3,
+      "resources": {
+        "food": 13,
+        "wood": 4,
+        "gold": 6,
+        "stone": 0
+      },
+      "notes": [
+        "Can spread villager japanese to berries deer takezaiku 2 When possible",
+        "Use 7x villager japanese of floating gate 2 to build stable"
+      ],
+      "time": "8:12"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 0,
+      "age": 3,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Mounted samurai 3 always"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 31,
+      "age": 3,
+      "resources": {
+        "food": 18,
+        "wood": 7,
+        "gold": 6,
+        "stone": 0
+      },
+      "notes": [
+        "Send 3x villager japanese on wood and the 7x villager japanese on food . Hunt relics"
+      ],
+      "time": "8:33"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 30,
+      "age": 3,
+      "resources": {
+        "food": 15,
+        "wood": 8,
+        "gold": 7,
+        "stone": 0
+      },
+      "notes": [
+        "Now 2:1 food gold for villager japanese"
+      ],
+      "time": "8:56"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 0,
+      "age": 3,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "2x villager japanese From wood to stone (optional) if you need second fortify outpost"
+      ],
+      "time": "9:46"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 0,
+      "age": 3,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Iron undermesh Think about."
+      ],
+      "time": "9:54"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 0,
+      "age": 3,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Shinto priest 3 on farmhouse 1 or mining camp then stable archery range"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 36,
+      "age": 3,
+      "resources": {
+        "food": 16,
+        "wood": 8,
+        "gold": 10,
+        "stone": 2
+      },
+      "notes": [
+        "Rebalance villagers: 16 food / 8 wood / 10 gold / 2 stone."
+      ],
+      "time": "10:11"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 39,
+      "age": 3,
+      "resources": {
+        "food": 18,
+        "wood": 11,
+        "gold": 10,
+        "stone": 0
+      },
+      "notes": [
+        "Rebalance villagers: 18 food / 11 wood / 10 gold."
+      ],
+      "time": "11:44"
+    }
+  ]
+}

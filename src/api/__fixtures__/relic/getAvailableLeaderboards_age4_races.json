@@ -1,0 +1,29 @@
+{
+  "_note": "AoE4 races (civilizations) table from aoe-api.worldsedgelink.com/community/leaderboard/getAvailableLeaderboards?title=age4 (fetched 2026-06-29). race_id == the racebp pbgid in the game's attrib files (verified vs aoemods/attrib racebps: abbasid pbgid 199703, english 106553, sultanate 136150). These race_id values are exactly what appears in getRecentMatchHistory matchhistorymember[].race_id.",
+  "races": [
+    { "race_id": 106553, "name": "English" },
+    { "race_id": 129267, "name": "Mongol" },
+    { "race_id": 131384, "name": "French" },
+    { "race_id": 133008, "name": "Rus" },
+    { "race_id": 134522, "name": "Hre" },
+    { "race_id": 136150, "name": "Sultanate" },
+    { "race_id": 137266, "name": "Chinese" },
+    { "race_id": 199703, "name": "Abbasid" },
+    { "race_id": 2039321, "name": "Ottoman" },
+    { "race_id": 2058393, "name": "Malian" },
+    { "race_id": 2101234, "name": "Byzantine" },
+    { "race_id": 2109886, "name": "Japanese" },
+    { "race_id": 2121948, "name": "French_Ha_01" },
+    { "race_id": 2121949, "name": "Abbasid_Ha_01" },
+    { "race_id": 2121950, "name": "Chinese_Ha_01" },
+    { "race_id": 2121952, "name": "Hre_Ha_01" },
+    { "race_id": 5000002, "name": "Templar" },
+    { "race_id": 5000003, "name": "Lancaster" },
+    { "race_id": 9000850, "name": "Japanese_Ha_Sen" },
+    { "race_id": 9000860, "name": "Sultanate_Ha_Tug" },
+    { "race_id": 9000878, "name": "Mongol_Ha_Gol" },
+    { "race_id": 9001050, "name": "Byzantine_Ha_Mac" },
+    { "race_id": 9003861, "name": "Rogue_Neutral" },
+    { "race_id": 9003910, "name": "Jin_Dynasty" }
+  ]
+}

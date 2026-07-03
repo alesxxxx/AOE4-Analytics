@@ -1,0 +1,168 @@
+{
+  "name": "Rus Hunting Scouts into Feudal",
+  "civilization": "Rus",
+  "author": "RTSLytics",
+  "source": "https://rtslytics.app/builds/rus-scout-feudal",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": {
+        "food": 6,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Send all 6 starting villagers to sheep and keep producing villagers nonstop.",
+        "Use your Scout to find deer. Rus get bonus gold from hunting animals."
+      ],
+      "time": "0:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 8,
+      "age": 1,
+      "resources": {
+        "food": 8,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Build a Hunting Cabin near a forest with lots of deer for extra gold income.",
+        "Use your Scout to push deer toward the Hunting Cabin or Town Center."
+      ],
+      "time": "1:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 10,
+      "age": 1,
+      "resources": {
+        "food": 7,
+        "wood": 3,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Send 3 villagers to wood and build a Lumber Camp.",
+        "Build a House so your population can keep growing."
+      ],
+      "time": "2:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 12,
+      "age": 1,
+      "resources": {
+        "food": 9,
+        "wood": 3,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Keep hunting deer for the gold bonus while gathering food from sheep.",
+        "Build a second Scout to keep finding and herding deer."
+      ],
+      "time": "2:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 15,
+      "age": 1,
+      "resources": {
+        "food": 11,
+        "wood": 4,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Continue putting villagers on food and hunting to fuel a fast Feudal Age.",
+        "With about 400 food and 200 wood, click up to the Feudal Age."
+      ],
+      "time": "4:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 17,
+      "age": 1,
+      "resources": {
+        "food": 9,
+        "wood": 8,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Pick the Kremlin or High Trade House landmark depending on your plan.",
+        "Add villagers to wood while you finish the age-up."
+      ],
+      "time": "5:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 19,
+      "age": 2,
+      "resources": {
+        "food": 9,
+        "wood": 6,
+        "gold": 4,
+        "stone": 0
+      },
+      "notes": [
+        "When you reach Feudal Age, build an Archery Range for cheap, strong Rus archers.",
+        "Send 4 villagers to gold and build a Mining Camp if you have not already."
+      ],
+      "time": "6:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 22,
+      "age": 2,
+      "resources": {
+        "food": 11,
+        "wood": 6,
+        "gold": 5,
+        "stone": 0
+      },
+      "notes": [
+        "Start producing Archers and a few Spearmen to defend against cavalry.",
+        "Keep hunting deer with villagers to maintain your gold advantage."
+      ],
+      "time": "7:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 25,
+      "age": 2,
+      "resources": {
+        "food": 12,
+        "wood": 6,
+        "gold": 7,
+        "stone": 0
+      },
+      "notes": [
+        "Use your Archers to control the map and protect your hunters.",
+        "Research economy upgrades at the Mill and Lumber Camp."
+      ],
+      "time": "9:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 28,
+      "age": 2,
+      "resources": {
+        "food": 12,
+        "wood": 6,
+        "gold": 10,
+        "stone": 0
+      },
+      "notes": [
+        "With a healthy economy from hunting, prepare to age up to the Castle Age.",
+        "Add a Stable for Horsemen if you want a mix of cavalry and archers."
+      ],
+      "time": "11:00"
+    }
+  ]
+}

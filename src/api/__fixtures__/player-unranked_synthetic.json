@@ -1,0 +1,26 @@
+{
+  "name": "BronzeBeginner",
+  "profile_id": 999111,
+  "steam_id": "76561199296565792",
+  "site_url": "http://aoe4world.com/players/10240693",
+  "avatars": {
+    "small": null,
+    "medium": null,
+    "full": null
+  },
+  "country": "se",
+  "social": {},
+  "modes": {
+    "rm_solo": {
+      "rank_level": "unranked",
+      "rating": null,
+      "rank": null,
+      "streak": 0,
+      "games_count": 0,
+      "wins_count": 0,
+      "losses_count": 0,
+      "win_rate": null,
+      "season": 13
+    }
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "name": "Ottoman Military School Pressure",
+  "civilization": ["Ottomans"],
+  "author": "RTSLytics",
+  "source": "https://rtslytics.app/builds/ottomans-military-school",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": { "food": 5, "wood": 0, "gold": 0, "stone": 1 },
+      "notes": [
+        "Send 5 starting villagers to sheep and 1 to stone. Military Schools require stone, so start it immediately.",
+        "Scout for sheep, gold, and your opponent."
+      ],
+      "time": "0:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 9,
+      "age": 1,
+      "resources": { "food": 5, "wood": 1, "gold": 0, "stone": 3 },
+      "notes": [
+        "Put early new villagers onto stone until you have 100 stone for the first Military School.",
+        "Use starting wood for the House and Military School; add a Lumber Camp once the school is started."
+      ],
+      "time": "1:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 12,
+      "age": 1,
+      "resources": { "food": 7, "wood": 2, "gold": 0, "stone": 3 },
+      "notes": [
+        "At 100 stone plus 100 wood, build the first Military School and set it to Spearmen or Archers.",
+        "After the school starts, move most stone villagers back to food and wood."
+      ],
+      "time": "2:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 14,
+      "age": 1,
+      "resources": { "food": 8, "wood": 3, "gold": 2, "stone": 1 },
+      "notes": [
+        "Send 2 villagers to gold with a Mining Camp for the Feudal landmark.",
+        "With about 400 food and 200 gold, age up to Feudal. Twin Minaret is the safer beginner economy landmark."
+      ],
+      "time": "4:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 16,
+      "age": 1,
+      "resources": { "food": 7, "wood": 4, "gold": 4, "stone": 1 },
+      "notes": [
+        "Keep the free Military School unit queued while the landmark goes up.",
+        "Gather food and gold for units; keep one villager on stone if you want the second Military School quickly."
+      ],
+      "time": "5:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 18,
+      "age": 2,
+      "resources": { "food": 7, "wood": 5, "gold": 5, "stone": 1 },
+      "notes": [
+        "In Feudal, add a Stable or Archery Range to match the free unit your Military School is producing.",
+        "Scout first: Horsemen punish Archers, Archers punish Spearmen, Spearmen stop cavalry."
+      ],
+      "time": "6:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 21,
+      "age": 2,
+      "resources": { "food": 8, "wood": 5, "gold": 6, "stone": 2 },
+      "notes": [
+        "Put 2 villagers back on stone before you plan the second Military School.",
+        "Use your free plus trained units to raid enemy villagers, then leave before defenders trap you."
+      ],
+      "time": "7:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 24,
+      "age": 2,
+      "resources": { "food": 9, "wood": 5, "gold": 8, "stone": 2 },
+      "notes": [
+        "Build the second Military School when the stone is ready; free units stack up fast over time.",
+        "Spend Vizier points on the bonus that supports your unit plan."
+      ],
+      "time": "9:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 28,
+      "age": 3,
+      "resources": { "food": 11, "wood": 5, "gold": 10, "stone": 2 },
+      "notes": [
+        "Move to Castle Age and add Janissaries backed by a Mehter for combat auras.",
+        "Keep Military Schools running in the background while your paid production makes the main army."
+      ],
+      "time": "11:00"
+    }
+  ]
+}

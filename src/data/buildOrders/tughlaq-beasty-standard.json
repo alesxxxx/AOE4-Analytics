@@ -1,0 +1,155 @@
+{
+  "name": "Tughlaq Standard (Beasty)",
+  "civilization": "Tughlaq Dynasty",
+  "author": "ferg40",
+  "source": "https://aoe4guides.com/builds/1LNid2NxvrK0bQA2Q0QF",
+  "archetype": "Standard opening",
+  "difficulty": "medium",
+  "reasoning": "Beasty's Tughlaq standard: the safe skeleton for the elephant-centric plan — stable economy first, elephants as the payoff instead of a gamble.",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 8,
+      "age": 1,
+      "resources": {
+        "food": 6,
+        "wood": 0,
+        "gold": 2,
+        "stone": 0
+      },
+      "notes": [
+        "6 villager delhi sheep , 1 worker elephant to gold , 1 worker elephant scouting for sheep/resources. rally point 2 gold ."
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 2,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 2,
+        "stone": 0
+      },
+      "notes": [
+        "Rally point food until age 2 . repair 2x house for tughluqabad fort by gold ."
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 12,
+      "age": 1,
+      "resources": {
+        "food": 10,
+        "wood": 0,
+        "gold": 0,
+        "stone": 2
+      },
+      "notes": [
+        "When 200 gold move 2 villager delhi and worker elephant to stone ."
+      ],
+      "time": "2:10"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 4,
+      "age": 1,
+      "resources": {
+        "food": 4,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Dome of the faith with 3 food villager delhi . Remacro for 7 villager delhi to stone . When age 2 completes move the 3 villager delhi to stone"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 17,
+      "age": 1,
+      "resources": {
+        "food": 4,
+        "wood": 0,
+        "gold": 6,
+        "stone": 7
+      },
+      "notes": [
+        "Rally point gold until 6, and use worker elephant from scouting"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 14,
+      "age": 2,
+      "resources": {
+        "food": 4,
+        "wood": 0,
+        "gold": 0,
+        "stone": 10
+      },
+      "notes": [
+        "Stable / barracks is very effective against FC enemies to counter man at arms 1 / lancer 3",
+        "Move dome of the faith villager delhi to stone , repair tughluqabad fort with gold villager delhi"
+      ],
+      "time": "4:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 22,
+      "age": 2,
+      "resources": {
+        "food": 4,
+        "wood": 12,
+        "gold": 6,
+        "stone": 0
+      },
+      "notes": [
+        "Gather stone until 320 remaining so you have enough to fully upgrade tughluqabad fort bhakkar . Move to wood rally point wood"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 18,
+      "age": 2,
+      "resources": {
+        "food": 0,
+        "wood": 12,
+        "gold": 6,
+        "stone": 0
+      },
+      "notes": [
+        "Rally point food and get wheelbarrow / elephant economics 1"
+      ],
+      "time": "5:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 0,
+      "age": 2,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Repair barracks / archery range / stable depending on enemy counters. Continually produce healer elephant ."
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 0,
+      "age": 2,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Repair blacksmith and dump extra gold"
+      ]
+    }
+  ]
+}

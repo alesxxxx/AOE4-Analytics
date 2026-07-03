@@ -1,0 +1,133 @@
+{
+  "name": "Lancaster 2 TC 2 Manor",
+  "civilization": "House of Lancaster",
+  "author": "murtuk",
+  "source": "https://aoe4guides.com/builds/eWVe0GafMAxmZKWJ8f8b",
+  "archetype": "Economy boom",
+  "difficulty": "medium",
+  "reasoning": "Papercut's manor economy: manors ARE the Lancaster identity, and this build sequences them with a second TC so the economy comes online without dying to Feudal pressure.",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": {
+        "food": 6,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "6 on sheep with 1 repair house rally point to gold until 3"
+      ],
+      "time": "0:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 9,
+      "age": 1,
+      "resources": {
+        "food": 6,
+        "wood": 0,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "Now rally point to sheep until age up"
+      ],
+      "time": "1:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 12,
+      "age": 1,
+      "resources": {
+        "food": 3,
+        "wood": 1,
+        "gold": 0,
+        "stone": 5,
+        "builder": 3
+      },
+      "notes": [
+        "Start age 2 lancaster castle with 3 gold vils back to repair manor Leave 3 on food and send others to 5 stone 1 wood rally point wood"
+      ],
+      "time": "2:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 18,
+      "age": 2,
+      "resources": {
+        "food": 3,
+        "wood": 0,
+        "gold": 0,
+        "stone": 5,
+        "builder": 10
+      },
+      "notes": [
+        "Age 2 finishes at 4:05 All wood vils (7 vil) and age upper (3 vil) go build manor on wood then gather wood"
+      ],
+      "time": "4:05"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 19,
+      "age": 2,
+      "resources": {
+        "food": 3,
+        "wood": 11,
+        "gold": 0,
+        "stone": 5
+      },
+      "notes": [
+        "1st manor ready"
+      ],
+      "time": "4:25"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 21,
+      "age": 2,
+      "resources": {
+        "food": 3,
+        "wood": 13,
+        "gold": 0,
+        "stone": 5
+      },
+      "notes": [
+        "When having 400 wood 300 stone start repair 2nd town center Stop gathering stone when having 100 extra(700 left on node) (for a 2nd manor)"
+      ],
+      "time": "5:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 23,
+      "age": 2,
+      "resources": {
+        "food": 5,
+        "wood": 18,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "2nd TC ready, Have at least 5-6 on food to produce from both TC"
+      ],
+      "time": "5:50"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 25,
+      "age": 2,
+      "resources": {
+        "food": 5,
+        "wood": 18,
+        "gold": 2,
+        "stone": 0
+      },
+      "notes": [
+        "Can make 2nd manor on other resource Make production buildings and respond to enemy"
+      ],
+      "time": "6:10"
+    }
+  ]
+}

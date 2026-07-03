@@ -1,0 +1,107 @@
+{
+  "name": "Delhi Scholars & Sacred Sites",
+  "civilization": ["Delhi Sultanate", "Tughlaq Dynasty"],
+  "author": "RTSLytics",
+  "source": "https://rtslytics.app/builds/delhi-sacred-sites",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": { "food": 6, "wood": 0, "gold": 0, "stone": 0 },
+      "notes": [
+        "Send all 6 starting villagers to sheep and keep making villagers.",
+        "Scout for sheep, gold, and the nearest Sacred Sites."
+      ],
+      "time": "0:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 9,
+      "age": 1,
+      "resources": { "food": 6, "wood": 3, "gold": 0, "stone": 0 },
+      "notes": [
+        "Put 3 villagers on wood and build a Lumber Camp.",
+        "Build a Mosque and start producing Scholars — they research your (free) technologies faster."
+      ],
+      "time": "1:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 12,
+      "age": 1,
+      "resources": { "food": 8, "wood": 4, "gold": 0, "stone": 0 },
+      "notes": [
+        "Keep most villagers on food; add a Mill on berries.",
+        "Send Scholars into buildings to speed research, and start the free economy upgrades early (they're slow, so begin now)."
+      ],
+      "time": "3:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 15,
+      "age": 1,
+      "resources": { "food": 9, "wood": 3, "gold": 3, "stone": 0 },
+      "notes": [
+        "Send 3 villagers to gold with a Mining Camp.",
+        "With about 400 food and 200 wood, age up — the Tower of Victory buffs your early army; Dome of the Faith helps hold Sacred Sites."
+      ],
+      "time": "4:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 17,
+      "age": 1,
+      "resources": { "food": 8, "wood": 4, "gold": 5, "stone": 0 },
+      "notes": [
+        "Keep researching free upgrades during the age-up — Delhi snowballs on tech leads.",
+        "Plan which Sacred Site you'll grab as you hit Feudal."
+      ],
+      "time": "5:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 20,
+      "age": 2,
+      "resources": { "food": 9, "wood": 4, "gold": 7, "stone": 0 },
+      "notes": [
+        "In Feudal, take a Sacred Site with a unit to start earning passive gold.",
+        "Make Man-at-Arms and Spearmen; with the Tower of Victory their attack is buffed near it."
+      ],
+      "time": "6:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 23,
+      "age": 2,
+      "resources": { "food": 10, "wood": 4, "gold": 9, "stone": 0 },
+      "notes": [
+        "Defend your Sacred Site and pressure the enemy with your upgraded infantry.",
+        "Keep Scholars researching — your free upgrade lead grows every minute."
+      ],
+      "time": "8:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 27,
+      "age": 2,
+      "resources": { "food": 11, "wood": 5, "gold": 10, "stone": 0 },
+      "notes": [
+        "Bank resources behind your tech lead and add a Barracks/Stable to grow the army.",
+        "Begin the Castle Age age-up when the front is stable."
+      ],
+      "time": "9:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 31,
+      "age": 3,
+      "resources": { "food": 11, "wood": 5, "gold": 13, "stone": 0 },
+      "notes": [
+        "In Castle Age, add War Elephants or Tower Elephants behind your upgraded infantry.",
+        "Your free, fully-researched units should out-trade the enemy — push for the map."
+      ],
+      "time": "11:30"
+    }
+  ]
+}

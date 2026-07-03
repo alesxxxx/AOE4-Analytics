@@ -1,0 +1,119 @@
+{
+  "name": "HRE Fast Castle",
+  "civilization": "Holy Roman Empire",
+  "author": "Guillaumcn",
+  "source": "https://aoe4guides.com/builds/7IZ9t7nhjs2NsKwHe3F2",
+  "archetype": "Fast Castle",
+  "difficulty": "medium",
+  "reasoning": "HRE's economy with prelates is the strongest in the game — this build converts it into a fast Castle Age with relics, then overwhelming Man-at-Arms production. Weak to early rushes: wall early and scout.",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": {
+        "food": 3,
+        "wood": 0,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "3 villager food build house 3 villager gold monk 3 switch until 8 food"
+      ],
+      "time": "00:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 13,
+      "age": 1,
+      "resources": {
+        "food": 1,
+        "wood": 4,
+        "gold": 3,
+        "stone": 3,
+        "builder": 2
+      },
+      "notes": [
+        "Age up 2 villager meinwerk palace . 4 villager wood 3 stone then 2 gold 1 food"
+      ],
+      "time": "2:20"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 16,
+      "age": 1,
+      "resources": {
+        "food": 9,
+        "wood": 0,
+        "gold": 5,
+        "stone": 0,
+        "builder": 2
+      },
+      "notes": [
+        "Wood back to food outpost at gold then naval arrow slits"
+      ],
+      "time": "3:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 20,
+      "age": 1,
+      "resources": {
+        "food": 15,
+        "wood": 0,
+        "gold": 5,
+        "stone": 0
+      },
+      "notes": [
+        "When 13 food switch rally point wood"
+      ],
+      "time": "4:10"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 18,
+      "age": 2,
+      "resources": {
+        "food": 8,
+        "wood": 7,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "2 villager age 2 switch to food Build lumber camp"
+      ],
+      "time": "4:40"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 24,
+      "age": 2,
+      "resources": {
+        "food": 5,
+        "wood": 4,
+        "gold": 5,
+        "stone": 0,
+        "builder": 10
+      },
+      "notes": [
+        "10 villager regnitz cathedral stable ASAP then monk 3"
+      ],
+      "time": "6:10"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 0,
+      "age": 3,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Stable + steel barding 3 + knight 2 Eco techs and relics"
+      ],
+      "time": "7:30"
+    }
+  ]
+}

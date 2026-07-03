@@ -1,0 +1,154 @@
+{
+  "name": "Mongols New Player Guide",
+  "civilization": "Mongols",
+  "author": "Shaada",
+  "source": "https://aoe4guides.com/builds/YOcdrRav7QTIlwa6QGrJ",
+  "archetype": "Feudal aggression",
+  "difficulty": "medium",
+  "reasoning": "The highest-rated Mongol guide on aoe4guides, written for newer players: an aggressive but forgiving plan built around Mongol mobility and early pressure without the all-in risk of a pure tower rush.",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 5,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 5,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "If can't tower rush, a fast pasture opening is okay",
+        "Place town center by wood , 5 villager mongols on nearest trees with the ger , 1 villager mongols makes ovoo"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 3,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 3,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "After trees is finished, 3 villager mongols go to tree by town center , other 2 villager mongols to food . repair barracks @ ovoo ."
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 3,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 3,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Double produce spearman 1 and go across the map with a villager mongols to outpost opponent's gold (see video for variants)"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 3,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 3,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Train 3 more spearman 1 (single + double production) and rally them across the map as well"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 4,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 4,
+        "stone": 0
+      },
+      "notes": [
+        "Once enough wood for the 5 spearman 1 + outpost , re-macro to food / gold and age up with 6 villager mongols on deer stones"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 9,
+      "age": 1,
+      "resources": {
+        "food": 5,
+        "wood": 0,
+        "gold": 4,
+        "stone": 0
+      },
+      "notes": [
+        "Leave 5 on food and 4 on gold as you age up. deer stones villager mongols will go back to food once done with 1 to gold .",
+        "Rally to wood until 7 total, then back to food to 12. Get wheelbarrow when you can."
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 5,
+      "age": 2,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 5,
+        "stone": 0
+      },
+      "notes": [
+        "Either all in in Feudal or re-arrange villager mongols and go up to Castle with kurultai !",
+        "Build stable , upgrade arrow slits on outpost , and upgrade spearman 1"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 5,
+      "age": 2,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 5,
+        "stone": 0
+      },
+      "notes": [
+        "Train keshik 2 (1x double production) non-stop. Add archery range and train archer 2 non-stop (double production when possible)."
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 5,
+      "age": 2,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 5,
+        "stone": 0
+      },
+      "notes": [
+        "Send 5 villager mongols to deer and research survival techniques (add an outpost when able)"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 5,
+      "age": 2,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 5,
+        "stone": 0
+      },
+      "notes": [
+        "Add blacksmith when able and research steeled arrow + iron undermesh . Slowly add pasture while being aggressive."
+      ]
+    }
+  ]
+}

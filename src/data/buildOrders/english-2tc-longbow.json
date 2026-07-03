@@ -1,0 +1,196 @@
+{
+  "name": "English 2 TC Boom",
+  "civilization": "English",
+  "author": "iLLertton",
+  "source": "https://aoe4guides.com/builds/tYWOOXp83ox4spPfNp1c",
+  "archetype": "Economy boom",
+  "difficulty": "easy",
+  "reasoning": "The classic English identity: add a second Town Center, out-villager everyone, and defend with Longbows behind farms and a network of towers. The safest way to learn macro fundamentals.",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 8,
+      "age": 1,
+      "resources": {
+        "food": 6,
+        "wood": 0,
+        "gold": 2,
+        "stone": 0
+      },
+      "notes": [
+        "Villager to sheep rally point 2 villager build mining camp gold + house"
+      ],
+      "time": "00:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 10,
+      "age": 1,
+      "resources": {
+        "food": 8,
+        "wood": 0,
+        "gold": 2,
+        "stone": 0
+      },
+      "notes": [
+        "Rally point 2x villager to sheep rally point villager to trees"
+      ],
+      "time": "00:50"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 14,
+      "age": 1,
+      "resources": {
+        "food": 4,
+        "wood": 3,
+        "gold": 0,
+        "stone": 4,
+        "builder": 3
+      },
+      "notes": [
+        "Gold villager & 1 trees villager build abbey of kings > sheep 4 sheep villager build mining camp stone"
+      ],
+      "time": "02:25"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 16,
+      "age": 1,
+      "resources": {
+        "food": 4,
+        "wood": 6,
+        "gold": 0,
+        "stone": 6
+      },
+      "notes": [
+        "When 1 trees remains, 1 trees villager build house > stone rally point 1 villager stone rally point sheep"
+      ],
+      "time": "04:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 21,
+      "age": 2,
+      "resources": {
+        "food": 8,
+        "wood": 6,
+        "gold": 0,
+        "stone": 0,
+        "builder": 7
+      },
+      "notes": [
+        "Trees villager build town center > gold stone villager build lumber camp wood"
+      ],
+      "time": "05:10"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 23,
+      "age": 2,
+      "resources": {
+        "food": 10,
+        "wood": 6,
+        "gold": 0,
+        "stone": 0,
+        "builder": 7
+      },
+      "notes": [
+        "TC2 rally point sheep"
+      ],
+      "time": "06:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 26,
+      "age": 2,
+      "resources": {
+        "food": 11,
+        "wood": 6,
+        "gold": 7,
+        "stone": 0,
+        "builder": 2
+      },
+      "notes": [
+        "2 sheep villager build mill + farm ↻"
+      ],
+      "time": "06:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 28,
+      "age": 2,
+      "resources": {
+        "food": 12,
+        "wood": 6,
+        "gold": 7,
+        "stone": 0,
+        "builder": 3
+      },
+      "notes": [
+        "At 4 farm TC2 rally point gold"
+      ],
+      "time": "06:50"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 32,
+      "age": 2,
+      "resources": {
+        "food": 16,
+        "wood": 5,
+        "gold": 11,
+        "stone": 0
+      },
+      "notes": [
+        "1 wood villager build house > house Reallocate villager (6 gold to wood )"
+      ],
+      "time": "08:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 42,
+      "age": 2,
+      "resources": {
+        "food": 16,
+        "wood": 13,
+        "gold": 5,
+        "stone": 0,
+        "builder": 8
+      },
+      "notes": [
+        "8 food villager build the white tower"
+      ],
+      "time": "09:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 46,
+      "age": 3,
+      "resources": {
+        "food": 19,
+        "wood": 14,
+        "gold": 13,
+        "stone": 0
+      },
+      "notes": [
+        "Wood villager build monastery"
+      ],
+      "time": "10:25"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 0,
+      "age": 3,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Harass with king 2 and knight 2 , get ready to Age up to IV with wynguard palace . Start getting unit upgrades and blacksmith upgrades."
+      ]
+    }
+  ]
+}

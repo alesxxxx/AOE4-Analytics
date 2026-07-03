@@ -1,0 +1,35 @@
+RTSLytics — NOTICE
+==================
+
+RTSLytics' own source code is licensed under the MIT License (see LICENSE).
+
+This project also bundles third-party game data and image assets that are NOT
+covered by the MIT License and are NOT relicensed under it:
+
+  * src/data/vendor/aoe4world-data/
+        Age of Empires IV unit / game data, derived from aoe4world/data.
+  * src/data/vendor/aoe4world-overlay/flags/
+        Civilization flag images, derived from aoe4world/overlay.
+
+Age of Empires IV and all related names, logos, images, and data are
+© Microsoft Corporation. These vendored assets are used for NON-COMMERCIAL
+purposes under Microsoft's Game Content Usage Rules:
+
+    https://www.xbox.com/en-US/developers/rules
+
+They may not be used in a commercial context except as permitted by those
+Rules. See each src/data/vendor/*/SOURCE.md file for the exact upstream commit
+pin, the fields retained, and the attribution/terms for that asset set.
+
+RTSLytics is a fan-made project. It is not affiliated with,
+endorsed by, or sponsored by Microsoft, Relic Entertainment, World's Edge, or
+aoe4world.
+
+Bundled fonts
+-------------
+  * Cinzel (@fontsource/cinzel) — SIL Open Font License 1.1.
+
+Data sources used at runtime (not redistributed here)
+-----------------------------------------------------
+  * AoE4World API           https://aoe4world.com
+  * Relic community API      https://aoe-api.worldsedgelink.com

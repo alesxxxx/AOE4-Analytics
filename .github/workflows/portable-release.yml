@@ -1,0 +1,137 @@
+name: Portable Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Optional release tag. Defaults to v<package version>."
+        required: false
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: portable-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build portable Windows release
+    runs-on: windows-latest
+
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: false
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+
+      - name: Build portable executable
+        run: npm run dist
+
+      - name: Prepare release artifact
+        id: artifact
+        shell: pwsh
+        run: |
+          $artifact = Get-ChildItem -Path release -Filter "*-portable.exe" -File |
+            Sort-Object LastWriteTime -Descending |
+            Select-Object -First 1
+
+          if (-not $artifact) {
+            throw "No portable executable found in release/"
+          }
+
+          $checksum = Get-FileHash -Path $artifact.FullName -Algorithm SHA256
+          $checksumPath = "$($artifact.FullName).sha256"
+          "$($checksum.Hash.ToLowerInvariant())  $($artifact.Name)" |
+            Out-File -FilePath $checksumPath -Encoding ascii
+
+          "artifact_path=$($artifact.FullName)" >> $env:GITHUB_OUTPUT
+          "artifact_name=$($artifact.Name)" >> $env:GITHUB_OUTPUT
+          "checksum_path=$checksumPath" >> $env:GITHUB_OUTPUT
+
+      - name: Choose release tag
+        id: release
+        shell: pwsh
+        env:
+          RELEASE_TAG_INPUT: ${{ github.event_name == 'workflow_dispatch' && inputs.release_tag || '' }}
+        run: |
+          $package = Get-Content package.json -Raw | ConvertFrom-Json
+
+          if ($env:RELEASE_TAG_INPUT) {
+            $tag = $env:RELEASE_TAG_INPUT
+          } else {
+            $tag = "v$($package.version)"
+          }
+
+          "tag=$tag" >> $env:GITHUB_OUTPUT
+          "name=RTSLytics $tag" >> $env:GITHUB_OUTPUT
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.artifact.outputs.artifact_name }}
+          path: |
+            ${{ steps.artifact.outputs.artifact_path }}
+            ${{ steps.artifact.outputs.checksum_path }}
+          if-no-files-found: error
+
+      - name: Publish GitHub release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+          RELEASE_NAME: ${{ steps.release.outputs.name }}
+          ARTIFACT_PATH: ${{ steps.artifact.outputs.artifact_path }}
+          CHECKSUM_PATH: ${{ steps.artifact.outputs.checksum_path }}
+          IS_DISPATCH: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          $notesPath = Join-Path $env:RUNNER_TEMP "release-notes.md"
+          @"
+          RTSLytics portable Windows build.
+
+          Download the portable .exe and run it. No installer is required.
+          "@ | Out-File -FilePath $notesPath -Encoding utf8
+
+          gh release view $env:RELEASE_TAG *> $null
+          if ($LASTEXITCODE -eq 0) {
+            # A tag must keep pointing at the binary it was released with. Only a
+            # manual workflow_dispatch may overwrite an existing release; pushes
+            # to main just keep the workflow artifact.
+            if ($env:IS_DISPATCH -eq 'true') {
+              gh release upload $env:RELEASE_TAG $env:ARTIFACT_PATH $env:CHECKSUM_PATH --clobber
+              gh release edit $env:RELEASE_TAG --title $env:RELEASE_NAME --notes-file $notesPath
+            } else {
+              Write-Host "Release $env:RELEASE_TAG already exists — skipping publish."
+              Write-Host "Bump the version in package.json to cut a new release, or re-run via workflow_dispatch to overwrite."
+            }
+          } else {
+            gh release create $env:RELEASE_TAG $env:ARTIFACT_PATH $env:CHECKSUM_PATH `
+              --title $env:RELEASE_NAME `
+              --notes-file $notesPath `
+              --target $env:GITHUB_SHA
+          }

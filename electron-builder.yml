@@ -1,0 +1,32 @@
+appId: com.rtslytics.app
+productName: RTSLytics
+copyright: AOE4 Companion. AoE4 © Microsoft (Game Content Usage Rules).
+
+directories:
+  output: release
+  buildResources: build
+
+# Only the built output + production deps are packaged.
+files:
+  - out/**/*
+  - package.json
+
+# better-sqlite3 is a native module — it must live outside the asar archive so
+# its .node binary can be loaded at runtime (D5/D25).
+asarUnpack:
+  - '**/node_modules/better-sqlite3/**'
+
+win:
+  icon: build/icon.ico
+  # No installer — a single self-contained portable .exe (double-click to run)
+  # plus the unpacked folder (release/win-unpacked/RTSLytics.exe).
+  target:
+    - portable
+    - dir
+  artifactName: ${productName}-${version}-portable.${ext}
+
+portable:
+  artifactName: ${productName}-${version}-portable.${ext}
+  # Reuse a stable extraction dir between launches (faster relaunch). Settings &
+  # history live under %APPDATA%/RTSLytics regardless, so they always persist.
+  unpackDirName: RTSLytics

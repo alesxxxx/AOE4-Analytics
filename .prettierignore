@@ -1,0 +1,7 @@
+node_modules
+out
+dist
+release
+coverage
+package-lock.json
+src/data/vendor

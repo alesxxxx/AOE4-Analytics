@@ -1,0 +1,43 @@
+name: CI
+
+# Typecheck, lint, and test on every push and pull request.
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Typecheck, lint & test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        # --ignore-scripts skips the postinstall native rebuild (electron-builder
+        # install-app-deps -> uiohook-napi / better-sqlite3), which needs X11 +
+        # Electron headers and is not required for typecheck/lint/test. The suite is
+        # pure Node; the history-store test probes for the native SQLite binary and
+        # falls back to the JSON store when it is absent.
+        run: npm ci --ignore-scripts
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test

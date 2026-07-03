@@ -1,0 +1,45 @@
+{
+  "_note": "Decoded summary of a REAL aoe-api.worldsedgelink.com getRecentMatchHistory?title=age4&profile_ids=[10240693] response, fetched 2026-06-29 via WebFetch (the raw host's TLS cert altname blocks direct curl/WebFetch on aoe-api.reliclink.com; aoe-api.worldsedgelink.com is the working mirror). Used to cross-check RELIC_RACE_ID -> civ slug. The 'Civilization' values the fetcher printed ARE the matchhistorymember[].race_id field values.",
+  "profile_id_under_test": 10240693,
+  "matches": [
+    {
+      "id": 63598287,
+      "mapname": "generated_map",
+      "matchtype_id": 21,
+      "members": [
+        { "profile_id": 6886363, "race_id": 106553, "outcome": "Win" },
+        { "profile_id": 10240693, "race_id": 137266, "outcome": "Win" },
+        { "profile_id": 11886387, "race_id": 129267, "outcome": "Win" },
+        { "profile_id": 8062699, "race_id": 106553, "outcome": "Loss" },
+        { "profile_id": 8326239, "race_id": 131384, "outcome": "Loss" },
+        { "profile_id": 4224807, "race_id": 136150, "outcome": "Loss" }
+      ]
+    },
+    {
+      "id": 81470478,
+      "mapname": "generated_map",
+      "matchtype_id": 3,
+      "members": [
+        { "profile_id": 12293272, "race_id": 129267, "outcome": "Loss" },
+        { "profile_id": 14458480, "race_id": 134522, "outcome": "Loss" },
+        { "profile_id": 7442148, "race_id": 199703, "outcome": "Loss" },
+        { "profile_id": 6992947, "race_id": 131384, "outcome": "Win" },
+        { "profile_id": 7063357, "race_id": 106553, "outcome": "Win" },
+        { "profile_id": 10240693, "race_id": 199703, "outcome": "Win" }
+      ]
+    },
+    {
+      "id": 81473905,
+      "mapname": "generated_map",
+      "matchtype_id": 3,
+      "members": [
+        { "profile_id": 6992947, "race_id": 131384, "outcome": "Win" },
+        { "profile_id": 10240693, "race_id": 199703, "outcome": "Win" },
+        { "profile_id": 7063357, "race_id": 106553, "outcome": "Win" },
+        { "profile_id": 1122145, "race_id": 199703, "outcome": "Loss" },
+        { "profile_id": 3696582, "race_id": 131384, "outcome": "Loss" },
+        { "profile_id": 368062, "race_id": 133008, "outcome": "Loss" }
+      ]
+    }
+  ]
+}

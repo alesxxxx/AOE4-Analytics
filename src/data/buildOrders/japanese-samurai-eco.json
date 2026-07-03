@@ -1,0 +1,107 @@
+{
+  "name": "Japanese Farm Eco into Samurai",
+  "civilization": ["Japanese", "Sengoku Daimyo"],
+  "author": "RTSLytics",
+  "source": "https://rtslytics.app/builds/japanese-samurai-eco",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": { "food": 6, "wood": 0, "gold": 0, "stone": 0 },
+      "notes": [
+        "Send all 6 starting villagers to sheep and keep making villagers nonstop.",
+        "Scout for sheep, gold, and your opponent."
+      ],
+      "time": "0:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 9,
+      "age": 1,
+      "resources": { "food": 6, "wood": 3, "gold": 0, "stone": 0 },
+      "notes": [
+        "Put 3 villagers on wood and build a Lumber Camp.",
+        "Build a House, and place a Farmhouse near your food so your farm economy starts strong."
+      ],
+      "time": "1:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 12,
+      "age": 1,
+      "resources": { "food": 9, "wood": 3, "gold": 0, "stone": 0 },
+      "notes": [
+        "Keep most villagers on food; transition onto Farms as the sheep run out.",
+        "Japanese farms are efficient — leaning on food keeps villagers producing."
+      ],
+      "time": "2:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 14,
+      "age": 1,
+      "resources": { "food": 8, "wood": 3, "gold": 3, "stone": 0 },
+      "notes": [
+        "Send 3 villagers to gold with a Mining Camp.",
+        "With about 400 food and 200 wood, age up to Feudal (Floating Gate for a safer boom)."
+      ],
+      "time": "4:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 16,
+      "age": 1,
+      "resources": { "food": 8, "wood": 4, "gold": 4, "stone": 0 },
+      "notes": [
+        "Keep gathering through the age-up and decide your plan by scouting: economy, infantry, or mounted harass.",
+        "Build a Buddhist or Shinto Temple — its bonus supports whichever path you pick."
+      ],
+      "time": "5:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 19,
+      "age": 2,
+      "resources": { "food": 9, "wood": 4, "gold": 6, "stone": 0 },
+      "notes": [
+        "In Feudal, build a Barracks and start Samurai — they're durable and hit hard.",
+        "Add a Bannerman; its aura buffs nearby units in fights."
+      ],
+      "time": "6:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 22,
+      "age": 2,
+      "resources": { "food": 10, "wood": 4, "gold": 8, "stone": 0 },
+      "notes": [
+        "Take efficient fights around your Samurai's durability and the bannerman aura.",
+        "Keep adding Farms so your food never stalls while you produce army."
+      ],
+      "time": "7:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 26,
+      "age": 2,
+      "resources": { "food": 11, "wood": 5, "gold": 9, "stone": 0 },
+      "notes": [
+        "Pressure exposed villagers, but don't dive into mass ranged units — Samurai can be kited.",
+        "Pick up blacksmith upgrades and bank toward Castle Age."
+      ],
+      "time": "9:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 30,
+      "age": 3,
+      "resources": { "food": 12, "wood": 5, "gold": 11, "stone": 0 },
+      "notes": [
+        "In Castle Age, mix in Mounted Samurai and Handcannons, with a Mangonel for groups.",
+        "Use bannermen and Samurai durability to win the key fights and take the map."
+      ],
+      "time": "11:00"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "total_count": 0,
+  "page": 1,
+  "per_page": 12,
+  "count": 0,
+  "offset": 0,
+  "filters": {
+    "leaderboard": "rm_solo",
+    "since": null,
+    "profile_ids": [10240693],
+    "opponent_profile_id": null,
+    "opponent_profile_ids": null
+  },
+  "games": []
+}

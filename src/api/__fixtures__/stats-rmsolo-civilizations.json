@@ -1,0 +1,238 @@
+{
+  "leaderboard": "rm_solo",
+  "rank_level": null,
+  "rating": null,
+  "patch": "10604,10884",
+  "data": [
+    {
+      "win_rate": 55.01755682868232,
+      "pick_rate": 4.845816293023672,
+      "win_count": 17862,
+      "games_count": 31590,
+      "civilization": "macedonian_dynasty",
+      "duration_median": 1373,
+      "duration_average": 1433.451610916035,
+      "player_games_count": 32466
+    },
+    {
+      "win_rate": 54.11651897897104,
+      "pick_rate": 9.028329203856831,
+      "win_count": 32734,
+      "games_count": 57625,
+      "civilization": "knights_templar",
+      "duration_median": 1513,
+      "duration_average": 1574.531146673721,
+      "player_games_count": 60488
+    },
+    {
+      "win_rate": 53.64445006534294,
+      "pick_rate": 3.540553449356697,
+      "win_count": 12725,
+      "games_count": 23274,
+      "civilization": "golden_horde",
+      "duration_median": 1385,
+      "duration_average": 1445.987774545761,
+      "player_games_count": 23721
+    },
+    {
+      "win_rate": 52.50330137222254,
+      "pick_rate": 5.199259679393415,
+      "win_count": 18289,
+      "games_count": 33918,
+      "civilization": "order_of_the_dragon",
+      "duration_median": 1403,
+      "duration_average": 1490.669116380548,
+      "player_games_count": 34834
+    },
+    {
+      "win_rate": 52.25771994562051,
+      "pick_rate": 3.074121615570614,
+      "win_count": 10763,
+      "games_count": 20243,
+      "civilization": "zhu_xis_legacy",
+      "duration_median": 1234,
+      "duration_average": 1357.657117886968,
+      "player_games_count": 20596
+    },
+    {
+      "win_rate": 51.68950242093334,
+      "pick_rate": 5.795396877518732,
+      "win_count": 20070,
+      "games_count": 37656,
+      "civilization": "japanese",
+      "duration_median": 1384,
+      "duration_average": 1471.264036262491,
+      "player_games_count": 38828
+    },
+    {
+      "win_rate": 50.93787768914672,
+      "pick_rate": 12.34962237678737,
+      "win_count": 42146,
+      "games_count": 77487,
+      "civilization": "french",
+      "duration_median": 1426,
+      "duration_average": 1531.289050036258,
+      "player_games_count": 82740
+    },
+    {
+      "win_rate": 50.54811205846529,
+      "pick_rate": 2.450819427445595,
+      "win_count": 8300,
+      "games_count": 16216,
+      "civilization": "jin_dynasty",
+      "duration_median": 1509,
+      "duration_average": 1578.177588306943,
+      "player_games_count": 16420
+    },
+    {
+      "win_rate": 50.0542888165038,
+      "pick_rate": 2.47440222096182,
+      "win_count": 8298,
+      "games_count": 16369,
+      "civilization": "ayyubids",
+      "duration_median": 1333,
+      "duration_average": 1402.097237302449,
+      "player_games_count": 16578
+    },
+    {
+      "win_rate": 49.53700574518418,
+      "pick_rate": 2.208274873876832,
+      "win_count": 7329,
+      "games_count": 14621,
+      "civilization": "house_of_lancaster",
+      "duration_median": 1455,
+      "duration_average": 1527.227576884083,
+      "player_games_count": 14795
+    },
+    {
+      "win_rate": 49.44898223778037,
+      "pick_rate": 1.151228394877459,
+      "win_count": 3814,
+      "games_count": 7654,
+      "civilization": "tughlaq_dynasty",
+      "duration_median": 1414,
+      "duration_average": 1473.945546479969,
+      "player_games_count": 7713
+    },
+    {
+      "win_rate": 49.25612150015498,
+      "pick_rate": 2.889339980297919,
+      "win_count": 9535,
+      "games_count": 19077,
+      "civilization": "malians",
+      "duration_median": 1397,
+      "duration_average": 1470.438268416159,
+      "player_games_count": 19358
+    },
+    {
+      "win_rate": 49.09121938731974,
+      "pick_rate": 1.749156691244515,
+      "win_count": 5753,
+      "games_count": 11627,
+      "civilization": "jeanne_darc",
+      "duration_median": 1319,
+      "duration_average": 1444.434166737776,
+      "player_games_count": 11719
+    },
+    {
+      "win_rate": 48.81132615900814,
+      "pick_rate": 3.647720827487388,
+      "win_count": 11929,
+      "games_count": 23949,
+      "civilization": "mongols",
+      "duration_median": 1386,
+      "duration_average": 1454.504194115962,
+      "player_games_count": 24439
+    },
+    {
+      "win_rate": 48.58893021220739,
+      "pick_rate": 3.411295859577898,
+      "win_count": 11105,
+      "games_count": 22403,
+      "civilization": "abbasid_dynasty",
+      "duration_median": 1368,
+      "duration_average": 1444.341369503391,
+      "player_games_count": 22855
+    },
+    {
+      "win_rate": 48.34776334776335,
+      "pick_rate": 2.068718469208036,
+      "win_count": 6701,
+      "games_count": 13681,
+      "civilization": "delhi_sultanate",
+      "duration_median": 1379,
+      "duration_average": 1471.355555555556,
+      "player_games_count": 13860
+    },
+    {
+      "win_rate": 47.7239591770614,
+      "pick_rate": 3.685483148750709,
+      "win_count": 11784,
+      "games_count": 24178,
+      "civilization": "byzantines",
+      "duration_median": 1345,
+      "duration_average": 1425.52016847562,
+      "player_games_count": 24692
+    },
+    {
+      "win_rate": 47.58074056547971,
+      "pick_rate": 5.046717812472014,
+      "win_count": 16088,
+      "games_count": 32996,
+      "civilization": "ottomans",
+      "duration_median": 1499,
+      "duration_average": 1598.845380338341,
+      "player_games_count": 33812
+    },
+    {
+      "win_rate": 47.31809603690501,
+      "pick_rate": 3.559061464521329,
+      "win_count": 11283,
+      "games_count": 23375,
+      "civilization": "rus",
+      "duration_median": 1487,
+      "duration_average": 1556.730886978402,
+      "player_games_count": 23845
+    },
+    {
+      "win_rate": 47.31010194180573,
+      "pick_rate": 12.4599241768411,
+      "win_count": 39494,
+      "games_count": 77694,
+      "civilization": "english",
+      "duration_median": 1532,
+      "duration_average": 1620.702116700008,
+      "player_games_count": 83479
+    },
+    {
+      "win_rate": 47.13653241930877,
+      "pick_rate": 4.180423296217797,
+      "win_count": 13202,
+      "games_count": 27414,
+      "civilization": "holy_roman_empire",
+      "duration_median": 1392,
+      "duration_average": 1512.987574978578,
+      "player_games_count": 28008
+    },
+    {
+      "win_rate": 46.28140204547712,
+      "pick_rate": 1.503179199379086,
+      "win_count": 4661,
+      "games_count": 9984,
+      "civilization": "sengoku_daimyo",
+      "duration_median": 1377,
+      "duration_average": 1466.472346340979,
+      "player_games_count": 10071
+    },
+    {
+      "win_rate": 45.09994728946194,
+      "pick_rate": 3.681154661333174,
+      "win_count": 11123,
+      "games_count": 24155,
+      "civilization": "chinese",
+      "duration_median": 1429,
+      "duration_average": 1535.349470867291,
+      "player_games_count": 24663
+    }
+  ]
+}

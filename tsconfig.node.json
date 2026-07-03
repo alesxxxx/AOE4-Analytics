@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2023"],
+    "types": ["node"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler"
+  },
+  "include": [
+    "electron",
+    "src/api",
+    "src/store",
+    "src/data",
+    "src/domain",
+    "electron.vite.config.ts",
+    "vitest.config.ts"
+  ]
+}

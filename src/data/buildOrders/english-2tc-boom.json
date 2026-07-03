@@ -1,0 +1,169 @@
+{
+  "name": "English 2 Town Center Boom",
+  "civilization": ["English", "House of Lancaster"],
+  "author": "RTSLytics",
+  "source": "https://rtslytics.app/builds/english-2tc-boom",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": {
+        "food": 6,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Send all 6 starting villagers to sheep. Keep producing villagers from the Town Center without stopping.",
+        "Use your Scout to find more sheep and herd them back to the Town Center."
+      ],
+      "time": "0:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 9,
+      "age": 1,
+      "resources": {
+        "food": 6,
+        "wood": 3,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Send the next 3 villagers to wood and build a Lumber Camp near a forest.",
+        "Build a House early so you do not get housed."
+      ],
+      "time": "1:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 12,
+      "age": 1,
+      "resources": {
+        "food": 9,
+        "wood": 3,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Put new villagers on food. Move to berries with a Mill once your sheep run low.",
+        "Keep the Town Center making villagers the entire game."
+      ],
+      "time": "2:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 15,
+      "age": 1,
+      "resources": {
+        "food": 9,
+        "wood": 6,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Add villagers to wood. You need plenty of wood to build the second Town Center.",
+        "Build another House to stay ahead of population."
+      ],
+      "time": "4:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 18,
+      "age": 1,
+      "resources": {
+        "food": 11,
+        "wood": 7,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Once you have about 400 food and 200 wood, click up to the Feudal Age using the Council Hall or Abbey of Kings landmark.",
+        "Continue gathering while the age-up completes."
+      ],
+      "time": "5:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 21,
+      "age": 2,
+      "resources": {
+        "food": 9,
+        "wood": 12,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "When you reach Feudal Age, gather wood for the second Town Center.",
+        "Build a Barracks and add a few Spearmen or Archers if your opponent is aggressive."
+      ],
+      "time": "6:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 24,
+      "age": 2,
+      "resources": {
+        "food": 9,
+        "wood": 9,
+        "gold": 0,
+        "stone": 0,
+        "builder": 6
+      },
+      "notes": [
+        "Use 6 villagers to build a second Town Center on a fresh food or gold source.",
+        "After it is built, send those villagers back to gathering resources."
+      ],
+      "time": "7:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 28,
+      "age": 2,
+      "resources": {
+        "food": 14,
+        "wood": 10,
+        "gold": 4,
+        "stone": 0
+      },
+      "notes": [
+        "Make villagers from BOTH Town Centers at the same time to boom your economy.",
+        "Put a few villagers on gold to prepare for the Castle Age."
+      ],
+      "time": "9:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 34,
+      "age": 2,
+      "resources": {
+        "food": 16,
+        "wood": 10,
+        "gold": 8,
+        "stone": 0
+      },
+      "notes": [
+        "Research economy upgrades like Wheelbarrow and Double Broadaxe at the Mill and Lumber Camp.",
+        "Keep both Town Centers producing villagers."
+      ],
+      "time": "11:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 40,
+      "age": 2,
+      "resources": {
+        "food": 16,
+        "wood": 12,
+        "gold": 12,
+        "stone": 0
+      },
+      "notes": [
+        "Once you have about 1200 food and 1200 gold, age up to the Castle Age.",
+        "Your strong economy lets you build a big army to take control of the map."
+      ],
+      "time": "13:00"
+    }
+  ]
+}

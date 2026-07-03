@@ -1,0 +1,288 @@
+{
+  "name": "Sengoku Standard (Beasty)",
+  "civilization": "Sengoku Daimyo",
+  "author": "EOGN",
+  "source": "https://aoe4guides.com/builds/AwbamP5dCYga2wybEzDr",
+  "archetype": "Standard opening",
+  "difficulty": "medium",
+  "reasoning": "Simplified from Beasty's Sengoku order: the bannerman economy into the Sengoku military timing that defines the variant.",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 2,
+        "gold": 3,
+        "stone": 0,
+        "builder": 1
+      },
+      "notes": [
+        "Build matsuri on gold (and wood if possible). rally point food"
+      ],
+      "time": "0:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 7,
+      "age": 1,
+      "resources": {
+        "food": 1,
+        "wood": 2,
+        "gold": 4,
+        "stone": 0
+      },
+      "notes": [
+        "Buy wood to build yatai . Put on boar or deer + berries"
+      ],
+      "time": "0:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 9,
+      "age": 1,
+      "resources": {
+        "food": 2,
+        "wood": 2,
+        "gold": 4,
+        "stone": 0,
+        "builder": 1
+      },
+      "notes": [
+        "Build farmhouse 1 on berries"
+      ],
+      "time": "1:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 10,
+      "age": 1,
+      "resources": {
+        "food": 4,
+        "wood": 2,
+        "gold": 4,
+        "stone": 0
+      },
+      "notes": [
+        "Buy wood to build 2nd yatai . Put it on the deer"
+      ],
+      "time": "1:25"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 0,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Then when you have 75-80 wood move vils from wood to gold"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 12,
+      "age": 1,
+      "resources": {
+        "food": 8,
+        "wood": 0,
+        "gold": 4,
+        "stone": 0
+      },
+      "notes": [
+        "Then when you have 75-80 wood move vils from wood to gold Buy wood to build 3rd yatai . Put it eg between sheep + berries"
+      ],
+      "time": "2:17"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 15,
+      "age": 1,
+      "resources": {
+        "food": 9,
+        "wood": 0,
+        "gold": 6,
+        "stone": 0
+      },
+      "notes": [
+        "Decide: - Leave 10 on wood for Feudal rush with yari 2 . For double stable and takeda daimyo 1 . For example against knight civs, you can outmass with yari 2 . - Leave 13 on wood for Feudal rush with yumi ashigaru 2 + yari 2 , i.e. stable + archery range",
+        "Age up with 3 gold + 1 new villager japanese . koka township 1"
+      ],
+      "time": "3:18"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 16,
+      "age": 1,
+      "resources": {
+        "food": 9,
+        "wood": 0,
+        "gold": 3,
+        "stone": 0,
+        "builder": 4
+      },
+      "notes": [
+        "Rebalance villagers: 9 food / 3 gold."
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 16,
+      "age": 1,
+      "resources": {
+        "food": 1,
+        "wood": 8,
+        "gold": 3,
+        "stone": 0,
+        "builder": 4
+      },
+      "notes": [
+        "Remacro 8 food vils except one, to wood . Build lumber camp . rally point to wood ."
+      ],
+      "time": "3:25"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 18,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 10,
+        "gold": 3,
+        "stone": 0,
+        "builder": 5
+      },
+      "notes": [
+        "Build farmhouse 1 with food villager japanese . Research towara 1 ."
+      ],
+      "time": "4:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 19,
+      "age": 2,
+      "resources": {
+        "food": 6,
+        "wood": 10,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "Age up vils and rally point to food . Build stable archery range with 2 wood villager japanese Research double broadaxe takezaiku 2 and build 4th yatai"
+      ],
+      "time": "5:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 23,
+      "age": 2,
+      "resources": {
+        "food": 7,
+        "wood": 13,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "Start queing units. yari 2 / yumi ashigaru 2"
+      ],
+      "time": "5:40"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 24,
+      "age": 2,
+      "resources": {
+        "food": 9,
+        "wood": 12,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "Build takeda daimyo 1 and queue daimyo"
+      ],
+      "time": "6:25"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 25,
+      "age": 2,
+      "resources": {
+        "food": 10,
+        "wood": 12,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "Rally point to food and when you have too much food, rally onto gold for age 3 or onto the wood and build more stable / archery range"
+      ],
+      "time": "6:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 27,
+      "age": 2,
+      "resources": {
+        "food": 11,
+        "wood": 12,
+        "gold": 3,
+        "stone": 0,
+        "builder": 1
+      },
+      "notes": [
+        "Build a forge 1 on the stone . Research steeled arrow / iron undermesh and tatara 1"
+      ],
+      "time": "7:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 42,
+      "age": 2,
+      "resources": {
+        "food": 22,
+        "wood": 6,
+        "gold": 14,
+        "stone": 0
+      },
+      "notes": [
+        "Build another takeda daimyo 2 and later takeda daimyo 3 for deflective armor on .",
+        "Remacro wood villager japanese to gold ."
+      ],
+      "time": "12:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 43,
+      "age": 2,
+      "resources": {
+        "food": 8,
+        "wood": 6,
+        "gold": 15,
+        "stone": 0,
+        "builder": 14
+      },
+      "notes": [
+        "Build sake brewery with 14 food villager japanese ."
+      ],
+      "time": "13:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 46,
+      "age": 3,
+      "resources": {
+        "food": 16,
+        "wood": 8,
+        "gold": 22,
+        "stone": 0
+      },
+      "notes": [
+        "Get all unit upgrades."
+      ],
+      "time": "14:10"
+    }
+  ]
+}

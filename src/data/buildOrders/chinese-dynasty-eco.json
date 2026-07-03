@@ -1,0 +1,107 @@
+{
+  "name": "Chinese Dynasty Economy",
+  "civilization": ["Chinese", "Zhu Xi's Legacy", "Jin Dynasty"],
+  "author": "RTSLytics",
+  "source": "https://rtslytics.app/builds/chinese-dynasty-eco",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": { "food": 6, "wood": 0, "gold": 0, "stone": 0 },
+      "notes": [
+        "Send all 6 starting villagers to sheep and keep making villagers nonstop.",
+        "Scout for sheep, gold, and your opponent."
+      ],
+      "time": "0:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 9,
+      "age": 1,
+      "resources": { "food": 6, "wood": 3, "gold": 0, "stone": 0 },
+      "notes": [
+        "Put 3 villagers on wood and build a Lumber Camp.",
+        "Build your first Imperial Official and set it to collect taxes from your Town Center."
+      ],
+      "time": "1:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 12,
+      "age": 1,
+      "resources": { "food": 8, "wood": 4, "gold": 0, "stone": 0 },
+      "notes": [
+        "Keep most villagers on food and add a Mill on berries.",
+        "Keep Officials supervising drop-off buildings — the tax gold funds your whole game, so don't let it float."
+      ],
+      "time": "2:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 15,
+      "age": 1,
+      "resources": { "food": 9, "wood": 3, "gold": 3, "stone": 0 },
+      "notes": [
+        "Send 3 villagers to gold with a Mining Camp.",
+        "With about 400 food and 200 wood, age up — the Barbican of the Sun gives a strong defensive tower; the Imperial Academy is the economic pick."
+      ],
+      "time": "4:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 18,
+      "age": 1,
+      "resources": { "food": 9, "wood": 4, "gold": 5, "stone": 0 },
+      "notes": [
+        "Keep gathering through the age-up; reaching Feudal starts the Song Dynasty.",
+        "Protect your Officials — losing them cuts your tax income."
+      ],
+      "time": "5:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 21,
+      "age": 2,
+      "resources": { "food": 10, "wood": 4, "gold": 7, "stone": 0 },
+      "notes": [
+        "In Feudal (Song Dynasty), make Zhuge Nu (repeating crossbows) and Spearmen for a safe defensive army.",
+        "Reinvest tax gold into more villagers — Chinese want a bigger economy than the enemy."
+      ],
+      "time": "6:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 25,
+      "age": 2,
+      "resources": { "food": 11, "wood": 5, "gold": 9, "stone": 0 },
+      "notes": [
+        "Defend with your compact army while villagers and tax gold pile up.",
+        "Add more Imperial Officials so every drop-off building is supervised."
+      ],
+      "time": "8:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 29,
+      "age": 2,
+      "resources": { "food": 12, "wood": 5, "gold": 11, "stone": 0 },
+      "notes": [
+        "Bank toward Castle Age and the next Dynasty for a power spike.",
+        "Keep your buildings tight and defended — Chinese are strong holding ground."
+      ],
+      "time": "9:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 33,
+      "age": 3,
+      "resources": { "food": 12, "wood": 6, "gold": 13, "stone": 0 },
+      "notes": [
+        "In Castle Age, add Palace Guard and a Nest of Bees (siege) behind your crossbows.",
+        "Use your larger economy to out-produce the enemy and grind forward with siege."
+      ],
+      "time": "11:30"
+    }
+  ]
+}

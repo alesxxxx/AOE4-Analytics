@@ -1,0 +1,179 @@
+{
+  "name": "Delhi Fast Ghazi into Castle",
+  "civilization": "Delhi Sultanate",
+  "author": "Valdemar1902",
+  "source": "https://aoe4guides.com/builds/S3FUuhz7WEB8VYUL5qPb",
+  "archetype": "Feudal aggression",
+  "difficulty": "medium",
+  "reasoning": "Valdemar's Ghazi raid build — the top-scored Delhi guide by a wide margin. Ghazi raiders harass while Delhi's free techs research in the background, converting into a strong Castle timing.",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 5,
+        "gold": 0,
+        "stone": 0,
+        "builder": 1
+      },
+      "notes": [
+        "Mill : wheelbarrow professional scouts survival techniques horticulture mosque : efficient production piety (cancel piety for instant research of sanctity on feudal age up) sanctity all seeing eye lumber camp : forestry double broadaxe",
+        "5 starting villager delhi to trees to chop 50 wood then build mill on berries 1 villager delhi builds mosque"
+      ],
+      "time": "00:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 7,
+      "age": 1,
+      "resources": {
+        "food": 0,
+        "wood": 5,
+        "gold": 0,
+        "stone": 0,
+        "builder": 2
+      },
+      "notes": [
+        "New villager delhi builds house then berries"
+      ],
+      "time": "00:20"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 8,
+      "age": 1,
+      "resources": {
+        "food": 7,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0,
+        "builder": 1
+      },
+      "notes": [
+        "1 new villager delhi to food (8 total)"
+      ],
+      "time": "00:40"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 9,
+      "age": 1,
+      "resources": {
+        "food": 8,
+        "wood": 0,
+        "gold": 1,
+        "stone": 0
+      },
+      "notes": [
+        "3 new villager delhi to mining camp gold"
+      ],
+      "time": "1:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 12,
+      "age": 1,
+      "resources": {
+        "food": 8,
+        "wood": 1,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "2 new villager delhi to chopped trees , then 1 new villager delhi to build lumber camp at woodline (pull the 2 villager delhi from straggler when 50 wood ) Keep rallying to wood until 5"
+      ],
+      "time": "2:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 13,
+      "age": 1,
+      "resources": {
+        "food": 4,
+        "wood": 2,
+        "gold": 3,
+        "stone": 0,
+        "builder": 4
+      },
+      "notes": [
+        "Dome of the faith on berries with 4 berries villager delhi"
+      ],
+      "time": "2:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 18,
+      "age": 1,
+      "resources": {
+        "food": 10,
+        "wood": 5,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "When 5 on wood you rally point back to sheep until 12. Then wood again until 12"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 21,
+      "age": 2,
+      "resources": {
+        "food": 11,
+        "wood": 5,
+        "gold": 3,
+        "stone": 0,
+        "builder": 2
+      },
+      "notes": [
+        "Queue all feudal upgrades 2 villager delhi from wood build stable ( put scholar inside stable and pump ghazi raider 2 nonstop )"
+      ],
+      "time": "4:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 24,
+      "age": 2,
+      "resources": {
+        "food": 12,
+        "wood": 9,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "Blacksmith archery range barracks in whatever order makes sense (usually go production buildings first and add 2x blacksmiths later around 8-10 mins)"
+      ],
+      "time": "6:25"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 0,
+      "age": 2,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Only go age 3 when you have secured 2 deer packs with professional scouts"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 0,
+      "age": 3,
+      "resources": {
+        "food": 0,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "In age 3 immediately queue war elephant and add 2 more archery range for archer 2 + crossbowman 3 Also Start stone for keep & village fortresses"
+      ]
+    }
+  ]
+}

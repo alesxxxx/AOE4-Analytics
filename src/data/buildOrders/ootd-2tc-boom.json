@@ -1,0 +1,171 @@
+{
+  "name": "Order of the Dragon 2 TC",
+  "civilization": "Order of the Dragon",
+  "author": "Glokamm_aus_Welch",
+  "source": "https://aoe4guides.com/builds/zmO8FDx7scMmNq1Tdjqx",
+  "archetype": "Economy boom",
+  "difficulty": "medium",
+  "reasoning": "Gilded units cost more and come out slower - the 2 TC boom funds them properly. The standard OOTD plan: fewer, better units on a bigger economy.",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 5,
+      "age": 1,
+      "resources": {
+        "food": 5,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "All Villagers to Food"
+      ],
+      "time": "00:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": {
+        "food": 5,
+        "wood": 0,
+        "gold": 1,
+        "stone": 0
+      },
+      "notes": [
+        "1 Villager Builds House - Mining Camp - Gold"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 7,
+      "age": 1,
+      "resources": {
+        "food": 5,
+        "wood": 0,
+        "gold": 2,
+        "stone": 0
+      },
+      "notes": [
+        "1 Villager to Gold"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 10,
+      "age": 1,
+      "resources": {
+        "food": 5,
+        "wood": 3,
+        "gold": 2,
+        "stone": 0
+      },
+      "notes": [
+        "3 Villagers to Wood"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 11,
+      "age": 1,
+      "resources": {
+        "food": 6,
+        "wood": 3,
+        "gold": 2,
+        "stone": 0
+      },
+      "notes": [
+        "1 Villager to Food"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 9,
+      "age": 1,
+      "resources": {
+        "food": 4,
+        "wood": 3,
+        "gold": 2,
+        "stone": 0
+      },
+      "notes": [
+        "Build Landmark with 2 Food Villager"
+      ],
+      "time": "02:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 14,
+      "age": 1,
+      "resources": {
+        "food": 9,
+        "wood": 3,
+        "gold": 2,
+        "stone": 0
+      },
+      "notes": [
+        "5 Villagers to Food & Build Barracks"
+      ]
+    },
+    {
+      "population_count": -1,
+      "villager_count": 18,
+      "age": 1,
+      "resources": {
+        "food": 13,
+        "wood": 3,
+        "gold": 2,
+        "stone": 0
+      },
+      "notes": [
+        "Landmark finished"
+      ],
+      "time": "04:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 19,
+      "age": 1,
+      "resources": {
+        "food": 13,
+        "wood": 4,
+        "gold": 2,
+        "stone": 0
+      },
+      "notes": [
+        "Build Blacksmith & 1 Villager to Wood"
+      ],
+      "time": "05:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 20,
+      "age": 1,
+      "resources": {
+        "food": 13,
+        "wood": 4,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "1 Villager to Gold and from now on all Villagers to Food & Build Stable"
+      ],
+      "time": "05:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 23,
+      "age": 1,
+      "resources": {
+        "food": 16,
+        "wood": 4,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "Start attacking with Man-at-Arms & Horseman (and later on with Spearman)"
+      ],
+      "time": "07:00"
+    }
+  ]
+}

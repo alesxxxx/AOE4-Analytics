@@ -1,0 +1,43 @@
+import type { ReactNode } from 'react'
+import {
+  LayoutDashboard,
+  Search,
+  BarChart3,
+  Globe2,
+  BookOpen,
+  Settings as SettingsIcon,
+  Info,
+  type LucideIcon,
+} from 'lucide-react'
+import { Dashboard } from './screens/Dashboard'
+import { Scout } from './screens/Scout'
+import { Stats } from './screens/Stats'
+import { CivMeta } from './screens/CivMeta'
+import { Guides } from './screens/Guides'
+import { Settings } from './screens/Settings'
+import { About } from './screens/About'
+
+export interface NavItem {
+  path: string
+  label: string
+  icon: LucideIcon
+  element: ReactNode
+  group: 'main' | 'secondary'
+}
+
+/** Single source of truth for routes + sidebar links. */
+export const navItems: NavItem[] = [
+  { path: '/', label: 'Dashboard', icon: LayoutDashboard, element: <Dashboard />, group: 'main' },
+  { path: '/stats', label: 'My Stats', icon: BarChart3, element: <Stats />, group: 'main' },
+  { path: '/scout', label: 'Scout', icon: Search, element: <Scout />, group: 'main' },
+  { path: '/civ-meta', label: 'Civ Meta', icon: Globe2, element: <CivMeta />, group: 'main' },
+  { path: '/guides', label: 'Guides', icon: BookOpen, element: <Guides />, group: 'main' },
+  {
+    path: '/settings',
+    label: 'Settings',
+    icon: SettingsIcon,
+    element: <Settings />,
+    group: 'secondary',
+  },
+  { path: '/about', label: 'About', icon: Info, element: <About />, group: 'secondary' },
+]

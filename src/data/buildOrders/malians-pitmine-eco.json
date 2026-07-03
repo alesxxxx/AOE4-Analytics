@@ -1,0 +1,107 @@
+{
+  "name": "Malian Pit Mine Economy",
+  "civilization": ["Malians"],
+  "author": "RTSLytics",
+  "source": "https://rtslytics.app/builds/malians-pitmine-eco",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 6,
+      "age": 1,
+      "resources": { "food": 6, "wood": 0, "gold": 0, "stone": 0 },
+      "notes": [
+        "Send all 6 starting villagers to sheep and keep making villagers nonstop.",
+        "Scout for sheep, gold veins, and your opponent."
+      ],
+      "time": "0:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 9,
+      "age": 1,
+      "resources": { "food": 6, "wood": 3, "gold": 0, "stone": 0 },
+      "notes": [
+        "Put 3 villagers on wood and build a Lumber Camp.",
+        "Build a House and start a Cattle economy — grow cattle at a Cattle Ranch for flexible food."
+      ],
+      "time": "1:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 12,
+      "age": 1,
+      "resources": { "food": 8, "wood": 4, "gold": 0, "stone": 0 },
+      "notes": [
+        "Keep most villagers on food and add a Mill on berries.",
+        "Build a Pit Mine on a gold vein — it generates passive gold without villagers."
+      ],
+      "time": "2:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 14,
+      "age": 1,
+      "resources": { "food": 9, "wood": 3, "gold": 2, "stone": 0 },
+      "notes": [
+        "A couple of villagers on gold plus the Pit Mine income adds up fast.",
+        "With about 400 food and 200 wood, age up to Feudal (Saharan Trade Network for economy)."
+      ],
+      "time": "4:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 16,
+      "age": 1,
+      "resources": { "food": 9, "wood": 4, "gold": 3, "stone": 0 },
+      "notes": [
+        "Keep gathering through the age-up; your passive gold means you can lean harder on food and wood.",
+        "Scout whether the enemy can punish your greedy economy."
+      ],
+      "time": "5:15"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 19,
+      "age": 2,
+      "resources": { "food": 10, "wood": 4, "gold": 5, "stone": 0 },
+      "notes": [
+        "In Feudal, make Donso (javelin/spear infantry) and Musofadi Warriors (stealth) for cheap, mobile pressure.",
+        "Use stealth infantry to sneak in and snipe villagers."
+      ],
+      "time": "6:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 23,
+      "age": 2,
+      "resources": { "food": 11, "wood": 4, "gold": 7, "stone": 0 },
+      "notes": [
+        "Raid with mobile infantry while your passive economy snowballs at home.",
+        "Add a second Pit Mine if you control another gold vein."
+      ],
+      "time": "8:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 27,
+      "age": 2,
+      "resources": { "food": 12, "wood": 5, "gold": 8, "stone": 0 },
+      "notes": [
+        "Protect your Pit Mines and cattle — losing them removes your snowball.",
+        "Bank toward Castle Age for a power spike."
+      ],
+      "time": "9:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 31,
+      "age": 3,
+      "resources": { "food": 12, "wood": 5, "gold": 10, "stone": 0 },
+      "notes": [
+        "In Castle Age, add Sofa (cavalry) and the Farimba Garrison buff, with Javelin Throwers and siege support.",
+        "Turn your passive-gold lead into a relentless, cost-efficient army."
+      ],
+      "time": "11:30"
+    }
+  ]
+}

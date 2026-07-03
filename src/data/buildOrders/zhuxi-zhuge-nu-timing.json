@@ -1,0 +1,194 @@
+{
+  "name": "Zhu Xi Zhuge Nu Timing",
+  "civilization": "Zhu Xi's Legacy",
+  "author": "Yufka1954",
+  "source": "https://aoe4guides.com/builds/r6hqDCES2nryqKqyml5z",
+  "archetype": "Timing attack",
+  "difficulty": "medium",
+  "reasoning": "The most-liked Zhu Xi build this season: a crossbow (Zhuge Nu) timing attack off the boosted Zhu Xi economy that hits before most civs stabilize.",
+  "build_order": [
+    {
+      "population_count": -1,
+      "villager_count": 5,
+      "age": 1,
+      "resources": {
+        "food": 5,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "Build all eco buildings closeby for better tax collection",
+        "Build mill with all 5 villager china and rally all sheep onto it, supervise building mill with imperial official"
+      ],
+      "time": "0:00"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 7,
+      "age": 1,
+      "resources": {
+        "food": 7,
+        "wood": 0,
+        "gold": 0,
+        "stone": 0
+      },
+      "notes": [
+        "7 villager china on sheep , 7th villager china builds village"
+      ],
+      "time": "0:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 10,
+      "age": 1,
+      "resources": {
+        "food": 7,
+        "wood": 0,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "3 villager china on gold"
+      ],
+      "time": "1:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 11,
+      "age": 1,
+      "resources": {
+        "food": 8,
+        "wood": 0,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "1 villager china on sheep rest villager china on wood , collect taxes from mill at about 130 gold"
+      ],
+      "time": "2:05"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 12,
+      "age": 1,
+      "resources": {
+        "food": 8,
+        "wood": 1,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "Age up with 1 sheep villager china with jiangnan tower 2 ,rally 3 sheep villager china onto wood"
+      ],
+      "time": "2:30"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 13,
+      "age": 1,
+      "resources": {
+        "food": 4,
+        "wood": 6,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "Collect taxes when you have enough food for villager china production",
+        "Train a imperial official and built lumber camp , supervise on building lumber camp with imperial official and rally villager china onto wood until 9"
+      ],
+      "time": "3:10"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 14,
+      "age": 1,
+      "resources": {
+        "food": 4,
+        "wood": 7,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "Research wheelbarrow"
+      ],
+      "time": "3:35"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 15,
+      "age": 2,
+      "resources": {
+        "food": 4,
+        "wood": 8,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "Don't forget to collect taxes for blacksmith upgrades, decide what units you want to train in each scenario, have fun :D",
+        "Start building 3 archery range and further barracks when needed at jiangnan tower 2 , set jiangnan tower 2 to City Guard"
+      ],
+      "time": "4:10"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 16,
+      "age": 2,
+      "resources": {
+        "food": 4,
+        "wood": 9,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "Collect taxes so you can afford double broadaxe , rally until 8 villager china on sheep and get horticulture"
+      ],
+      "time": "4:35"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 20,
+      "age": 2,
+      "resources": {
+        "food": 8,
+        "wood": 9,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "Build blacksmith and start training zhuge nu 2 , rally villager china onto wood until 13"
+      ],
+      "time": "5:35"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 23,
+      "age": 2,
+      "resources": {
+        "food": 8,
+        "wood": 12,
+        "gold": 3,
+        "stone": 0
+      },
+      "notes": [
+        "Get 1 imperial official and rally villager china onto gold until 6, at 7-10 zhuge nu 2 go out to harass enemy gold and stop production for steeled arrow and iron undermesh"
+      ],
+      "time": "6:45"
+    },
+    {
+      "population_count": -1,
+      "villager_count": 27,
+      "age": 2,
+      "resources": {
+        "food": 8,
+        "wood": 13,
+        "gold": 6,
+        "stone": 0
+      },
+      "notes": [
+        "Rally villager china onto food now, build village at 46 supply, start zhuge nu 2 and siege engineering , built new lumber camp forward for max income"
+      ],
+      "time": "8:35"
+    }
+  ]
+}
