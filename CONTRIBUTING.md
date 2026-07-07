@@ -39,6 +39,7 @@ Useful commands:
 npm run typecheck   # tsc --noEmit (node + web projects)
 npm run lint         # eslint
 npm test             # vitest run (all)
+npm run verify       # typecheck + lint + test
 npm run format       # prettier --write .
 npm run pack         # production build → release/win-unpacked/RTSLytics.exe
 npm run dist         # portable .exe → release/
@@ -46,10 +47,10 @@ npm run dist         # portable .exe → release/
 
 ## Before you open a PR
 
-Please make sure all three are green:
+Please make sure the full verification suite is green:
 
 ```bash
-npm run typecheck && npm run lint && npm test
+npm run verify
 ```
 
 For changes to the overlay, the Electron main process, or native/local-data

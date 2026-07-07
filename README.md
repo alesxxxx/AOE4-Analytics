@@ -64,6 +64,7 @@ Useful commands:
 npm run typecheck
 npm run lint
 npm test
+npm run verify
 npm run pack
 npm run dist
 ```
@@ -112,7 +113,7 @@ RTSLytics is an Electron app with three windows across two processes: a Node **m
 
 ## Contributing
 
-Contributions are welcome — code, build orders, and guides. Please read [CONTRIBUTING.md](CONTRIBUTING.md) first (especially the read-only rule), and run `npm run typecheck && npm run lint && npm test` before opening a PR.
+Contributions are welcome — code, build orders, and guides. Please read [CONTRIBUTING.md](CONTRIBUTING.md) first (especially the read-only rule), and run `npm run verify` before opening a PR.
 
 ## Docs
 

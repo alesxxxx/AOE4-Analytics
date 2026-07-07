@@ -10,7 +10,7 @@
 
 ## Checklist
 
-- [ ] `npm run typecheck && npm run lint && npm test` all pass
+- [ ] `npm run verify` passes
 - [ ] For overlay / main-process / local-data changes: ran `npm run pack` and smoke-tested the packaged build
 - [ ] This change does **not** read game memory or modify the game (read-only local files + public APIs only)
 - [ ] Updated docs / CHANGELOG where relevant
