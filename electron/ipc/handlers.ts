@@ -7,6 +7,7 @@ import {
   getPollManager,
   getSettings,
 } from '../services/appContext'
+import { registerHotkeys } from '../hotkeys'
 import { launchGame } from '../services/gameProcess'
 import { getSteamAccounts, getSteamAvatar } from '../services/steamService'
 import type { LiveMatchInfo } from './contract'
@@ -64,9 +65,16 @@ export function registerIpcHandlers(): void {
     getSettings().removeAccount(profileId),
   )
   ipcMain.handle(IpcChannels.settingsGet, () => getSettings().getAll())
-  ipcMain.handle(IpcChannels.settingsUpdate, (_e, patch: AppSettingsPatch) =>
-    getSettings().update(patch),
-  )
+  ipcMain.handle(IpcChannels.settingsUpdate, (_e, patch: AppSettingsPatch) => {
+    const next = getSettings().update(patch)
+    // Hotkey changes take effect immediately: re-register (old bindings are
+    // unregistered first; a failed registration falls back to the default).
+    if (patch && typeof patch === 'object' && 'hotkeys' in patch) {
+      const overlay = getOverlayController()
+      if (overlay) registerHotkeys(overlay)
+    }
+    return next
+  })
 
   ipcMain.handle(IpcChannels.civMetaGet, (_e, query: CivMetaQuery) => getCivMeta(query))
   ipcMain.handle(IpcChannels.civDetailGet, (_e, civ: string) => getCivDetailStats(civ))
@@ -124,14 +132,21 @@ export function registerIpcHandlers(): void {
 
   ipcMain.handle(IpcChannels.overlayApplySettings, () => {
     const overlay = getOverlayController()
-    overlay?.setOpacity(getSettings().getAll().overlay.opacity)
-    overlay?.applyPosition() // snap to the chosen top-of-screen preset
+    overlay?.applyPosition() // snap to the current display's full bounds
     overlay?.refreshGating() // apply the "only show while AoE4 focused" toggle live
-    overlay?.sendSettings() // push widget toggles etc. to the overlay renderer
+    // Push widget toggles + opacity to the overlay renderer (opacity is applied
+    // there as panel-background alpha — never win.setOpacity, which dims text).
+    overlay?.sendSettings()
     getApmTracker()?.setEnabled(getSettings().getAll().overlay.apm) // start/stop the live-APM hook
   })
   ipcMain.handle(IpcChannels.overlayToggle, () => {
     getOverlayController()?.toggle()
+  })
+  ipcMain.handle(IpcChannels.overlayInteractive, (_e, hover: unknown) => {
+    getOverlayController()?.setInteractiveHover(hover === true)
+  })
+  ipcMain.handle(IpcChannels.overlayDismissPostGame, () => {
+    getOverlayController()?.dismissPostGame()
   })
 
   // Custom window chrome — act on whichever window made the call (the frameless

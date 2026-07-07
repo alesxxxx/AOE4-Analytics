@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Check, ChevronsUpDown, Plus, Search, X } from 'lucide-react'
 import { countryFlag } from '@shared/format'
 import { cn } from '@shared/lib/utils'
@@ -24,6 +24,24 @@ export function AccountSwitcher() {
   const remove = useRemoveAccount()
   const [open, setOpen] = useState(false)
   const [adding, setAdding] = useState(false)
+  const rootRef = useRef<HTMLDivElement>(null)
+
+  // Close the dropdown on outside click or Escape.
+  useEffect(() => {
+    if (!open) return
+    const onPointerDown = (e: PointerEvent) => {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) setOpen(false)
+    }
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('pointerdown', onPointerDown)
+    document.addEventListener('keydown', onKeyDown)
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown)
+      document.removeEventListener('keydown', onKeyDown)
+    }
+  }, [open])
 
   if (!settings) return null
   const accounts = settings.accounts
@@ -32,7 +50,7 @@ export function AccountSwitcher() {
     settings.playerName ?? accounts.find((a) => a.profileId === active)?.name ?? null
 
   return (
-    <div className="relative">
+    <div ref={rootRef} className="relative">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
@@ -78,7 +96,11 @@ export function AccountSwitcher() {
                 <button
                   type="button"
                   title="Remove account"
-                  onClick={() => remove.mutate(a.profileId)}
+                  onClick={() => {
+                    if (!window.confirm(`Remove ${a.name} from RTSLytics? This cannot be undone.`))
+                      return
+                    remove.mutate(a.profileId)
+                  }}
                   className="shrink-0 text-muted-foreground opacity-0 transition-opacity hover:text-destructive group-hover:opacity-100"
                 >
                   <X className="h-3.5 w-3.5" />

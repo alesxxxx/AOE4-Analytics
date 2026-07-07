@@ -1,5 +1,5 @@
-// DORMANT (D55): unimported since the overlay redesign — kept as the pattern
-// base for the planned overlay micro-coach; do not delete without reading D55.
+// Re-activated (2026-07-07): mounted by OverlayApp as a placeable widget, driven
+// by the live game clock + the build order pinned from Guides ("Show in overlay").
 import { useState } from 'react'
 import type { BuildOrder } from '@domain/buildOrderSchema'
 import { parseNote } from '@domain/buildOrderSchema'

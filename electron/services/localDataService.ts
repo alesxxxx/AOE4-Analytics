@@ -39,7 +39,21 @@ interface GameSummaryMemoEntry {
   summary: MatchSummary | null
 }
 
+const SUMMARY_MEMO_CAP = 24
+
+/** Insertion-order LRU — parsed summaries are large, don't retain them forever. */
 const gameSummaryMemo = new Map<string, GameSummaryMemoEntry>()
+
+function memoizeGameSummary(path: string, entry: GameSummaryMemoEntry): GameSummaryMemoEntry {
+  gameSummaryMemo.delete(path) // re-insert so iteration order tracks recency
+  gameSummaryMemo.set(path, entry)
+  while (gameSummaryMemo.size > SUMMARY_MEMO_CAP) {
+    const oldest = gameSummaryMemo.keys().next()
+    if (oldest.done) break
+    gameSummaryMemo.delete(oldest.value)
+  }
+  return entry
+}
 
 function gameDir(): string {
   const def = join(app.getPath('documents'), 'My Games', AOE4_DIRNAME)
@@ -60,22 +74,44 @@ function warningLogPath(): string {
   return join(gameDir(), 'warnings.log')
 }
 
-/** Reads only the tail of a potentially multi-MB log to keep ticks cheap. */
+interface LogTailCacheEntry {
+  size: number
+  mtimeMs: number
+  text: string
+}
+
+/**
+ * Last tail read per `path\0maxBytes` — the poll loop re-reads warnings.log
+ * several times a tick, but the file only changes when the game writes to it.
+ */
+const logTailCache = new Map<string, LogTailCacheEntry>()
+
+/**
+ * Reads only the tail of a potentially multi-MB log to keep ticks cheap. The
+ * read is skipped entirely (cached text returned) while the file's size+mtime
+ * are unchanged since the last read.
+ */
 function readLogTail(path: string, maxBytes = 1_000_000): string | null {
+  const key = `${path}\u0000${maxBytes}`
   try {
     if (!existsSync(path)) return null
-    const size = statSync(path).size
-    const start = Math.max(0, size - maxBytes)
-    const length = size - start
+    const stat = statSync(path)
+    const cached = logTailCache.get(key)
+    if (cached && cached.size === stat.size && cached.mtimeMs === stat.mtimeMs) return cached.text
+    const start = Math.max(0, stat.size - maxBytes)
+    const length = stat.size - start
     const fd = openSync(path, 'r')
     try {
       const buf = Buffer.alloc(length)
       readSync(fd, buf, 0, length, start)
-      return buf.toString('utf8')
+      const text = buf.toString('utf8')
+      logTailCache.set(key, { size: stat.size, mtimeMs: stat.mtimeMs, text })
+      return text
     } finally {
       closeSync(fd)
     }
   } catch {
+    logTailCache.delete(key)
     return null
   }
 }
@@ -110,9 +146,10 @@ export function readGameSummary(matchId: string): MatchSummary | null {
     const stat = statSync(path)
     if (!stat.isFile()) return null
     const memo = gameSummaryMemo.get(path)
-    if (memo && memo.mtimeMs === stat.mtimeMs && memo.size === stat.size) return memo.summary
+    if (memo && memo.mtimeMs === stat.mtimeMs && memo.size === stat.size)
+      return memoizeGameSummary(path, memo).summary
     const summary = parseStatsSummary(new Uint8Array(readFileSync(path)))
-    gameSummaryMemo.set(path, { mtimeMs: stat.mtimeMs, size: stat.size, summary })
+    memoizeGameSummary(path, { mtimeMs: stat.mtimeMs, size: stat.size, summary })
     return summary
   } catch {
     gameSummaryMemo.delete(path)
@@ -369,12 +406,18 @@ export function getSessionState(processRunning: boolean): SessionState {
 
 /**
  * The accurate game clock (sim start + pauses) from the live warnings.log — the
- * basis for the overlay's build/age timing. Reads a generous tail so the
- * `Starting mission` anchor survives a long game. Null without consent/data.
+ * basis for the overlay's build/age timing. Tiered read: the `Starting mission`
+ * anchor is normally within the last ~600KB (the SAME cached tail
+ * `getSessionState` reads every poll tick, so this is usually a free cache hit);
+ * only a very chatty long game falls back to the deep 6MB tail. Null without
+ * consent/data or when no mission start is in view.
  */
 export function getGameClock(): GameClock | null {
   if (!getSettings().getAll().localData.consentGranted) return null
-  const log = readLogTail(warningLogPath(), 6_000_000)
-  if (!log) return null
-  return parseGameClock(log)
+  const small = readLogTail(warningLogPath(), 600_000)
+  if (!small) return null
+  const clock = parseGameClock(small)
+  if (clock) return clock
+  const big = readLogTail(warningLogPath(), 6_000_000)
+  return big ? parseGameClock(big) : null
 }

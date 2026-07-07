@@ -269,14 +269,27 @@ async function loadSummaryForSync(
   }
 }
 
+/** In-flight sync, shared so poll- and user-triggered syncs can't interleave. */
+let syncInFlight: Promise<IpcResult<AnalyzeResult>> | null = null
+
 /**
  * The one coordinator for a full sync: ranked/QM games via AoE4World + Relic,
  * then local (custom / vs-AI) games. Local folding runs even when the ranked
  * FETCH fails (offline / API down) — it still needs a profile set, since the
  * local pipeline keys its store and stats enrichment off the active profile.
  * analyzeLocalGames is module-private so nothing can double-fold after this.
+ * Concurrent calls (poll tick + Sync button) share one in-flight run — two
+ * interleaved syncs would double-download summary blobs and race goal chaining.
  */
-export async function analyzeRecentGames(count = 15): Promise<IpcResult<AnalyzeResult>> {
+export function analyzeRecentGames(count = 15): Promise<IpcResult<AnalyzeResult>> {
+  if (syncInFlight) return syncInFlight
+  syncInFlight = runSync(count).finally(() => {
+    syncInFlight = null
+  })
+  return syncInFlight
+}
+
+async function runSync(count: number): Promise<IpcResult<AnalyzeResult>> {
   const ranked = await analyzeRankedGames(count)
   let localAnalyzed = 0
   try {
@@ -623,7 +636,8 @@ async function analyzeLocalGames(): Promise<number> {
       }
     }
     return added
-  } catch {
+  } catch (e) {
+    console.warn('[analysis] local fold failed', e)
     return 0
   }
 }

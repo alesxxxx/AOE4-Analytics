@@ -19,11 +19,26 @@ function cacheDir(): string {
 interface CachedSummaryEntry {
   mtimeMs: number
   size: number
-  bytes: Uint8Array
+  /** Dropped once `parsed` exists — retaining every inflated blob leaks MBs. */
+  bytes?: Uint8Array
   parsed?: MatchSummary | null
 }
 
+const MEMO_CAP = 24
+
+/** Insertion-order LRU over the disk cache (the disk keeps every blob forever). */
 const cachedSummaries = new Map<string, CachedSummaryEntry>()
+
+function memoize(file: string, entry: CachedSummaryEntry): CachedSummaryEntry {
+  cachedSummaries.delete(file) // re-insert so iteration order tracks recency
+  cachedSummaries.set(file, entry)
+  while (cachedSummaries.size > MEMO_CAP) {
+    const oldest = cachedSummaries.keys().next()
+    if (oldest.done) break
+    cachedSummaries.delete(oldest.value)
+  }
+  return entry
+}
 
 /** Game ids are Relic match ids. Anything else is refused (no path tricks). */
 function safeGameId(gameId: string): string | null {
@@ -49,14 +64,13 @@ function readCachedEntry(gameId: string): CachedSummaryEntry | null {
     const stat = statSync(file)
     if (!stat.isFile()) return null
     const memo = cachedSummaries.get(file)
-    if (memo && memo.mtimeMs === stat.mtimeMs && memo.size === stat.size) return memo
-    const entry = {
+    if (memo && memo.mtimeMs === stat.mtimeMs && memo.size === stat.size)
+      return memoize(file, memo)
+    return memoize(file, {
       mtimeMs: stat.mtimeMs,
       size: stat.size,
       bytes: new Uint8Array(gunzipSync(readFileSync(file))),
-    }
-    cachedSummaries.set(file, entry)
-    return entry
+    })
   } catch {
     cachedSummaries.delete(file)
     return null
@@ -65,14 +79,28 @@ function readCachedEntry(gameId: string): CachedSummaryEntry | null {
 
 /** The cached summary blob (inflated), or null when absent/unreadable. */
 export function readCachedSummary(gameId: string): Uint8Array | null {
-  return readCachedEntry(gameId)?.bytes ?? null
+  const entry = readCachedEntry(gameId)
+  if (!entry) return null
+  if (entry.bytes) return entry.bytes
+  // Bytes are dropped once parsed — re-inflate for this (rare) raw read without
+  // pinning them back into the memo.
+  const file = fileFor(gameId)
+  if (!file) return null
+  try {
+    return new Uint8Array(gunzipSync(readFileSync(file)))
+  } catch {
+    return null
+  }
 }
 
 /** The cached summary parsed once per process, or null when absent/unreadable. */
 export function readCachedParsedSummary(gameId: string): MatchSummary | null {
   const entry = readCachedEntry(gameId)
   if (!entry) return null
-  if (!('parsed' in entry)) entry.parsed = parseStatsSummary(entry.bytes)
+  if (!('parsed' in entry)) {
+    entry.parsed = entry.bytes ? parseStatsSummary(entry.bytes) : null
+    delete entry.bytes
+  }
   return entry.parsed ?? null
 }
 
@@ -123,7 +151,7 @@ export function writeCachedSummary(gameId: string, bytes: Uint8Array): void {
     mkdirSync(cacheDir(), { recursive: true })
     writeFileSync(file, gzipSync(Buffer.from(bytes)))
     const stat = statSync(file)
-    cachedSummaries.set(file, { mtimeMs: stat.mtimeMs, size: stat.size, bytes })
+    memoize(file, { mtimeMs: stat.mtimeMs, size: stat.size, bytes })
     clearSummaryUnavailable(gameId)
   } catch {
     /* cache is an optimization, never an error */

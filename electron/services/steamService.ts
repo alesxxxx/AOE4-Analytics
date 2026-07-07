@@ -74,6 +74,10 @@ export function getSteamAvatar(steamId: string): Promise<string | null> {
   if (!p) {
     p = fetchAvatar(steamId).catch(() => readCachedAvatar(steamId))
     avatarMemo.set(steamId, p)
+    // Don't memoize a failure for the whole session — let the next call retry.
+    void p.then((url) => {
+      if (url == null) avatarMemo.delete(steamId)
+    })
   }
   return p
 }

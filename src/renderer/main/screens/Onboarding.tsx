@@ -65,21 +65,31 @@ function SteamConnect({ onResolved }: { onResolved: (hit: PlayerSearchHit) => vo
   const detect = async () => {
     setLoading(true)
     setError(null)
-    const accs = await ipc.detectSteamAccounts()
-    setLoading(false)
-    setAccounts(accs)
-    if (accs.length === 0) {
-      setError('No Steam accounts found on this PC. If you play on Xbox, search by name above.')
+    try {
+      const accs = await ipc.detectSteamAccounts()
+      setAccounts(accs)
+      if (accs.length === 0) {
+        setError('No Steam accounts found on this PC. If you play on Xbox, search by name above.')
+      }
+    } catch {
+      setError('Could not detect Steam accounts. Try again, or search by name above.')
+    } finally {
+      setLoading(false)
     }
   }
 
   const pick = async (acc: SteamAccount) => {
     setResolvingId(acc.steamId)
     setError(null)
-    const res = await ipc.searchPlayers(acc.steamId)
-    setResolvingId(null)
-    if (res.ok && res.data.length > 0) onResolved(res.data[0]!)
-    else setError(`No AoE4World profile for ${acc.personaName ?? acc.accountName ?? acc.steamId}.`)
+    try {
+      const res = await ipc.searchPlayers(acc.steamId)
+      if (res.ok && res.data.length > 0) onResolved(res.data[0]!)
+      else setError(`No AoE4World profile for ${acc.personaName ?? acc.accountName ?? acc.steamId}.`)
+    } catch {
+      setError('Profile lookup failed. Try again, or search by name above.')
+    } finally {
+      setResolvingId(null)
+    }
   }
 
   if (!accounts) {

@@ -1,5 +1,5 @@
-// DORMANT (D55): unimported since the overlay redesign — kept as the pattern
-// base for the planned overlay micro-coach; do not delete without reading D55.
+// Re-activated (2026-07-07): mounted by OverlayApp as a placeable widget, driven
+// by the live game clock + the pace brackets for the player's rank.
 import type { Benchmarks, Bracket } from '@domain/benchmarks'
 import { cn } from '@shared/lib/utils'
 

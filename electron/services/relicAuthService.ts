@@ -108,6 +108,17 @@ export function getSteamAuthStatus(): SteamAuthStatus {
 /** Log into steam-user with a refresh token; resolves once fully logged on. */
 function loginWithToken(refreshToken: string): Promise<void> {
   return new Promise((resolve, reject) => {
+    // Discard any previous client first — a lingering connected session would
+    // keep emitting events (and hold a Steam connection) behind the new one.
+    if (steamClient) {
+      try {
+        steamClient.logOff()
+      } catch {
+        /* ignore */
+      }
+      steamClient = null
+      loggedOn = false
+    }
     const client = new SteamUser({ dataDirectory: null, autoRelogin: false })
     let settled = false
     client.logOn({ refreshToken })
@@ -118,6 +129,7 @@ function loginWithToken(refreshToken: string): Promise<void> {
     client.on('error', (e: Error & { eresult?: number }) => {
       loggedOn = false
       steamClient = null
+      lastError = e.message // post-settle disconnects surface in the UI status
       if (!settled) {
         settled = true
         reject(new Error(`Steam login failed: ${e.message} (eresult ${e.eresult ?? '?'})`))
@@ -369,6 +381,7 @@ async function requestTempCredentials(
   sessionID: string,
   rawBlobUrl: string,
   blobPath: string,
+  onResponse?: (status: number, bodyLength: number) => void,
 ): Promise<string | null> {
   const qs = new URLSearchParams({
     title: TITLE,
@@ -379,6 +392,7 @@ async function requestTempCredentials(
   })
   const res = await fetch(`${RELIC}/game/cloud/getTempCredentials?${qs}`)
   const text = await res.text()
+  onResponse?.(res.status, text.length)
   try {
     const data = JSON.parse(text)
     if (!Array.isArray(data) || data[0] !== 0) return null
@@ -553,45 +567,14 @@ export async function diagnoseRankedFetch(profileId: number): Promise<string> {
     add(`summary url: ${rawUrl.slice(0, 90)}… (${summary.size} bytes)`)
     add(`blob key: ${key.slice(0, 60)}…`)
 
-    const qs = new URLSearchParams({
-      title: TITLE,
-      callNum: String(1 + Math.floor(Math.random() * 300)),
-      connect_id: session,
-      key,
-      sessionID: session,
-    })
-    const credRes = await fetch(`${RELIC}/game/cloud/getTempCredentials?${qs}`)
-    const credText = await credRes.text()
-    // Don't echo the body — it contains live Azure SAS credentials.
-    add(`getTempCredentials: HTTP ${credRes.status}, ${credText.length}B`)
-
     try {
-      const credData = JSON.parse(credText)
-      if (!Array.isArray(credData) || credData[0] !== 0) {
-        add(`→ non-zero result code: ${credData[0]}`)
-        return out.join('\n') + '\n→ getTempCredentials returned an error.'
-      }
-      const base = rawUrl.split('?')[0]!
-      let signedUrl: string | null = null
-
-      // Scan for the SAS string (index varies; typically [0, expiry, "sig=…"])
-      for (let i = 1; i < credData.length; i++) {
-        const el = credData[i]
-        if (typeof el === 'string') {
-          if (el.startsWith('http')) { signedUrl = el; break }
-          if (el.includes('sig=') || el.includes('sv=')) { signedUrl = `${base}?${el}`; break }
-        }
-        if (typeof el === 'object' && el != null && !Array.isArray(el)) {
-          const parts = new URLSearchParams()
-          for (const [k, v] of Object.entries(el as Record<string, unknown>)) {
-            if (v != null) parts.set(k, String(v))
-          }
-          signedUrl = `${base}?${parts}`
-          break
-        }
-      }
+      // Same SAS request/parse as fetchRankedSummary; only the logging differs.
+      // Don't echo the body — it contains live Azure SAS credentials.
+      const signedUrl = await requestTempCredentials(session, rawUrl, key, (status, length) =>
+        add(`getTempCredentials: HTTP ${status}, ${length}B`),
+      )
       if (!signedUrl) {
-        return out.join('\n') + '\n→ no SAS string found in getTempCredentials response.'
+        return out.join('\n') + '\n→ no SAS credentials in getTempCredentials response.'
       }
 
       add(`signed URL: ${signedUrl.split('?')[0]} (query withheld — contains SAS signature)`)

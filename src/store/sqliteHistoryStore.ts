@@ -2,6 +2,7 @@ import Database from 'better-sqlite3'
 import type { HistoryStore, StoredMatch } from './historyStore'
 
 type DB = InstanceType<typeof Database>
+type Stmt = Database.Statement<unknown[]>
 
 interface Row {
   data: string
@@ -15,6 +16,13 @@ interface Row {
  */
 export class SqliteHistoryStore implements HistoryStore {
   private readonly db: DB
+  // Prepared once — every method here runs on each poll tick / sync loop.
+  private readonly saveStmt: Stmt
+  private readonly getStmt: Stmt
+  private readonly hasStmt: Stmt
+  private readonly deleteStmt: Stmt
+  private readonly listStmt: Stmt
+  private readonly listAllStmt: Stmt
 
   constructor(filePath: string) {
     this.db = new Database(filePath)
@@ -27,33 +35,35 @@ export class SqliteHistoryStore implements HistoryStore {
       );
       CREATE INDEX IF NOT EXISTS idx_matches_played_at ON matches(played_at DESC);`,
     )
+    this.saveStmt = this.db.prepare(
+      'INSERT OR REPLACE INTO matches (id, played_at, data) VALUES (?, ?, ?)',
+    )
+    this.getStmt = this.db.prepare('SELECT data FROM matches WHERE id = ?')
+    this.hasStmt = this.db.prepare('SELECT 1 FROM matches WHERE id = ?')
+    this.deleteStmt = this.db.prepare('DELETE FROM matches WHERE id = ?')
+    this.listStmt = this.db.prepare('SELECT data FROM matches ORDER BY played_at DESC LIMIT ?')
+    this.listAllStmt = this.db.prepare('SELECT data FROM matches ORDER BY played_at DESC')
   }
 
   saveMatch(match: StoredMatch): void {
-    this.db
-      .prepare('INSERT OR REPLACE INTO matches (id, played_at, data) VALUES (?, ?, ?)')
-      .run(match.id, match.playedAt, JSON.stringify(match))
+    this.saveStmt.run(match.id, match.playedAt, JSON.stringify(match))
   }
 
   getMatch(id: string): StoredMatch | null {
-    const row = this.db.prepare('SELECT data FROM matches WHERE id = ?').get(id) as Row | undefined
+    const row = this.getStmt.get(id) as Row | undefined
     return row ? (JSON.parse(row.data) as StoredMatch) : null
   }
 
   hasMatch(id: string): boolean {
-    return this.db.prepare('SELECT 1 FROM matches WHERE id = ?').get(id) !== undefined
+    return this.hasStmt.get(id) !== undefined
   }
 
   deleteMatch(id: string): void {
-    this.db.prepare('DELETE FROM matches WHERE id = ?').run(id)
+    this.deleteStmt.run(id)
   }
 
   listMatches(limit?: number): StoredMatch[] {
-    const sql =
-      'SELECT data FROM matches ORDER BY played_at DESC' + (limit != null ? ' LIMIT ?' : '')
-    const rows = (
-      limit != null ? this.db.prepare(sql).all(limit) : this.db.prepare(sql).all()
-    ) as Row[]
+    const rows = (limit != null ? this.listStmt.all(limit) : this.listAllStmt.all()) as Row[]
     return rows.map((r) => JSON.parse(r.data) as StoredMatch)
   }
 

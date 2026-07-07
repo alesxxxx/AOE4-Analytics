@@ -64,6 +64,8 @@ const api: RtslyticsApi = {
 
   applyOverlaySettings: () => ipcRenderer.invoke(IpcChannels.overlayApplySettings),
   toggleOverlay: () => ipcRenderer.invoke(IpcChannels.overlayToggle),
+  setOverlayInteractive: (hover) => ipcRenderer.invoke(IpcChannels.overlayInteractive, hover),
+  dismissOverlayPostGame: () => ipcRenderer.invoke(IpcChannels.overlayDismissPostGame),
 
   minimizeWindow: () => ipcRenderer.invoke(IpcChannels.windowMinimize),
   toggleMaximizeWindow: () => ipcRenderer.invoke(IpcChannels.windowMaximizeToggle),

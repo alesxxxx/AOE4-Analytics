@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import {
   ArrowLeft,
@@ -181,18 +182,20 @@ function CivMetaSection({ slug }: { slug: string }) {
   const stats = data?.ok ? data.data : null
 
   // Your personal win rate with this civ, from synced history.
-  const matches = history?.ok ? history.data : []
-  const games: StatGame[] = matches.map((m) => ({
-    result: m.result,
-    civ: m.civ,
-    oppCiv: m.oppCiv,
-    map: m.map,
-    durationSec: m.durationSec,
-    ratingDiff: m.ratingDiff,
-    format: m.format,
-    playedAt: m.playedAt,
-  }))
-  const mine = computePlayerStats(games).byCiv.find((b) => b.key === slug) ?? null
+  const mine = useMemo(() => {
+    const matches = history?.ok ? history.data : []
+    const games: StatGame[] = matches.map((m) => ({
+      result: m.result,
+      civ: m.civ,
+      oppCiv: m.oppCiv,
+      map: m.map,
+      durationSec: m.durationSec,
+      ratingDiff: m.ratingDiff,
+      format: m.format,
+      playedAt: m.playedAt,
+    }))
+    return computePlayerStats(games).byCiv.find((b) => b.key === slug) ?? null
+  }, [history, slug])
 
   if (isLoading) {
     return (

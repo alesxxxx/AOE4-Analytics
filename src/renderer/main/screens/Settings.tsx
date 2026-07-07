@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { User, Monitor, Gauge, Keyboard, Gamepad2, Loader2, Check, Palette, Pipette } from 'lucide-react'
 import type { Leaderboard } from '@api/types'
 import {
+  DEFAULT_HOTKEYS,
   DEFAULT_OVERLAY_WIDGET_POSITIONS,
   type AppSettings,
   type OverlayWidgetAnchor,
@@ -9,6 +10,7 @@ import {
 import { matchSteamAccount, type SteamAccount } from '@domain/steamAccounts'
 import { ipc } from '@shared/ipc'
 import { cn } from '@shared/lib/utils'
+import { useDebounce } from '@shared/hooks/useDebounce'
 import { ACCENT_PRESETS } from '@shared/accent'
 import { Card, CardContent } from '@shared/components/ui/card'
 import { useSettings, useUpdateSettings, useRemoveAccount } from '../queries/useProfile'
@@ -25,15 +27,38 @@ const POLL_OPTIONS = [
   { value: 15_000, label: '15s (recommended)' },
   { value: 30_000, label: '30s' },
 ]
-const HOTKEYS = [
-  ['Alt + O', 'Show / hide overlay'],
-  ['Ctrl + I', 'Move overlay widgets'],
-]
-
 export function Settings() {
   const { data: settings } = useSettings()
   const update = useUpdateSettings()
   const removeAccount = useRemoveAccount()
+
+  const toggleHotkey = settings?.hotkeys.toggleOverlay ?? DEFAULT_HOTKEYS.toggleOverlay
+  const placementHotkey = settings?.hotkeys.placementMode ?? DEFAULT_HOTKEYS.placementMode
+
+  // The sliders track a local value and commit it debounced — one settings
+  // write + overlay IPC after the drag settles instead of one per tick.
+  const [liveOpacity, setLiveOpacity] = useState<number | null>(null)
+  const debouncedOpacity = useDebounce(liveOpacity, 200)
+  const { mutate: commitSettings } = update
+  useEffect(() => {
+    if (debouncedOpacity == null) return
+    commitSettings(
+      { overlay: { opacity: debouncedOpacity } },
+      { onSuccess: () => void ipc.applyOverlaySettings() },
+    )
+  }, [debouncedOpacity, commitSettings])
+  const opacity = liveOpacity ?? settings?.overlay.opacity ?? 0.92
+
+  const [liveScale, setLiveScale] = useState<number | null>(null)
+  const debouncedScale = useDebounce(liveScale, 200)
+  useEffect(() => {
+    if (debouncedScale == null) return
+    commitSettings(
+      { overlay: { scale: debouncedScale } },
+      { onSuccess: () => void ipc.applyOverlaySettings() },
+    )
+  }, [debouncedScale, commitSettings])
+  const scale = liveScale ?? settings?.overlay.scale ?? 1
 
   return (
     <div className="animate-fade-in space-y-6">
@@ -90,9 +115,12 @@ export function Settings() {
             <button
               type="button"
               disabled={settings?.profileId == null}
-              onClick={() =>
-                settings?.profileId != null && removeAccount.mutate(settings.profileId)
-              }
+              onClick={() => {
+                if (settings?.profileId == null) return
+                if (!window.confirm('Remove this account from RTSLytics? This cannot be undone.'))
+                  return
+                removeAccount.mutate(settings.profileId)
+              }}
               className="rounded-md border border-border px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground disabled:opacity-50"
             >
               Remove account
@@ -118,7 +146,7 @@ export function Settings() {
             <div className="flex items-center justify-between text-sm">
               <span>Opacity</span>
               <span className="tabular-nums text-muted-foreground">
-                {Math.round((settings?.overlay.opacity ?? 0.92) * 100)}%
+                {Math.round(opacity * 100)}%
               </span>
             </div>
             <input
@@ -126,21 +154,32 @@ export function Settings() {
               min={0.35}
               max={1}
               step={0.01}
-              value={settings?.overlay.opacity ?? 0.92}
-              onChange={(e) => {
-                if (!settings) return
-                update.mutate(
-                  { overlay: { ...settings.overlay, opacity: Number(e.target.value) } },
-                  { onSuccess: () => void ipc.applyOverlaySettings() },
-                )
-              }}
+              value={opacity}
+              onChange={(e) => setLiveOpacity(Number(e.target.value))}
+              className="w-full accent-[hsl(var(--primary))]"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between text-sm">
+              <span>Widget size</span>
+              <span className="tabular-nums text-muted-foreground">{Math.round(scale * 100)}%</span>
+            </div>
+            <input
+              type="range"
+              min={0.75}
+              max={1.5}
+              step={0.05}
+              value={scale}
+              onChange={(e) => setLiveScale(Number(e.target.value))}
               className="w-full accent-[hsl(var(--primary))]"
             />
           </div>
 
           <p className="text-[11px] text-muted-foreground">
             The overlay shows the matchup across the top, a live APM counter, and a results card
-            after each game. Press Alt+O to show or hide it, and Ctrl+I to move widgets.
+            after each game. Press {toggleHotkey} to show or hide it, and {placementHotkey} to
+            move widgets.
           </p>
 
           <div className="flex flex-wrap gap-2">
@@ -149,7 +188,7 @@ export function Settings() {
               onClick={() => void ipc.toggleOverlay()}
               className="rounded-md border border-border px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
             >
-              Show / hide overlay (Alt+O)
+              Show / hide overlay ({toggleHotkey})
             </button>
             <button
               type="button"
@@ -273,6 +312,64 @@ export function Settings() {
                 <option value="hidden">Hidden</option>
               </select>
             </label>
+            <label className="flex cursor-pointer items-center justify-between gap-3 text-sm">
+              <span>
+                Age-up pace targets
+                <span className="block text-[11px] text-muted-foreground">
+                  A small chip with target Feudal/Castle/Imperial times for your rank next to the
+                  live match clock. Pace targets, never a live reading.
+                </span>
+              </span>
+              <input
+                type="checkbox"
+                checked={settings?.overlay.showAgeTargets ?? true}
+                onChange={(e) => {
+                  if (!settings) return
+                  update.mutate(
+                    { overlay: { ...settings.overlay, showAgeTargets: e.target.checked } },
+                    { onSuccess: () => void ipc.applyOverlaySettings() },
+                  )
+                }}
+                className="h-4 w-4 shrink-0 accent-[hsl(var(--primary))]"
+              />
+            </label>
+            <div className="flex items-center justify-between gap-3 text-sm">
+              <span>
+                Build order on overlay
+                <span className="block text-[11px] text-muted-foreground">
+                  {settings?.overlay.buildOrderId
+                    ? `Showing "${settings.overlay.buildOrderId}" step-by-step during matches.`
+                    : 'None selected — pick one in Guides → Build Orders → "Show in overlay".'}
+                </span>
+              </span>
+              {settings?.overlay.buildOrderId && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!settings) return
+                    update.mutate(
+                      { overlay: { ...settings.overlay, buildOrderId: null } },
+                      { onSuccess: () => void ipc.applyOverlaySettings() },
+                    )
+                  }}
+                  className="shrink-0 rounded-md border border-border px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                >
+                  Remove
+                </button>
+              )}
+            </div>
+            <HotkeyInput
+              label="Show / hide overlay hotkey"
+              value={toggleHotkey}
+              defaultValue={DEFAULT_HOTKEYS.toggleOverlay}
+              onCommit={(accelerator) => update.mutate({ hotkeys: { toggleOverlay: accelerator } })}
+            />
+            <HotkeyInput
+              label="Move overlay widgets hotkey"
+              value={placementHotkey}
+              defaultValue={DEFAULT_HOTKEYS.placementMode}
+              onCommit={(accelerator) => update.mutate({ hotkeys: { placementMode: accelerator } })}
+            />
           </div>
         </CardContent>
       </Card>
@@ -380,16 +477,70 @@ export function Settings() {
             Hotkeys
           </h2>
           <div className="divide-y divide-border text-sm">
-            {HOTKEYS.map(([key, desc]) => (
-              <div key={key} className="flex items-center justify-between py-1.5">
+            {[
+              [toggleHotkey, 'Show / hide overlay'],
+              [placementHotkey, 'Move overlay widgets'],
+            ].map(([key, desc]) => (
+              <div key={desc} className="flex items-center justify-between py-1.5">
                 <span className="text-muted-foreground">{desc}</span>
                 <kbd className="rounded bg-secondary px-2 py-0.5 font-mono text-xs">{key}</kbd>
               </div>
             ))}
           </div>
+          <p className="text-xs text-muted-foreground">
+            Change the bindings from the Overlay section above.
+          </p>
         </CardContent>
       </Card>
     </div>
+  )
+}
+
+/**
+ * A global hotkey binding row: a text input in Electron accelerator format
+ * (e.g. "Alt+O", "Ctrl+Shift+F1"), committed on blur/Enter. The main process
+ * validates it (at least one modifier required) and re-registers immediately;
+ * an invalid or rejected value simply snaps back to the current binding.
+ */
+function HotkeyInput({
+  label,
+  value,
+  defaultValue,
+  onCommit,
+}: {
+  label: string
+  value: string
+  defaultValue: string
+  onCommit: (accelerator: string) => void
+}) {
+  const [draft, setDraft] = useState(value)
+  useEffect(() => setDraft(value), [value])
+  const commit = () => {
+    const next = draft.trim()
+    if (next && next !== value) onCommit(next)
+    // Snap back to the committed binding; the settings refresh brings the new one.
+    setDraft(value)
+  }
+  return (
+    <label className="flex items-center justify-between gap-3 text-sm">
+      <span>
+        {label}
+        <span className="block text-[11px] text-muted-foreground">
+          Electron accelerator format with at least one modifier, e.g. {defaultValue}.
+        </span>
+      </span>
+      <input
+        type="text"
+        value={draft}
+        spellCheck={false}
+        onChange={(e) => setDraft(e.target.value)}
+        onBlur={commit}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') e.currentTarget.blur()
+        }}
+        className="h-8 w-36 shrink-0 rounded-md border border-border bg-background px-2 text-center font-mono text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      />
+    </label>
   )
 }
 
@@ -473,13 +624,20 @@ function SteamIdentityCard({
   const [accounts, setAccounts] = useState<SteamAccount[] | null>(null)
   const [profileSteamId, setProfileSteamId] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [detectError, setDetectError] = useState<string | null>(null)
 
   const detect = useCallback(async () => {
     setLoading(true)
-    const [accs, dash] = await Promise.all([ipc.detectSteamAccounts(), ipc.getDashboard()])
-    setAccounts(accs)
-    setProfileSteamId(dash.ok ? dash.data.steamId : null)
-    setLoading(false)
+    setDetectError(null)
+    try {
+      const [accs, dash] = await Promise.all([ipc.detectSteamAccounts(), ipc.getDashboard()])
+      setAccounts(accs)
+      setProfileSteamId(dash.ok ? dash.data.steamId : null)
+    } catch {
+      setDetectError('Could not detect Steam accounts. Click Re-detect to try again.')
+    } finally {
+      setLoading(false)
+    }
   }, [])
 
   useEffect(() => {
@@ -509,6 +667,8 @@ function SteamIdentityCard({
             <Loader2 className="h-4 w-4 animate-spin" /> Detecting Steam accounts…
           </div>
         )}
+
+        {!loading && detectError && <p className="text-sm text-destructive">{detectError}</p>}
 
         {!loading && accounts && accounts.length === 0 && (
           <p className="text-sm text-muted-foreground">

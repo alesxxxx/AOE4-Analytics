@@ -52,9 +52,21 @@ export function applySecurityPolicy(session: Session): void {
 /** Schemes we'll hand to the OS browser; everything else is dropped. */
 const ALLOWED_OPEN_PROTOCOLS = new Set(['https:', 'http:'])
 
-function sameOrigin(a: string, b: string): boolean {
+/**
+ * Whether a navigation target is the document we're already on. `file:` URLs all
+ * share the opaque origin "null", so an origin check can never block a `file:`
+ * navigation in packaged builds — compare the full normalized URL (pathname)
+ * instead. http(s) (the dev server) keeps the origin comparison so HMR-driven
+ * reloads of the same localhost origin stay allowed.
+ */
+function sameDocument(a: string, b: string): boolean {
   try {
-    return new URL(a).origin === new URL(b).origin
+    const ua = new URL(a)
+    const ub = new URL(b)
+    if (ua.protocol === 'file:' || ub.protocol === 'file:') {
+      return ua.protocol === ub.protocol && ua.pathname === ub.pathname
+    }
+    return ua.origin === ub.origin
   } catch {
     return false
   }
@@ -80,7 +92,7 @@ export function hardenWindow(win: BrowserWindow): void {
   })
 
   const guard = (e: Event, url: string): void => {
-    if (!sameOrigin(url, win.webContents.getURL())) e.preventDefault()
+    if (!sameDocument(url, win.webContents.getURL())) e.preventDefault()
   }
   win.webContents.on('will-navigate', guard)
   win.webContents.on('will-redirect', guard)

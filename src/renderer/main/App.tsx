@@ -1,18 +1,24 @@
-import { useEffect, useState, type ReactNode } from 'react'
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom'
+import { lazy, Suspense, useEffect, useState, type ReactNode } from 'react'
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom'
 import { Loader2 } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
 import { CommandBar } from './components/CommandBar'
 import { navItems } from './nav'
 import { useSettings } from './queries/useProfile'
 import { Onboarding } from './screens/Onboarding'
-import { CivDetail } from './screens/CivDetail'
-import { PlayerProfile } from './screens/PlayerProfile'
-import { GameDetail } from './screens/GameDetail'
 import { applyAccent } from '@shared/accent'
 import { ipc } from '@shared/ipc'
+import { ErrorBoundary } from '@shared/components/ErrorBoundary'
 import { CIV_FLAGS } from '@data/vendor/aoe4world-overlay/flags'
-import menuBackdrop from '@shared/assets/strategy-menu-backdrop.png'
+import menuBackdrop from '@shared/assets/strategy-menu-backdrop.jpg'
+
+const CivDetail = lazy(() => import('./screens/CivDetail').then((m) => ({ default: m.CivDetail })))
+const PlayerProfile = lazy(() =>
+  import('./screens/PlayerProfile').then((m) => ({ default: m.PlayerProfile })),
+)
+const GameDetail = lazy(() =>
+  import('./screens/GameDetail').then((m) => ({ default: m.GameDetail })),
+)
 
 /** Post-game auto-open: the main process pushes the finished game's id. */
 function useOpenGamePush() {
@@ -39,6 +45,7 @@ function useLiveCivTheme(): string | null {
 
 export function App() {
   const { data: settings, isLoading } = useSettings()
+  const location = useLocation()
   useOpenGamePush()
   const liveCiv = useLiveCivTheme()
 
@@ -63,15 +70,26 @@ export function App() {
     content = (
       <main className="chronicle-main relative z-10 flex-1 overflow-y-auto">
         <div className="mx-auto max-w-6xl px-10 py-7">
-          <Routes>
-            {navItems.map((item) => (
-              <Route key={item.path} path={item.path} element={item.element} />
-            ))}
-            <Route path="/civ/:slug" element={<CivDetail />} />
-            <Route path="/profile/:profileId" element={<PlayerProfile />} />
-            <Route path="/game/:matchId" element={<GameDetail />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+          {/* Keyed by path so navigating away resets a crashed screen. */}
+          <ErrorBoundary key={location.pathname}>
+            <Suspense
+              fallback={
+                <div className="flex items-center justify-center py-12 text-muted-foreground">
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                </div>
+              }
+            >
+              <Routes>
+                {navItems.map((item) => (
+                  <Route key={item.path} path={item.path} element={item.element} />
+                ))}
+                <Route path="/civ/:slug" element={<CivDetail />} />
+                <Route path="/profile/:profileId" element={<PlayerProfile />} />
+                <Route path="/game/:matchId" element={<GameDetail />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            </Suspense>
+          </ErrorBoundary>
         </div>
       </main>
     )

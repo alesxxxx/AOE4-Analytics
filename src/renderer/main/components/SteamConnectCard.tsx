@@ -59,15 +59,15 @@ export function SteamConnectCard() {
     setQrSrc(null)
     setManualMessage(null)
     setGuardActions([])
-    const res = await startLogin.mutateAsync()
-    if (!res.ok) {
-      setStartError(res.error.message)
-      return
-    }
     try {
+      const res = await startLogin.mutateAsync()
+      if (!res.ok) {
+        setStartError(res.error.message)
+        return
+      }
       setQrSrc(await QRCode.toDataURL(res.data.challengeUrl, { margin: 1, width: 200 }))
     } catch {
-      setStartError('Could not render the QR code.')
+      setStartError('Could not start the Steam QR login. Try again.')
     }
   }
 
@@ -77,28 +77,40 @@ export function SteamConnectCard() {
     setManualMessage(null)
     setQrSrc(null)
     setGuardActions([])
-    const res = await startCredentialsLogin.mutateAsync({ accountName, password })
-    setPassword('')
-    if (!res.ok) {
-      setStartError(res.error.message)
-      return
+    try {
+      const res = await startCredentialsLogin.mutateAsync({ accountName, password })
+      if (!res.ok) {
+        setStartError(res.error.message)
+        return
+      }
+      setGuardActions(res.data.actions)
+      setManualMessage(
+        res.data.message ?? manualLoginMessage(res.data.actions, res.data.actionRequired),
+      )
+    } catch {
+      setStartError('Steam sign-in failed. Try again.')
+    } finally {
+      setPassword('')
     }
-    setGuardActions(res.data.actions)
-    setManualMessage(res.data.message ?? manualLoginMessage(res.data.actions, res.data.actionRequired))
   }
 
   async function submitGuardCode(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setStartError(null)
     setManualMessage(null)
-    const res = await submitSteamGuard.mutateAsync(guardCode)
-    setGuardCode('')
-    if (!res.ok) {
-      setStartError(res.error.message)
-      return
+    try {
+      const res = await submitSteamGuard.mutateAsync(guardCode)
+      if (!res.ok) {
+        setStartError(res.error.message)
+        return
+      }
+      setGuardActions(res.data.actions)
+      setManualMessage(res.data.message ?? 'Waiting for Steam to finish sign-in.')
+    } catch {
+      setStartError('Could not submit the Steam Guard code. Try again.')
+    } finally {
+      setGuardCode('')
     }
-    setGuardActions(res.data.actions)
-    setManualMessage(res.data.message ?? 'Waiting for Steam to finish sign-in.')
   }
 
   return (
@@ -187,9 +199,14 @@ export function SteamConnectCard() {
                 onClick={async () => {
                   setTesting(true)
                   setDiag(null)
-                  const res = await ipc.steamTestRankedFetch()
-                  setDiag(res.ok ? res.data : `Error: ${res.error.message}`)
-                  setTesting(false)
+                  try {
+                    const res = await ipc.steamTestRankedFetch()
+                    setDiag(res.ok ? res.data : `Error: ${res.error.message}`)
+                  } catch (err) {
+                    setDiag(`Error: ${err instanceof Error ? err.message : String(err)}`)
+                  } finally {
+                    setTesting(false)
+                  }
                 }}
                 disabled={testing}
                 className="inline-flex items-center gap-2 rounded-md border border-border px-3 py-1.5 text-sm font-medium transition-colors hover:bg-secondary disabled:opacity-60"

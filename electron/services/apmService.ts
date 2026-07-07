@@ -53,27 +53,36 @@ export class ApmTracker {
   }
 
   private startHook(): void {
-    if (this.hookStarted) {
-      this.startTimer()
-      return
-    }
-    try {
-      // electron-vite externalizes the dep; require resolves the native binary at
-      // runtime. Lazy + guarded so a blocked/missing hook can't take down the app.
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
-      const mod = require('uiohook-napi') as { uIOhook: InputHook }
-      this.hook = mod.uIOhook
-      const bump = (): void => {
-        if (this.enabled && this.inMatch) this.actions.push(Date.now())
+    if (!this.hook) {
+      try {
+        // electron-vite externalizes the dep; require resolves the native binary at
+        // runtime. Lazy + guarded so a blocked/missing hook can't take down the app.
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const mod = require('uiohook-napi') as { uIOhook: InputHook }
+        const bump = (): void => {
+          if (this.enabled && this.inMatch) this.actions.push(Date.now())
+        }
+        // require() returns a cached singleton emitter — attach the listeners
+        // exactly once per process, or every enable/disable cycle stacks another
+        // pair and multiplies the counted APM. bump gates on enabled/inMatch.
+        mod.uIOhook.on('keydown', bump)
+        mod.uIOhook.on('mousedown', bump)
+        this.hook = mod.uIOhook
+      } catch (e) {
+        console.warn('[apm] live input hook unavailable — APM disabled:', e)
+        return
       }
-      this.hook.on('keydown', bump)
-      this.hook.on('mousedown', bump)
-      this.hook.start()
-      this.hookStarted = true
-      this.startTimer()
-    } catch (e) {
-      console.warn('[apm] live input hook unavailable — APM disabled:', e)
     }
+    if (!this.hookStarted) {
+      try {
+        this.hook.start()
+        this.hookStarted = true
+      } catch (e) {
+        console.warn('[apm] live input hook unavailable — APM disabled:', e)
+        return
+      }
+    }
+    this.startTimer()
   }
 
   private startTimer(): void {
@@ -99,7 +108,8 @@ export class ApmTracker {
       // ignore
     }
     this.hookStarted = false
-    this.hook = null
+    // Keep this.hook: the module is a singleton and its listeners stay attached
+    // (bump is a no-op while disabled) — re-attaching on re-enable would stack.
   }
 
   stop(): void {

@@ -5,24 +5,18 @@ import { hardenWindow } from '../security'
 
 /**
  * Creates the transparent, frameless, always-on-top overlay canvas. It spans the
- * current display's work area so individual overlay widgets can be positioned
- * independently. It is hidden by default and click-through when locked. Windows
- * caveat: exclusive-fullscreen games defeat any overlay, so users should run
- * Borderless/Windowed Fullscreen.
+ * primary display's FULL bounds (not the work area — borderless-fullscreen games
+ * cover the taskbar, so the canvas must too or widgets misalign by the taskbar
+ * height; safe because the window is click-through and non-focusable). The
+ * controller re-snaps it to whichever display the game is on. It is hidden by
+ * default and click-through when locked. Windows caveat: exclusive-fullscreen
+ * games defeat any overlay, so users should run Borderless/Windowed Fullscreen.
  */
-export interface OverlayBounds {
-  x: number
-  y: number
-  width: number
-  height: number
-}
-
-export function createOverlayWindow(bounds?: OverlayBounds): BrowserWindow {
-  const { workArea } = screen.getPrimaryDisplay()
+export function createOverlayWindow(): BrowserWindow {
+  const { bounds } = screen.getPrimaryDisplay()
   const win = new BrowserWindow({
-    width: bounds?.width ?? workArea.width,
-    height: bounds?.height ?? workArea.height,
-    ...(bounds ? { x: bounds.x, y: bounds.y } : {}),
+    width: bounds.width,
+    height: bounds.height,
     show: false,
     transparent: true,
     frame: false,
@@ -46,11 +40,12 @@ export function createOverlayWindow(bounds?: OverlayBounds): BrowserWindow {
   // Float above borderless-fullscreen games and on every virtual desktop.
   win.setAlwaysOnTop(true, 'screen-saver')
   win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true })
-  // Click-through by default; `forward: true` still delivers mousemove so the
-  // renderer can detect hover over interactive regions (Windows-specific).
-  win.setIgnoreMouseEvents(true, { forward: true })
+  // Click-through by default. No `forward: true`: nothing in the overlay
+  // renderer listens for mousemove while locked, and forwarding costs an IPC
+  // message per mouse move during gameplay.
+  win.setIgnoreMouseEvents(true)
 
-  if (!bounds) win.setPosition(workArea.x, workArea.y)
+  win.setPosition(bounds.x, bounds.y)
 
   if (isDev) {
     void win.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/overlay.html`)

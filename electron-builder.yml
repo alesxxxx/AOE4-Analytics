@@ -11,10 +11,11 @@ files:
   - out/**/*
   - package.json
 
-# better-sqlite3 is a native module — it must live outside the asar archive so
-# its .node binary can be loaded at runtime (D5/D25).
+# better-sqlite3 and uiohook-napi are native modules — they must live outside
+# the asar archive so their .node binaries can be loaded at runtime (D5/D25).
 asarUnpack:
   - '**/node_modules/better-sqlite3/**'
+  - '**/node_modules/uiohook-napi/**'
 
 win:
   icon: build/icon.ico

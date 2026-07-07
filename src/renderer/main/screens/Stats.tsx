@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useMemo, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import {
   BarChart3,
@@ -38,7 +38,10 @@ export function Stats() {
   const { data: dash } = useDashboard(settings?.profileId != null)
   const analyze = useAnalyzeRecent()
   const excludeAi = settings?.localData.excludeAiFromStats ?? false
-  const matches = (data?.ok ? data.data : []).filter((m) => !excludeAi || (!m.vsAI && !m.custom))
+  const matches = useMemo(
+    () => (data?.ok ? data.data : []).filter((m) => !excludeAi || (!m.vsAI && !m.custom)),
+    [data, excludeAi],
+  )
 
   return (
     <div className="animate-fade-in space-y-6">
@@ -107,45 +110,51 @@ function Content({
   profileId: number | null
   identity: { name: string; country: string | null; primary: RankInfo | null } | null
 }) {
-  const games: StatGame[] = matches.map((m) => ({
-    result: displayedResult(m, profileId),
-    civ: m.civ,
-    oppCiv: m.oppCiv,
-    map: m.map,
-    durationSec: m.durationSec,
-    ratingDiff: m.ratingDiff,
-    format: m.format,
-    playedAt: m.playedAt,
-  }))
-  const s = computePlayerStats(games, { civLabel: civDisplayName })
-
-  const playstyleGames: PlaystyleGame[] = matches.map((m) => {
-    const mine = m.perPlayer?.find((p) => p.profileId === profileId)
-    return {
+  const s = useMemo(() => {
+    const games: StatGame[] = matches.map((m) => ({
       result: displayedResult(m, profileId),
       civ: m.civ,
+      oppCiv: m.oppCiv,
+      map: m.map,
       durationSec: m.durationSec,
-      apm: mine?.apm ?? m.analysis.apm,
-      // A grade from a 0-villager parse-miss game is bogus — don't feed it to the radar.
-      grade: (m.local?.villagersProduced ?? 0) > 0 ? m.analysis.grade : null,
-      local: m.local,
-      kd: mine?.kd ?? null,
-      deaths: mine?.deaths ?? null,
-      unitsProduced: mine?.unitsProduced ?? null,
-      techsResearched: mine?.techsResearched ?? null,
-    }
-  })
-  const playstyle = computePlaystyle(playstyleGames)
+      ratingDiff: m.ratingDiff,
+      format: m.format,
+      playedAt: m.playedAt,
+    }))
+    return computePlayerStats(games, { civLabel: civDisplayName })
+  }, [matches, profileId])
 
-  const profileGames: ProfileGame[] = matches.map((m) => ({
-    civ: m.civ,
-    result: displayedResult(m, profileId),
-    ratingDiff: m.ratingDiff,
-    durationSec: m.durationSec,
-    local: m.local,
-    perPlayer: m.perPlayer,
-  }))
-  const overview = computeProfileOverview(profileGames, profileId)
+  const playstyle = useMemo(() => {
+    const playstyleGames: PlaystyleGame[] = matches.map((m) => {
+      const mine = m.perPlayer?.find((p) => p.profileId === profileId)
+      return {
+        result: displayedResult(m, profileId),
+        civ: m.civ,
+        durationSec: m.durationSec,
+        apm: mine?.apm ?? m.analysis.apm,
+        // A grade from a 0-villager parse-miss game is bogus — don't feed it to the radar.
+        grade: (m.local?.villagersProduced ?? 0) > 0 ? m.analysis.grade : null,
+        local: m.local,
+        kd: mine?.kd ?? null,
+        deaths: mine?.deaths ?? null,
+        unitsProduced: mine?.unitsProduced ?? null,
+        techsResearched: mine?.techsResearched ?? null,
+      }
+    })
+    return computePlaystyle(playstyleGames)
+  }, [matches, profileId])
+
+  const overview = useMemo(() => {
+    const profileGames: ProfileGame[] = matches.map((m) => ({
+      civ: m.civ,
+      result: displayedResult(m, profileId),
+      ratingDiff: m.ratingDiff,
+      durationSec: m.durationSec,
+      local: m.local,
+      perPlayer: m.perPlayer,
+    }))
+    return computeProfileOverview(profileGames, profileId)
+  }, [matches, profileId])
 
   const r = s.recent2w
   const recentWr = r.wins + r.losses > 0 ? Math.round((r.wins / (r.wins + r.losses)) * 100) : null

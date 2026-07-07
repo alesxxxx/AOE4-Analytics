@@ -1,4 +1,5 @@
-import { rankColor, rankTier } from '@shared/format'
+import { useId } from 'react'
+import { rankColor } from '@shared/format'
 
 /**
  * A small heraldic crest tinted by rank tier (bronze → conqueror). Gives the
@@ -13,7 +14,9 @@ export function RankCrest({
   size?: number
 }) {
   const color = rankColor(rankLevel)
-  const id = `rc-${rankTier(rankLevel)}`
+  // Per-instance gradient id — a shared tier-based id breaks when two crests
+  // of different tiers render on the same page.
+  const id = `rc-${useId().replace(/[^a-zA-Z0-9_-]/g, '')}`
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden>
       <defs>

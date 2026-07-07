@@ -12,6 +12,7 @@ RTSLytics is read-only. It uses public APIs and your own local AoE4 files.
 
 - Pre-game scouting: opponent rank, rating, recent form, favorite civs, and matchup notes.
 - In-game overlay: top matchup bar, civ flags, ranks, key units, counters, and optional live APM.
+- Live match clock widgets: a step-by-step build-order guide (pin any build from Guides) and age-up pace targets for your rank, driven by the real game clock (your own log file, pauses included).
 - Post-game review: result card, economy grade, APM, trends, and game history.
 - Guides and data: civ pages, tier lists, counters, build orders, landmarks, and matchup stats.
 - Local support: ranked, Quick Match, custom games, and vs-AI where local files provide the data.
@@ -73,10 +74,11 @@ npm run dist
 
 Run AoE4 in Borderless or Windowed Fullscreen. The overlay appears when RTSLytics detects a live match.
 
-Hotkey:
+Hotkeys (defaults — rebindable in Settings → Overlay):
 
 ```text
-Alt + O    show / hide overlay
+Alt + O           show / hide overlay
+Ctrl + Alt + O    move overlay widgets (placement mode)
 ```
 
 ## Local Data

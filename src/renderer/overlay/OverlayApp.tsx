@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useMemo,
   useState,
   type CSSProperties,
   type PointerEvent as ReactPointerEvent,
@@ -11,10 +12,15 @@ import type { ScoutReport } from '@domain/types'
 import type { LiveMatchup } from '@domain/liveMatch'
 import type { OverlayMatchState, PostGameSummary } from '@ipc/contract'
 import { matchupTroopsForTeam } from '@domain/civUnits'
+import { gameElapsedSec, todMsFromEpoch } from '@domain/localStats'
+import { bracketFromRankLevel, getBenchmarks } from '@domain/benchmarks'
+import { stepIndexForElapsed, type BuildOrder } from '@domain/buildOrderSchema'
 import { applyAccent } from '@shared/accent'
 import { CIV_FLAGS } from '@data/vendor/aoe4world-overlay/flags'
+import { BUNDLED_BUILD_ORDERS } from '@data/buildOrders'
 import {
   DEFAULT_OVERLAY_WIDGET_POSITIONS,
+  type OverlayWidgetAnchor,
   type OverlayWidgetKey,
   type OverlayWidgetPosition,
   type OverlayWidgetPositions,
@@ -22,6 +28,9 @@ import {
 import { MatchupBar, type MatchupSide } from './MatchupBar'
 import { PostGameCard } from './PostGameCard'
 import { ApmWidget } from './ApmWidget'
+import { BuildOrderWidget } from './BuildOrderWidget'
+import { AgeTargetsWidget } from './AgeTargetsWidget'
+import { panelBg } from './panelBg'
 
 const PLACEHOLDER_MATCHUP: LiveMatchup = {
   teams: [
@@ -86,9 +95,10 @@ const PLACEHOLDER_POST_GAME: PostGameSummary = {
 }
 
 /**
- * Transparent in-game overlay root. Ctrl+I toggles placement mode: the same
- * current widgets become draggable, and idle mode renders placeholders so the
- * player can arrange the overlay before queueing.
+ * Transparent in-game overlay root. The placement hotkey (Ctrl+Alt+O by
+ * default) toggles placement mode: the same current widgets become draggable,
+ * and idle mode renders placeholders so the player can arrange the overlay
+ * before queueing.
  */
 export function OverlayApp() {
   const [matchState, setMatchState] = useState<OverlayMatchState>('idle')
@@ -105,6 +115,19 @@ export function OverlayApp() {
   const [civTheme, setCivTheme] = useState(true)
   const [accentColor, setAccentColor] = useState<string | null>(null)
   const [placementMode, setPlacementMode] = useState(false)
+  // The user's overlay opacity, applied as PANEL BACKGROUND alpha only (via the
+  // --panel-alpha CSS variable) — the window stays at setOpacity(1) so text and
+  // icons never dim with it.
+  const [panelAlpha, setPanelAlpha] = useState(1)
+  // Per-widget scale, applied as a CSS transform around each widget's anchor
+  // corner so saved positions stay put across scale changes.
+  const [scale, setScale] = useState(1)
+  const [ageTargetsShown, setAgeTargetsShown] = useState(true)
+  // The pinned build order's unique name (Guides → "Show in overlay"); null = hidden.
+  const [buildOrderId, setBuildOrderId] = useState<string | null>(null)
+  // Live match time in seconds, derived from the pushed game-clock anchor
+  // (warnings.log sim start + pauses) + our wall clock; null when not in a match.
+  const [elapsedSec, setElapsedSec] = useState<number | null>(null)
   const [widgetPositions, setWidgetPositions] = useState<OverlayWidgetPositions>(
     DEFAULT_OVERLAY_WIDGET_POSITIONS,
   )
@@ -118,6 +141,10 @@ export function OverlayApp() {
         setWidgetPositions(clampPositions(s.overlay.widgetPositions))
         setPlacementMode(!s.overlay.locked)
         setAccentColor(s.accentColor ?? null)
+        setPanelAlpha(clampAlpha(s.overlay.opacity))
+        setScale(clampScale(s.overlay.scale))
+        setAgeTargetsShown(s.overlay.showAgeTargets !== false)
+        setBuildOrderId(s.overlay.buildOrderId ?? null)
         if (s.profileId == null) return
         return ipc.scoutPlayer(s.profileId).then((r) => {
           if (r.ok) setMyScout(r.data)
@@ -134,11 +161,21 @@ export function OverlayApp() {
 
     const offLock = ipc.onOverlayLock((locked) => setPlacementMode(!locked))
     const offApm = ipc.onOverlayApm((v) => setApm(v))
+    // The main process re-pushes the clock ANCHOR every second while a match is
+    // live; elapsed is derived here from the anchor + our wall clock (freezes
+    // through pauses because the anchor carries them).
+    const offClock = ipc.onOverlayGameClock((clock) =>
+      setElapsedSec(clock ? gameElapsedSec(clock, todMsFromEpoch(Date.now())) : null),
+    )
     const offSettings = ipc.onOverlaySettings((o) => {
       setTroopsShown(o.troopsPos !== 'hidden')
       setCivTheme(o.civTheme !== false)
       setWidgetPositions(clampPositions(o.widgetPositions))
       setAccentColor(o.accentColor ?? null)
+      setPanelAlpha(clampAlpha(o.opacity))
+      setScale(clampScale(o.scale))
+      setAgeTargetsShown(o.showAgeTargets !== false)
+      setBuildOrderId(o.buildOrderId ?? null)
     })
 
     const offUpdate = ipc.onOverlayUpdate((p) => {
@@ -164,6 +201,7 @@ export function OverlayApp() {
     return () => {
       offUpdate()
       offApm()
+      offClock()
       offSettings()
       offLock()
       window.removeEventListener('resize', onResize)
@@ -179,14 +217,35 @@ export function OverlayApp() {
     applyAccent(civHex ?? accentColor)
   }, [civTheme, inGame, myCiv, accentColor])
   const renderMatchup = matchup ?? (!inGame && placementMode ? PLACEHOLDER_MATCHUP : null)
-  const haveMatchup = inGame && ((matchup?.teams.length ?? 0) >= 2 || myCiv != null || oppCiv != null)
+  const haveMatchup =
+    inGame && ((matchup?.teams.length ?? 0) >= 2 || myCiv != null || oppCiv != null)
   const showMatchup = haveMatchup || placementMode
   const showPostGame = (matchState === 'ended' && postGame != null) || placementMode
   const showApm = apm != null || placementMode
 
+  // The pinned build order, resolved by its unique bundled name; null = hidden.
+  const selectedBuild = useMemo<BuildOrder | null>(
+    () =>
+      buildOrderId
+        ? ((BUNDLED_BUILD_ORDERS as unknown as BuildOrder[]).find((b) => b.name === buildOrderId) ??
+          null)
+        : null,
+    [buildOrderId],
+  )
+  const showBuildOrder = selectedBuild != null && (inGame || placementMode)
+  const showAgeTargets = ageTargetsShown && (inGame || placementMode)
+  // Placement mode outside a match previews with a fake clock (like the other placeholders).
+  const renderElapsed = elapsedSec ?? (placementMode && !inGame ? 312 : null)
+  const bracket = bracketFromRankLevel(myScout?.primary?.rankLevel)
+
   const troopMyCiv =
     renderMatchup?.teams[0]?.find((p) => p.isMe)?.civ ?? renderMatchup?.teams[0]?.[0]?.civ ?? myCiv
-  const enemyCivs = renderMatchup ? renderMatchup.teams.slice(1).flat().map((p) => p.civ) : [oppCiv]
+  const enemyCivs = renderMatchup
+    ? renderMatchup.teams
+        .slice(1)
+        .flat()
+        .map((p) => p.civ)
+    : [oppCiv]
   const troops =
     (inGame || placementMode) && troopsShown ? matchupTroopsForTeam(troopMyCiv, enemyCivs) : null
 
@@ -203,6 +262,14 @@ export function OverlayApp() {
         isAI: oppIsAI,
       }
 
+  // ✕ on the post-game card: clear it locally right away (no flicker waiting
+  // for the round-trip), then let the main process reset match state + hide.
+  const dismissPostGame = () => {
+    setPostGame(null)
+    setMatchState('idle')
+    void ipc.dismissOverlayPostGame().catch(() => {})
+  }
+
   const saveWidgetPosition = (key: OverlayWidgetKey, position: OverlayWidgetPosition) => {
     setWidgetPositions((prev) => {
       const next = { ...prev, [key]: position }
@@ -212,13 +279,17 @@ export function OverlayApp() {
   }
 
   return (
-    <div className="relative h-screen w-screen select-none text-white">
+    <div
+      className="relative h-screen w-screen select-none text-white"
+      style={{ '--panel-alpha': panelAlpha } as CSSProperties}
+    >
       {showMatchup && (
         <PlacedWidget
           widgetKey="matchup"
           position={widgetPositions.matchup}
           placementMode={placementMode}
           zIndex={50}
+          scale={scale}
           onPositionChange={saveWidgetPosition}
         >
           <MatchupBar
@@ -236,9 +307,14 @@ export function OverlayApp() {
           position={widgetPositions.postGame}
           placementMode={placementMode}
           zIndex={60}
+          scale={scale}
           onPositionChange={saveWidgetPosition}
         >
-          <PostGameCard summary={postGame ?? PLACEHOLDER_POST_GAME} />
+          {/* No ✕ in placement mode: the card is a drag handle there (and may be a placeholder). */}
+          <PostGameCard
+            summary={postGame ?? PLACEHOLDER_POST_GAME}
+            onDismiss={postGame && !placementMode ? dismissPostGame : undefined}
+          />
         </PlacedWidget>
       )}
 
@@ -248,9 +324,65 @@ export function OverlayApp() {
           position={widgetPositions.apm}
           placementMode={placementMode}
           zIndex={55}
+          scale={scale}
           onPositionChange={saveWidgetPosition}
         >
           <ApmWidget apm={apm ?? 72} />
+        </PlacedWidget>
+      )}
+
+      {showBuildOrder && selectedBuild && (
+        <PlacedWidget
+          widgetKey="buildOrder"
+          position={widgetPositions.buildOrder}
+          placementMode={placementMode}
+          zIndex={40}
+          scale={scale}
+          onPositionChange={saveWidgetPosition}
+        >
+          <div
+            className="pointer-events-none w-[340px] select-none rounded-lg py-1 shadow-xl ring-1 ring-white/10"
+            style={{
+              background: `linear-gradient(to bottom right, ${panelBg(0.95)}, ${panelBg(0.7)})`,
+              textShadow: '0 1px 3px rgba(0,0,0,0.95)',
+            }}
+          >
+            <BuildOrderWidget
+              bo={selectedBuild}
+              stepIndex={
+                renderElapsed != null
+                  ? stepIndexForElapsed(selectedBuild.build_order, renderElapsed)
+                  : 0
+              }
+              elapsedSec={renderElapsed}
+              auto={renderElapsed != null}
+            />
+          </div>
+        </PlacedWidget>
+      )}
+
+      {showAgeTargets && (
+        <PlacedWidget
+          widgetKey="ageTargets"
+          position={widgetPositions.ageTargets}
+          placementMode={placementMode}
+          zIndex={45}
+          scale={scale}
+          onPositionChange={saveWidgetPosition}
+        >
+          <div
+            className="pointer-events-none w-48 select-none rounded-lg text-white shadow-xl ring-1 ring-white/10"
+            style={{
+              background: `linear-gradient(to bottom right, ${panelBg(0.95)}, ${panelBg(0.7)})`,
+              textShadow: '0 1px 3px rgba(0,0,0,0.95)',
+            }}
+          >
+            <AgeTargetsWidget
+              benchmarks={getBenchmarks(bracket)}
+              bracket={bracket}
+              elapsedSec={renderElapsed}
+            />
+          </div>
         </PlacedWidget>
       )}
 
@@ -290,6 +422,7 @@ function PlacedWidget({
   position,
   placementMode,
   zIndex,
+  scale = 1,
   children,
   onPositionChange,
 }: {
@@ -297,13 +430,18 @@ function PlacedWidget({
   position: OverlayWidgetPosition
   placementMode: boolean
   zIndex: number
+  /** Widget scale, applied around the anchor corner so positions stay put. */
+  scale?: number
   children: ReactNode
   onPositionChange: (key: OverlayWidgetKey, position: OverlayWidgetPosition) => void
 }) {
   const [draft, setDraft] = useState<OverlayWidgetPosition | null>(null)
-  const [drag, setDrag] = useState<{ dx: number; dy: number; width: number; height: number } | null>(
-    null,
-  )
+  const [drag, setDrag] = useState<{
+    dx: number
+    dy: number
+    width: number
+    height: number
+  } | null>(null)
   const active = draft ?? position
 
   useEffect(() => {
@@ -339,7 +477,7 @@ function PlacedWidget({
   return (
     <div
       className={placementMode ? 'pointer-events-auto cursor-move' : 'pointer-events-none'}
-      style={{ ...positionStyle(active), zIndex }}
+      style={{ ...positionStyle(active, scale), zIndex }}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
@@ -350,38 +488,71 @@ function PlacedWidget({
           <Move className="h-3 w-3" />
         </span>
       )}
-      <div className={placementMode ? 'rounded-md ring-1 ring-primary/70' : undefined}>{children}</div>
+      <div className={placementMode ? 'rounded-md ring-1 ring-primary/70' : undefined}>
+        {children}
+      </div>
     </div>
   )
 }
 
-function positionStyle(position: OverlayWidgetPosition): CSSProperties {
+/** CSS transform-origin per anchor: scale grows AWAY from the anchored corner/edge. */
+const SCALE_ORIGIN: Record<OverlayWidgetAnchor, string> = {
+  'top-left': 'top left',
+  'top-center': 'top center',
+  'top-right': 'top right',
+  'bottom-left': 'bottom left',
+  'bottom-right': 'bottom right',
+  center: 'center',
+}
+
+function positionStyle(position: OverlayWidgetPosition, scale = 1): CSSProperties {
   const px = (n: number) => `${Math.round(n)}px`
-  const base: CSSProperties = { position: 'absolute' }
+  // Scale composes AFTER the centering translate (CSS applies right-to-left), so
+  // the anchor point stays fixed and the saved position is scale-independent.
+  const s = scale === 1 ? '' : ` scale(${scale})`
+  const base: CSSProperties = {
+    position: 'absolute',
+    transformOrigin: SCALE_ORIGIN[position.anchor],
+  }
   switch (position.anchor) {
     case 'top-center':
-      return { ...base, left: `calc(50% + ${px(position.x)})`, top: px(position.y), transform: 'translateX(-50%)' }
+      return {
+        ...base,
+        left: `calc(50% + ${px(position.x)})`,
+        top: px(position.y),
+        transform: `translateX(-50%)${s}`,
+      }
     case 'top-right':
-      return { ...base, right: px(position.x), top: px(position.y) }
+      return { ...base, right: px(position.x), top: px(position.y), transform: s || undefined }
     case 'bottom-left':
-      return { ...base, left: px(position.x), bottom: px(position.y) }
+      return { ...base, left: px(position.x), bottom: px(position.y), transform: s || undefined }
     case 'bottom-right':
-      return { ...base, right: px(position.x), bottom: px(position.y) }
+      return { ...base, right: px(position.x), bottom: px(position.y), transform: s || undefined }
     case 'center':
       return {
         ...base,
         left: `calc(50% + ${px(position.x)})`,
         top: `calc(50% + ${px(position.y)})`,
-        transform: 'translate(-50%, -50%)',
+        transform: `translate(-50%, -50%)${s}`,
       }
     case 'top-left':
     default:
-      return { ...base, left: px(position.x), top: px(position.y) }
+      return { ...base, left: px(position.x), top: px(position.y), transform: s || undefined }
   }
 }
 
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value))
+}
+
+/** Mirror the settings range for overlay opacity ([0.3, 1], 1 when unset). */
+function clampAlpha(value: number | undefined): number {
+  return clamp(typeof value === 'number' && Number.isFinite(value) ? value : 1, 0.3, 1)
+}
+
+/** Mirror the settings range for overlay scale ([0.75, 1.5], 1 when unset). */
+function clampScale(value: number | undefined): number {
+  return clamp(typeof value === 'number' && Number.isFinite(value) ? value : 1, 0.75, 1.5)
 }
 
 /** Keep at least this many pixels of a widget inside the canvas when clamping. */
@@ -418,5 +589,7 @@ function clampPositions(p: OverlayWidgetPositions): OverlayWidgetPositions {
     matchup: clampPosition(p.matchup),
     apm: clampPosition(p.apm),
     postGame: clampPosition(p.postGame),
+    buildOrder: clampPosition(p.buildOrder),
+    ageTargets: clampPosition(p.ageTargets),
   }
 }

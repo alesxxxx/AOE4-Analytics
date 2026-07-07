@@ -39,10 +39,6 @@ const COUNTRIES: { code: string | undefined; label: string }[] = [
   { code: 'jp', label: 'Japan' },
 ]
 
-export function Leaderboards() {
-  return <LeaderboardPanel />
-}
-
 export function LeaderboardPanel({ embedded = false }: { embedded?: boolean } = {}) {
   const [leaderboard, setLeaderboard] = useState<Leaderboard>('rm_solo')
   const [country, setCountry] = useState<string | undefined>(undefined)

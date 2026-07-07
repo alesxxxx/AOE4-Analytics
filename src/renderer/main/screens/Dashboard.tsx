@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import type { DashboardData } from '@ipc/contract'
 import {
   countryFlag,
@@ -30,8 +31,10 @@ export function Dashboard() {
   const { data, isLoading, refetch } = useDashboard(!!hasProfile)
   const { data: history } = useHistory()
   const excludeAi = settings?.localData.excludeAiFromStats ?? false
-  const matches = (history?.ok ? history.data : []).filter(
-    (m) => !excludeAi || (!m.vsAI && !m.custom),
+  // Stable reference so MatchPrepCard's useMemo doesn't recompute every render.
+  const matches = useMemo(
+    () => (history?.ok ? history.data : []).filter((m) => !excludeAi || (!m.vsAI && !m.custom)),
+    [history, excludeAi],
   )
 
   return (

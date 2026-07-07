@@ -11,7 +11,7 @@ import { useScout } from '../queries/useScout'
 import { ScoutReportCard } from '../components/ScoutReportCard'
 import { RankBadge } from '../components/RankBadge'
 import { StatTile } from '../components/StatTile'
-import { ErrorBox, Spinner } from '../components/feedback'
+import { EmptyBox, ErrorBox, Spinner } from '../components/feedback'
 
 /**
  * The full public profile for any player (reachable from a scout card). Everything
@@ -21,7 +21,8 @@ import { ErrorBox, Spinner } from '../components/feedback'
  */
 export function PlayerProfile() {
   const { profileId: raw } = useParams()
-  const profileId = raw ? Number(raw) : null
+  const parsed = raw ? Number(raw) : NaN
+  const profileId = Number.isFinite(parsed) ? parsed : null
   const { data, isLoading, refetch } = useScout(profileId)
 
   return (
@@ -32,6 +33,12 @@ export function PlayerProfile() {
       >
         <ArrowLeft className="h-4 w-4" /> Scout
       </Link>
+
+      {profileId == null && (
+        <EmptyBox>
+          <p>Player not found.</p>
+        </EmptyBox>
+      )}
 
       {isLoading && <Spinner label="Loading profile…" />}
       {!isLoading && data && !data.ok && (

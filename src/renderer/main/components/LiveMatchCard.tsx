@@ -2,10 +2,12 @@ import { Gamepad2, Radio, Play, Swords, Loader2 } from 'lucide-react'
 import { civDisplayName } from '@domain/civ'
 import { formatRankLevel, formatRating, rankColor } from '@shared/format'
 import { useLiveMatch, useLaunchGame } from '../queries/useLiveMatch'
+import { useSettings } from '../queries/useProfile'
 
 /** Top-of-dashboard card: shows the CURRENT live matchup, or a Start AoE4 button. */
 export function LiveMatchCard() {
   const { data: live } = useLiveMatch()
+  const { data: settings } = useSettings()
   const launch = useLaunchGame()
 
   if (!live) return null
@@ -48,7 +50,9 @@ export function LiveMatchCard() {
 
         <p className="mt-2 text-xs text-muted-foreground">
           The overlay shows your matchup — press{' '}
-          <kbd className="rounded bg-secondary px-1 py-0.5 font-mono text-[10px]">Alt+O</kbd>{' '}
+          <kbd className="rounded bg-secondary px-1 py-0.5 font-mono text-[10px]">
+            {settings?.hotkeys.toggleOverlay ?? 'Alt+O'}
+          </kbd>{' '}
           in-game.
         </p>
       </div>

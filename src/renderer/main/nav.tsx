@@ -1,4 +1,5 @@
-import type { ReactNode } from 'react'
+/* eslint-disable react-refresh/only-export-components -- route table, not a component module */
+import { lazy, type ReactNode } from 'react'
 import {
   LayoutDashboard,
   Search,
@@ -9,13 +10,16 @@ import {
   Info,
   type LucideIcon,
 } from 'lucide-react'
-import { Dashboard } from './screens/Dashboard'
-import { Scout } from './screens/Scout'
-import { Stats } from './screens/Stats'
-import { CivMeta } from './screens/CivMeta'
-import { Guides } from './screens/Guides'
-import { Settings } from './screens/Settings'
-import { About } from './screens/About'
+
+// Screens are lazy so each route (and its heavy deps, e.g. recharts + static
+// game data) loads on first visit instead of in the entry bundle.
+const Dashboard = lazy(() => import('./screens/Dashboard').then((m) => ({ default: m.Dashboard })))
+const Scout = lazy(() => import('./screens/Scout').then((m) => ({ default: m.Scout })))
+const Stats = lazy(() => import('./screens/Stats').then((m) => ({ default: m.Stats })))
+const CivMeta = lazy(() => import('./screens/CivMeta').then((m) => ({ default: m.CivMeta })))
+const Guides = lazy(() => import('./screens/Guides').then((m) => ({ default: m.Guides })))
+const Settings = lazy(() => import('./screens/Settings').then((m) => ({ default: m.Settings })))
+const About = lazy(() => import('./screens/About').then((m) => ({ default: m.About })))
 
 export interface NavItem {
   path: string

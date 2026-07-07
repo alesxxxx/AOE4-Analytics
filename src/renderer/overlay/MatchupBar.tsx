@@ -5,6 +5,7 @@ import type { LiveMatchup, MatchupPlayer } from '@domain/liveMatch'
 import { formatRankLevel, formatRating } from '@shared/format'
 import { cn } from '@shared/lib/utils'
 import { CivFlag } from './CivFlag'
+import { panelBg } from './panelBg'
 
 const AGE_ROMAN: Record<number, string> = { 2: 'II', 3: 'III', 4: 'IV' }
 const UNIT_CDN = 'https://data.aoe4world.com/images/units'
@@ -112,10 +113,13 @@ function TeamColumn({
   return (
     <div
       className={cn(
-        'min-w-[330px] max-w-[430px] overflow-hidden bg-gradient-to-r from-[#0a0e1aF7] via-[#0a0e1aE6] to-[#0a0e1a9C] shadow-xl ring-1 ring-white/10',
+        'min-w-[330px] max-w-[430px] overflow-hidden shadow-xl ring-1 ring-white/10',
         isRight ? 'rounded-l-xl' : 'rounded-r-xl',
       )}
-      style={{ boxShadow: `inset ${isRight ? '-' : ''}3px 0 0 0 ${color}` }}
+      style={{
+        background: `linear-gradient(to right, ${panelBg(0.97)}, ${panelBg(0.9)}, ${panelBg(0.61)})`,
+        boxShadow: `inset ${isRight ? '-' : ''}3px 0 0 0 ${color}`,
+      }}
     >
       {label && (
         <div
@@ -286,10 +290,12 @@ function LegacySide({ side, align }: { side: MatchupSide; align: 'left' | 'right
     <div
       className={cn(
         'flex items-center gap-3 px-4 py-2',
-        isRight ? 'flex-row-reverse rounded-l-xl bg-gradient-to-l' : 'rounded-r-xl bg-gradient-to-r',
-        'from-[#0a0e1aF7] via-[#0a0e1aD0] to-[#0a0e1a26]',
+        isRight ? 'flex-row-reverse rounded-l-xl' : 'rounded-r-xl',
       )}
-      style={{ boxShadow: `inset ${isRight ? '-' : ''}3px 0 0 0 ${color}` }}
+      style={{
+        background: `linear-gradient(to ${isRight ? 'left' : 'right'}, ${panelBg(0.97)}, ${panelBg(0.82)}, ${panelBg(0.15)})`,
+        boxShadow: `inset ${isRight ? '-' : ''}3px 0 0 0 ${color}`,
+      }}
     >
       <CivFlag civ={side.civ} compact={false} />
       <div className={cn('flex min-w-0 flex-col gap-1', isRight && 'items-end')}>

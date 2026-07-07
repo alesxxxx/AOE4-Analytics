@@ -7,10 +7,11 @@ import {
 } from '@domain/liveMatch'
 import { buildScoutReport, pickPrimaryMode } from '@domain/scouting'
 import type { RankInfo } from '@domain/types'
+import type { GameClock } from '@domain/localStats'
 import { getClient, getMainWindow, getSettings } from './appContext'
 import { analyzeRecentGames, listHistory } from './analysisService'
 import { IpcChannels, type PostGameSummary } from '../ipc/contract'
-import { getLiveTeamMatchup, getSessionState } from './localDataService'
+import { getGameClock, getLiveTeamMatchup, getSessionState } from './localDataService'
 import { isGameRunning } from './gameProcess'
 import type { OverlayController } from './overlayController'
 import type { ApmTracker } from './apmService'
@@ -89,6 +90,14 @@ export class PollManager {
   /** True once BOTH civs are read from temp.rec, so we stop re-reading mid-game. */
   private customMatchupResolved = false
   private liveInfo: LiveMatchInfo = EMPTY_LIVE
+  /**
+   * Game-clock pusher: the parsed anchor (sim start + pauses) is re-read once
+   * per poll tick (cheap — readLogTail caches by size+mtime) and re-pushed to
+   * the overlay every second; the renderer derives elapsed from anchor + its
+   * wall clock, so the log is never read between ticks.
+   */
+  private clockTimer: ReturnType<typeof setInterval> | null = null
+  private clockAnchor: GameClock | null = null
 
   constructor(
     private readonly overlay: OverlayController,
@@ -109,6 +118,8 @@ export class PollManager {
     this.running = false
     if (this.timer) clearTimeout(this.timer)
     if (this.hideTimer) clearTimeout(this.hideTimer)
+    if (this.clockTimer) clearInterval(this.clockTimer)
+    this.clockTimer = null
   }
 
   private scheduleNext(delay: number): void {
@@ -131,11 +142,15 @@ export class PollManager {
 
     // Cheap, FREE signals first (no API): is the game process up, and does the
     // local session log say we're in a match? These gate whether we spend an
-    // AoE4World call at all.
-    const processRunning = await isGameRunning()
+    // AoE4World call at all. When the foreground watcher already reports AoE4
+    // as the foreground window, the process is necessarily running — skip the
+    // tasklist spawn for this tick.
+    const processRunning = this.overlay.isGameProcessForeground() ? true : await isGameRunning()
 
     let localInMatch: boolean | null = null
-    if (settings.localData.consentGranted) {
+    // Skip the warnings.log read when the game is known to be closed — the
+    // session state would be 'not-running' anyway.
+    if (settings.localData.consentGranted && processRunning !== false) {
       const state = getSessionState(processRunning === true)
       localInMatch = state === 'in-match' ? true : state === 'menu' ? false : null
     }
@@ -163,6 +178,15 @@ export class PollManager {
 
     const live = evaluateLiveMatch({ game, localInMatch, processRunning, nowMs: Date.now() })
     this.liveInfo = buildLiveMatchInfo(game, live, processRunning, settings.profileId)
+
+    // Game-clock producer: re-anchor from the log each tick while live (picks up
+    // pauses) and keep the 1s push loop running; stop + reset when not live.
+    if (live.isLive) {
+      this.clockAnchor = getGameClock()
+      this.startClockPush()
+    } else {
+      this.stopClockPush()
+    }
 
     if (live.isLive) {
       if (live.source === 'ongoing' && game) {
@@ -299,6 +323,22 @@ export class PollManager {
     }
   }
 
+  /** Starts the 1s game-clock push loop (idempotent) and pushes immediately. */
+  private startClockPush(): void {
+    if (this.clockTimer) return
+    this.overlay.sendGameClock(this.clockAnchor)
+    this.clockTimer = setInterval(() => this.overlay.sendGameClock(this.clockAnchor), 1000)
+  }
+
+  /** Stops the game-clock loop and resets the overlay's clock (idempotent). */
+  private stopClockPush(): void {
+    if (!this.clockTimer) return
+    clearInterval(this.clockTimer)
+    this.clockTimer = null
+    this.clockAnchor = null
+    this.overlay.sendGameClock(null)
+  }
+
   /**
    * Reads the live matchup from warnings.log and pushes it to the overlay the
    * moment it resolves (a beat into the game, once the roster lines are written).
@@ -372,10 +412,13 @@ export class PollManager {
       if (getSettings().getAll().openSummaryOnGameEnd) this.openAppOnSummary(postGame.matchId)
     }
     if (this.hideTimer) clearTimeout(this.hideTimer)
-    this.hideTimer = setTimeout(
-      () => this.overlay.hide(),
-      postGame ? POSTGAME_HIDE_MS : HIDE_AFTER_MS,
-    )
+    // Respect an explicit user toggle during the post-game window: if the user
+    // Alt+O'd (or Settings-toggled) the overlay after the match ended, the
+    // timed auto-hide backs off instead of clobbering their choice.
+    const toggleSeqAtEnd = this.overlay.getManualToggleSeq()
+    this.hideTimer = setTimeout(() => {
+      if (this.overlay.getManualToggleSeq() === toggleSeqAtEnd) this.overlay.hide()
+    }, postGame ? POSTGAME_HIDE_MS : HIDE_AFTER_MS)
   }
 
   /** Bring the dashboard to the front, opened on the finished game's summary. */

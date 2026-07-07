@@ -58,11 +58,13 @@ export const IpcChannels = {
   steamTestRankedFetch: 'steam:testRankedFetch',
   // Phase 4 (main → overlay renderer pushes)
   overlayUpdate: 'overlay:update',
-  // overlayControl + overlayGameClock are currently DORMANT:
-  // kept deliberately as the pipeline for the planned overlay micro-coach (D55).
+  // overlayControl is currently DORMANT: kept deliberately as the pipeline for
+  // the planned overlay micro-coach (D55).
   overlayControl: 'overlay:control',
   overlayLock: 'overlay:lock',
   overlaySettings: 'overlay:settings',
+  // Live game-clock anchor (sim start + pauses), pushed at 1s cadence by the
+  // poll loop while a match is live; null on match end.
   overlayGameClock: 'overlay:gameClock',
   overlayApm: 'overlay:apm',
   // Phase 4.5
@@ -70,6 +72,12 @@ export const IpcChannels = {
   // Phase 5
   overlayApplySettings: 'overlay:applySettings',
   overlayToggle: 'overlay:toggle',
+  // Overlay renderer → main: post-game card interactivity. The locked overlay
+  // is click-through; while the card is up the main process forwards mouse
+  // moves, the renderer hit-tests its ✕ button, and these two channels toggle
+  // real clicks on it / dismiss the card.
+  overlayInteractive: 'overlay:interactive',
+  overlayDismissPostGame: 'overlay:dismissPostGame',
   // Custom window chrome (the main window is frameless; the renderer draws its
   // own title bar + min/max/close, so it drives the window through these).
   windowMinimize: 'window:minimize',
@@ -355,7 +363,11 @@ export interface RtslyticsApi {
       },
     ) => void,
   ): () => void
-  /** The accurate game clock (sim start + pauses) pushed each poll while in a match. */
+  /**
+   * The accurate game-clock anchor (sim start + pauses), pushed every second
+   * while in a match (re-anchored from the log each poll tick); null resets it
+   * on match end. Derive elapsed with `gameElapsedSec(clock, todMsFromEpoch(now))`.
+   */
   onOverlayGameClock(cb: (clock: GameClock | null) => void): () => void
   /** Live APM (actions in the last 60s), pushed while in a match; null when idle/off. */
   onOverlayApm(cb: (apm: number | null) => void): () => void
@@ -364,6 +376,10 @@ export interface RtslyticsApi {
   // Phase 5
   applyOverlaySettings(): Promise<void>
   toggleOverlay(): Promise<void>
+  /** Overlay only: the cursor is over (or left) a clickable overlay control (post-game ✕). */
+  setOverlayInteractive(hover: boolean): Promise<void>
+  /** Overlay only: dismiss the post-game card and hide the overlay. */
+  dismissOverlayPostGame(): Promise<void>
   // Custom window chrome (frameless main window — the renderer's title bar)
   minimizeWindow(): Promise<void>
   toggleMaximizeWindow(): Promise<void>
