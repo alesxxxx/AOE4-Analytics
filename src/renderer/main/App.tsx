@@ -28,8 +28,10 @@ function useOpenGamePush() {
     () =>
       ipc.onOpenGame((matchId) => {
         // The game was just folded into history — make sure the list is fresh
-        // before the detail view resolves the match from it.
+        // before the detail view resolves the match from it. The dashboard's
+        // ladder numbers (rating/rank/win rate) moved with it.
         void queryClient.invalidateQueries({ queryKey: ['history'] })
+        void queryClient.invalidateQueries({ queryKey: ['dashboard'] })
         navigate(`/game/${matchId}`)
       }),
     [navigate, queryClient],

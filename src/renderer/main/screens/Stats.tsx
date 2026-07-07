@@ -13,7 +13,12 @@ import type { StoredMatch } from '@store/historyStore'
 import { resourcesPerMinute, resultFromPerPlayer, villagersPerMinute } from '@domain/analysis'
 import { computePlayerStats, type Breakdown, type StatGame } from '@domain/playerStats'
 import { computePlaystyle, type PlaystyleGame } from '@domain/playstyle'
-import { computeProfileOverview, type ProfileGame } from '@domain/profileOverview'
+import {
+  computeProfileOverview,
+  type PerformanceTiles,
+  type ProfileGame,
+} from '@domain/profileOverview'
+import { computeTrends, type TrendGame } from '@domain/trends'
 import type { RankInfo } from '@domain/types'
 import { civDisplayName, teamCivLabel } from '@domain/civ'
 import { formatDurationShort, relativeTime } from '@shared/format'
@@ -24,11 +29,8 @@ import { useDashboard, useSettings } from '../queries/useProfile'
 import { WinRateBar } from '../components/WinRateBar'
 import { RatingChart } from '../components/RatingChart'
 import { PlaystyleRadar } from '../components/PlaystyleRadar'
-import {
-  CivOverviewTable,
-  PerformanceTilesRow,
-  ProfileIdentityCard,
-} from '../components/ProfileOverview'
+import { StatTile } from '../components/StatTile'
+import { CivOverviewTable, ProfileIdentityCard } from '../components/ProfileOverview'
 import { PageHead } from '../components/PageHead'
 import { EmptyBox, Spinner, ErrorBox } from '../components/feedback'
 
@@ -156,6 +158,17 @@ function Content({
     return computeProfileOverview(profileGames, profileId)
   }, [matches, profileId])
 
+  // Recent-window trends (rating momentum) for the tiles' delta arrows.
+  const trends = useMemo(() => {
+    const trendGames: TrendGame[] = matches.map((m) => ({
+      result: displayedResult(m, profileId),
+      rating: m.rating,
+      ratingDiff: m.ratingDiff,
+      durationSec: m.durationSec,
+    }))
+    return computeTrends(trendGames)
+  }, [matches, profileId])
+
   const r = s.recent2w
   const recentWr = r.wins + r.losses > 0 ? Math.round((r.wins / (r.wins + r.losses)) * 100) : null
 
@@ -189,7 +202,7 @@ function Content({
               {recentWr != null ? ` · ${recentWr}%` : ''} · {r.hours}h played
             </span>
           </div>
-          <PerformanceTilesRow tiles={overview.tiles} />
+          <PerformanceTilesRow tiles={overview.tiles} ratingTrend={trends.rating.delta} />
           <div>
             <div className="rts-ledger-head mb-1.5">Rating over time</div>
             <RatingChart matches={matches} />
@@ -255,6 +268,38 @@ function Content({
         count with caution.
       </p>
     </>
+  )
+}
+
+/** Overall performance tiles from real per-game data (- when unavailable). */
+function PerformanceTilesRow({
+  tiles,
+  ratingTrend,
+}: {
+  tiles: PerformanceTiles
+  /** Rating change across the recent window (computeTrends), for the arrow. */
+  ratingTrend: number | null
+}) {
+  const delta = tiles.ratingDelta
+  return (
+    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
+      <StatTile
+        label="Net rating"
+        value={delta == null ? '-' : `${delta > 0 ? '+' : ''}${delta}`}
+        accent={delta == null ? undefined : delta >= 0 ? 'win' : 'loss'}
+        sub={`over ${tiles.games} games`}
+        delta={ratingTrend}
+      />
+      <StatTile label="APM" value={tiles.avgApm ?? '-'} sub="avg, Relic counters" />
+      <StatTile label="K/D" value={tiles.avgKd ?? '-'} sub="units, avg" />
+      <StatTile label="Units / game" value={tiles.avgUnitsProduced ?? '-'} sub="produced, avg" />
+      <StatTile label="Kills / game" value={tiles.avgKills ?? '-'} sub="avg" />
+      <StatTile
+        label="Eco pace"
+        value={tiles.avgResourcesPerMinute ?? tiles.avgVillagersPerMinute ?? '-'}
+        sub={tiles.avgResourcesPerMinute != null ? 'resources/min' : 'villagers/min'}
+      />
+    </div>
   )
 }
 

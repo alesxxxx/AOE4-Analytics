@@ -77,6 +77,16 @@ export function formatRating(rating: number | null | undefined): string {
   return rating == null ? '—' : String(Math.round(rating))
 }
 
+/**
+ * The one way a percentage renders app-wide: whole number + '%', '—' when
+ * unknown. Domain math keeps its decimals; only the display rounds, so the
+ * same win rate can never show as "52.3%" on one screen and "52%" on another.
+ */
+export function formatPercent(value: number | null | undefined): string {
+  if (value == null || !Number.isFinite(value)) return '—'
+  return `${Math.round(value)}%`
+}
+
 /** 2-letter ISO country code → flag emoji (empty string if invalid). */
 export function countryFlag(code: string | null | undefined): string {
   if (!code || code.length !== 2) return ''

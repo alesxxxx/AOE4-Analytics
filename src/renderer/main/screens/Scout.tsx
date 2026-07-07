@@ -41,7 +41,7 @@ export function Scout() {
           >
             <ArrowLeft className="h-4 w-4" /> Back to leaderboard
           </button>
-          <div className="max-w-xl">
+          <div className="max-w-3xl">
             {isLoading && <Spinner label={`Scouting ${selected.name}...`} />}
             {!isLoading && data && !data.ok && (
               <ErrorBox message={data.error.message} onRetry={() => refetch()} />

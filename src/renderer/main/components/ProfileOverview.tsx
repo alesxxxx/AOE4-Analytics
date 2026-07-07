@@ -3,13 +3,12 @@ import { Link } from 'react-router-dom'
 import { Shield } from 'lucide-react'
 import type { RankInfo } from '@domain/types'
 import type { PlaystyleTag } from '@domain/playstyle'
-import type { CivOverviewRow, PerformanceTiles } from '@domain/profileOverview'
-import { formatDurationShort, countryFlag } from '@shared/format'
+import type { CivOverviewRow } from '@domain/profileOverview'
+import { formatDurationShort, countryFlag, formatPercent } from '@shared/format'
 import { cn } from '@shared/lib/utils'
 import { Card, CardContent } from '@shared/components/ui/card'
 import { RankBadge } from './RankBadge'
 import { WinRateBar } from './WinRateBar'
-import { StatTile } from './StatTile'
 
 /** The player's identity + rank + tags column (Mobalytics-profile style). */
 export function ProfileIdentityCard({
@@ -82,30 +81,6 @@ export function ProfileIdentityCard({
         </div>
       </CardContent>
     </Card>
-  )
-}
-
-/** Overall performance tiles from real per-game data (- when unavailable). */
-export function PerformanceTilesRow({ tiles }: { tiles: PerformanceTiles }) {
-  const delta = tiles.ratingDelta
-  return (
-    <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
-      <StatTile
-        label="Net rating"
-        value={delta == null ? '-' : `${delta > 0 ? '+' : ''}${delta}`}
-        accent={delta == null ? undefined : delta >= 0 ? 'win' : 'loss'}
-        sub={`over ${tiles.games} games`}
-      />
-      <StatTile label="APM" value={tiles.avgApm ?? '-'} sub="avg, Relic counters" />
-      <StatTile label="K/D" value={tiles.avgKd ?? '-'} sub="units, avg" />
-      <StatTile label="Units / game" value={tiles.avgUnitsProduced ?? '-'} sub="produced, avg" />
-      <StatTile label="Kills / game" value={tiles.avgKills ?? '-'} sub="avg" />
-      <StatTile
-        label="Eco pace"
-        value={tiles.avgResourcesPerMinute ?? tiles.avgVillagersPerMinute ?? '-'}
-        sub={tiles.avgResourcesPerMinute != null ? 'resources/min' : 'villagers/min'}
-      />
-    </div>
   )
 }
 
@@ -186,7 +161,7 @@ function CivRow({ r }: { r: CivOverviewRow }) {
           <WinRateBar winRate={r.winRate} />
         </div>
         <div className="mt-0.5 text-[11px] tabular-nums text-muted-foreground">
-          {fmtPercent(r.winRate)}
+          {formatPercent(r.winRate)}
         </div>
       </td>
       <Metric
@@ -258,8 +233,4 @@ function Metric({
       )}
     </td>
   )
-}
-
-function fmtPercent(value: number | null | undefined): string {
-  return value == null ? '-' : `${value}%`
 }

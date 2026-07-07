@@ -3,6 +3,7 @@ import { ArrowLeft } from 'lucide-react'
 import {
   countryFlag,
   formatLeaderboard,
+  formatPercent,
   formatRankLevel,
   formatRating,
   rankColor,
@@ -74,7 +75,7 @@ function ProfileBody({ report }: { report: Parameters<typeof ScoutReportCard>[0]
         <StatTile label="Rank" value={primary?.rank != null ? `#${primary.rank}` : '—'} />
         <StatTile
           label="Win rate"
-          value={primary?.winRate != null ? `${primary.winRate}%` : '—'}
+          value={formatPercent(primary?.winRate)}
           sub={primary ? `${primary.gamesCount} games` : undefined}
           accent={primary?.winRate == null ? undefined : primary.winRate >= 50 ? 'win' : 'loss'}
         />
@@ -96,7 +97,7 @@ function ProfileBody({ report }: { report: Parameters<typeof ScoutReportCard>[0]
                   <span style={{ color: rankColor(m.rankLevel) }}>{formatRankLevel(m.rankLevel)}</span>
                   <span className="tabular-nums text-foreground">{formatRating(m.rating)}</span>
                   <span className="w-20 text-right tabular-nums">
-                    {m.winRate != null ? `${m.winRate}%` : '—'} · {m.gamesCount}g
+                    {formatPercent(m.winRate)} · {m.gamesCount}g
                   </span>
                 </span>
               </div>

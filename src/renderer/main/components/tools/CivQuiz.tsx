@@ -50,9 +50,7 @@ export function CivQuiz() {
 
         {runnersUp.slice(0, 2).length > 0 && (
           <div className="space-y-2">
-            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              Also worth a look
-            </p>
+            <p className="rts-ledger-head">Also worth a look</p>
             {runnersUp.slice(0, 2).map((r) => (
               <button
                 key={r.civ.slug}

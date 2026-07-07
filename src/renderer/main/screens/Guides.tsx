@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { BookOpen, ListOrdered, Shield, Sparkles, ArrowLeft, Clock } from 'lucide-react'
 import { GUIDES, type Guide } from '@data/guides'
 import { BUNDLED_BUILD_ORDERS } from '@data/buildOrders'
@@ -22,7 +22,19 @@ const TABS = [
 ] as const
 
 export function Guides() {
-  const [tab, setTab] = useState<Tab>('guides')
+  // Tab lives in the URL so a refresh or deep link restores it.
+  const [searchParams, setSearchParams] = useSearchParams()
+  const tabParam = searchParams.get('tab')
+  const tab: Tab = TABS.some((t) => t.id === tabParam) ? (tabParam as Tab) : 'guides'
+  const setTab = (id: Tab) =>
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev)
+        next.set('tab', id)
+        return next
+      },
+      { replace: true },
+    )
 
   return (
     <div className="animate-fade-in space-y-6">
@@ -32,13 +44,15 @@ export function Guides() {
         sub="Beginner tactics, build orders, a counter helper, and a civ-picker quiz."
       />
 
-      <div className="flex gap-1 border-b border-border">
+      <div className="flex gap-1 border-b border-border" role="tablist">
         {TABS.map((t) => {
           const Icon = t.icon
           return (
             <button
               key={t.id}
               type="button"
+              role="tab"
+              aria-selected={tab === t.id}
               onClick={() => setTab(t.id)}
               className={`-mb-px flex items-center gap-1.5 border-b-2 px-3 py-2 text-sm transition-colors ${
                 tab === t.id
@@ -53,16 +67,31 @@ export function Guides() {
         })}
       </div>
 
-      {tab === 'guides' && <GuideLibrary />}
-      {tab === 'builds' && <BuildLibrary />}
-      {tab === 'counters' && <CounterHelper />}
-      {tab === 'quiz' && <CivQuiz />}
+      <div role="tabpanel">
+        {tab === 'guides' && <GuideLibrary />}
+        {tab === 'builds' && <BuildLibrary />}
+        {tab === 'counters' && <CounterHelper />}
+        {tab === 'quiz' && <CivQuiz />}
+      </div>
     </div>
   )
 }
 
 function GuideLibrary() {
-  const [active, setActive] = useState<Guide | null>(null)
+  // The open guide lives in the URL (`?guide=slug`) so it survives a refresh.
+  const [searchParams, setSearchParams] = useSearchParams()
+  const guideSlug = searchParams.get('guide')
+  const active = guideSlug != null ? (GUIDES.find((g) => g.slug === guideSlug) ?? null) : null
+  const setActive = (g: Guide | null) =>
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev)
+        if (g) next.set('guide', g.slug)
+        else next.delete('guide')
+        return next
+      },
+      { replace: true },
+    )
 
   if (active) {
     return (
@@ -129,7 +158,19 @@ const DIFFICULTY_TONE: Record<string, string> = {
  */
 function BuildLibrary() {
   const builds = BUNDLED_BUILD_ORDERS as unknown as BuildOrder[]
-  const [idx, setIdx] = useState(0)
+  // The selected build lives in the URL (`?build=index`) so it survives a refresh.
+  const [searchParams, setSearchParams] = useSearchParams()
+  const rawIdx = Number(searchParams.get('build'))
+  const idx = Number.isInteger(rawIdx) && rawIdx >= 0 && rawIdx < builds.length ? rawIdx : 0
+  const setIdx = (i: number) =>
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev)
+        next.set('build', String(i))
+        return next
+      },
+      { replace: true },
+    )
   const active = builds[idx]
 
   // Group by primary civ label, keeping library order within each group.

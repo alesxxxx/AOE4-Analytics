@@ -15,6 +15,7 @@ import type { CivDetailStats } from '@domain/civDetailStats'
 import type { LiveMatchInfo, LiveOpponent, LiveMatchup, MatchupPlayer } from '@domain/liveMatch'
 import type { ReplayMatchup, ReplayPlayer } from '@domain/replay'
 import type { AppSettings, AppSettingsPatch, OverlaySettings } from '@store/settings'
+import type { SessionSummary } from '@domain/session'
 import type { StoredMatch } from '@store/historyStore'
 import type { MatchSummary } from '@domain/statsSummary'
 import type { LocalMatch } from '@domain/localMatch'
@@ -174,6 +175,11 @@ export interface OverlayUpdatePayload {
   kind: string | null
   /** Post-game results (win/loss + coaching), pushed on `ended` once analysis finishes. */
   postGame?: PostGameSummary | null
+  /**
+   * Today's session line (W–L + net rating), for the session-tracker widget.
+   * Null until the first finished game of the local day.
+   */
+  session: SessionSummary | null
   /**
    * Stable identity of the current match (ranked `game_id`, or a per-match token
    * for custom games); null when not in a match. The overlay keys its one-shot

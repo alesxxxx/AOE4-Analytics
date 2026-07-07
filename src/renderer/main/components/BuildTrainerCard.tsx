@@ -53,7 +53,7 @@ function ScoreBadge({ score }: { score: number | null }) {
   if (score == null) return null
   const tone = score >= 80 ? 'bg-win/15 text-win' : score >= 50 ? 'bg-warn/15 text-warn' : 'bg-loss/15 text-loss'
   return (
-    <span className={cn('rounded-full px-2.5 py-0.5 text-xs font-bold tabular-nums', tone)}>
+    <span className={cn('rounded-sm px-2.5 py-0.5 text-xs font-bold tabular-nums', tone)}>
       {score}% on plan
     </span>
   )

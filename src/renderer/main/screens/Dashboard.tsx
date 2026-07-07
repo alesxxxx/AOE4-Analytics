@@ -3,9 +3,11 @@ import type { DashboardData } from '@ipc/contract'
 import {
   countryFlag,
   formatLeaderboard,
+  formatPercent,
   formatRankLevel,
   formatRating,
   rankColor,
+  winRateTone,
 } from '@shared/format'
 import { cn } from '@shared/lib/utils'
 import { Skeleton } from '@shared/components/ui/skeleton'
@@ -18,7 +20,7 @@ import { RankBadge } from '../components/RankBadge'
 import { FormPips } from '../components/FormPips'
 import { AccountAvatar } from '../components/AccountSwitcher'
 import { PageHead } from '../components/PageHead'
-import { ErrorBox, Spinner } from '../components/feedback'
+import { ErrorBox } from '../components/feedback'
 
 /**
  * The landing surface: a hero ladder-standing slab (identity, vitals, form,
@@ -50,8 +52,6 @@ export function Dashboard() {
       )}
 
       {!isLoading && data?.ok && <LadderStanding data={data.data} />}
-
-      {!isLoading && !data && <Spinner />}
 
       <MatchPrepCard matches={matches} />
 
@@ -99,9 +99,9 @@ function LadderStanding({ data }: { data: DashboardData }) {
         <Vital label="Rank" value={primary?.rank != null ? `#${primary.rank}` : '—'} />
         <Vital
           label="Win rate"
-          value={primary?.winRate != null ? `${primary.winRate}%` : '—'}
+          value={formatPercent(primary?.winRate)}
           sub={primary ? `${primary.gamesCount} games` : undefined}
-          tone={primary?.winRate == null ? undefined : primary.winRate >= 50 ? 'win' : 'loss'}
+          tone={winRateTone(primary?.winRate)}
         />
       </div>
 
@@ -131,7 +131,7 @@ function LadderStanding({ data }: { data: DashboardData }) {
               )}
               <span className="w-16 text-right tabular-nums">{formatRating(m.rating)}</span>
               <span className="w-24 text-right tabular-nums text-muted-foreground">
-                {m.winRate != null ? `${m.winRate}%` : '—'} · {m.gamesCount}g
+                {formatPercent(m.winRate)} · {m.gamesCount}g
               </span>
             </div>
           ))}
@@ -150,7 +150,7 @@ function Vital({
   label: string
   value: string
   sub?: string
-  tone?: 'win' | 'loss'
+  tone?: 'win' | 'loss' | 'even'
 }) {
   return (
     <div className="px-4 py-3">
@@ -160,6 +160,7 @@ function Vital({
           'mt-0.5 text-xl font-semibold tabular-nums',
           tone === 'win' && 'text-win',
           tone === 'loss' && 'text-loss',
+          tone === 'even' && 'text-muted-foreground',
         )}
       >
         {value}

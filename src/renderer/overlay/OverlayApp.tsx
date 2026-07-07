@@ -10,6 +10,7 @@ import { Move } from 'lucide-react'
 import { ipc } from '@shared/ipc'
 import type { ScoutReport } from '@domain/types'
 import type { LiveMatchup } from '@domain/liveMatch'
+import type { SessionSummary } from '@domain/session'
 import type { OverlayMatchState, PostGameSummary } from '@ipc/contract'
 import { matchupTroopsForTeam } from '@domain/civUnits'
 import { gameElapsedSec, todMsFromEpoch } from '@domain/localStats'
@@ -30,6 +31,7 @@ import { PostGameCard } from './PostGameCard'
 import { ApmWidget } from './ApmWidget'
 import { BuildOrderWidget } from './BuildOrderWidget'
 import { AgeTargetsWidget } from './AgeTargetsWidget'
+import { SessionWidget } from './SessionWidget'
 import { panelBg } from './panelBg'
 
 const PLACEHOLDER_MATCHUP: LiveMatchup = {
@@ -81,6 +83,8 @@ const PLACEHOLDER_MATCHUP: LiveMatchup = {
   ],
 }
 
+const PLACEHOLDER_SESSION: SessionSummary = { games: 4, wins: 3, losses: 1, ratingDelta: 42 }
+
 const PLACEHOLDER_POST_GAME: PostGameSummary = {
   result: 'win',
   civ: 'english',
@@ -111,6 +115,8 @@ export function OverlayApp() {
   const [myScout, setMyScout] = useState<ScoutReport | null>(null)
   const [postGame, setPostGame] = useState<PostGameSummary | null>(null)
   const [apm, setApm] = useState<number | null>(null)
+  const [session, setSession] = useState<SessionSummary | null>(null)
+  const [sessionShown, setSessionShown] = useState(true)
   const [troopsShown, setTroopsShown] = useState(true)
   const [civTheme, setCivTheme] = useState(true)
   const [accentColor, setAccentColor] = useState<string | null>(null)
@@ -144,6 +150,7 @@ export function OverlayApp() {
         setPanelAlpha(clampAlpha(s.overlay.opacity))
         setScale(clampScale(s.overlay.scale))
         setAgeTargetsShown(s.overlay.showAgeTargets !== false)
+        setSessionShown(s.overlay.showSession !== false)
         setBuildOrderId(s.overlay.buildOrderId ?? null)
         if (s.profileId == null) return
         return ipc.scoutPlayer(s.profileId).then((r) => {
@@ -175,11 +182,13 @@ export function OverlayApp() {
       setPanelAlpha(clampAlpha(o.opacity))
       setScale(clampScale(o.scale))
       setAgeTargetsShown(o.showAgeTargets !== false)
+      setSessionShown(o.showSession !== false)
       setBuildOrderId(o.buildOrderId ?? null)
     })
 
     const offUpdate = ipc.onOverlayUpdate((p) => {
       setMatchState(p.matchState)
+      setSession(p.session ?? null)
       if (p.matchState === 'ongoing') {
         setMyCiv(p.myCiv)
         setOppCiv(p.oppCiv)
@@ -222,6 +231,9 @@ export function OverlayApp() {
   const showMatchup = haveMatchup || placementMode
   const showPostGame = (matchState === 'ended' && postGame != null) || placementMode
   const showApm = apm != null || placementMode
+  // Shown whenever the overlay is up with a session to report (in-game AND on
+  // the post-game screen, where the just-finished game is already counted).
+  const showSession = sessionShown && (session != null || placementMode)
 
   // The pinned build order, resolved by its unique bundled name; null = hidden.
   const selectedBuild = useMemo<BuildOrder | null>(
@@ -328,6 +340,19 @@ export function OverlayApp() {
           onPositionChange={saveWidgetPosition}
         >
           <ApmWidget apm={apm ?? 72} />
+        </PlacedWidget>
+      )}
+
+      {showSession && (
+        <PlacedWidget
+          widgetKey="session"
+          position={widgetPositions.session}
+          placementMode={placementMode}
+          zIndex={55}
+          scale={scale}
+          onPositionChange={saveWidgetPosition}
+        >
+          <SessionWidget session={session ?? PLACEHOLDER_SESSION} />
         </PlacedWidget>
       )}
 
@@ -591,5 +616,6 @@ function clampPositions(p: OverlayWidgetPositions): OverlayWidgetPositions {
     postGame: clampPosition(p.postGame),
     buildOrder: clampPosition(p.buildOrder),
     ageTargets: clampPosition(p.ageTargets),
+    session: clampPosition(p.session),
   }
 }

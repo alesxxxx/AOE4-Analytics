@@ -3,14 +3,14 @@ import { useAppInfo } from '../queries/useAppInfo'
 import { PageHead } from '../components/PageHead'
 
 export function About() {
-  const { data } = useAppInfo()
+  const { data, isError } = useAppInfo()
 
   return (
     <div className="animate-fade-in space-y-6">
       <PageHead
         kicker="Colophon"
         title="About RTSLytics"
-        sub={`Version ${data?.version ?? '…'} · ${data?.platform ?? '…'}`}
+        sub={isError ? 'Version unknown' : `Version ${data?.version ?? '…'} · ${data?.platform ?? '…'}`}
       />
 
       <Card>

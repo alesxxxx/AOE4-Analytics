@@ -64,6 +64,13 @@ export function LiveMatchCard() {
   // old "looking for your match…" status card is gone.
   const gameClosed = live.processRunning !== true
   if (!gameClosed) return null
+  // The launcher reports failure two ways: a rejected IPC call, or a resolved
+  // LaunchResult with ok:false and the launcher's own message.
+  const launchFailed = launch.isError || (launch.data != null && !launch.data.ok)
+  const launchError =
+    launch.data != null && !launch.data.ok && launch.data.message
+      ? launch.data.message
+      : "Couldn't launch the game — is it installed?"
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border bg-card/50 p-4">
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -79,6 +86,7 @@ export function LiveMatchCard() {
         <Play className="h-3.5 w-3.5" />
         Start AoE4
       </button>
+      {launchFailed && <p className="w-full text-xs text-destructive">{launchError}</p>}
     </div>
   )
 }

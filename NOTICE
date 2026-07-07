@@ -10,6 +10,8 @@ covered by the MIT License and are NOT relicensed under it:
         Age of Empires IV unit / game data, derived from aoe4world/data.
   * src/data/vendor/aoe4world-overlay/flags/
         Civilization flag images, derived from aoe4world/overlay.
+  * src/data/vendor/aoe4world-overlay/units/ and buildings/
+        Unit and building icon images, from data.aoe4world.com.
 
 Age of Empires IV and all related names, logos, images, and data are
 © Microsoft Corporation. These vendored assets are used for NON-COMMERCIAL

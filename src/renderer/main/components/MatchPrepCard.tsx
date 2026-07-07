@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ChevronRight, Swords } from 'lucide-react'
 import type { StoredMatch } from '@store/historyStore'
 import { BUNDLED_BUILD_ORDERS } from '@data/buildOrders'
+import { resultFromPerPlayer } from '@domain/analysis'
 import {
   buildIndexForCiv,
   condenseBuildOrder,
@@ -14,6 +15,7 @@ import { civDisplayName } from '@domain/civ'
 import { computePlayerStats, type StatGame } from '@domain/playerStats'
 import { cn } from '@shared/lib/utils'
 import { useLiveMatch } from '../queries/useLiveMatch'
+import { useSettings } from '../queries/useProfile'
 
 const UNIT_CDN = 'https://data.aoe4world.com/images/units'
 const AGE_NAME: Record<2 | 3 | 4, string> = { 2: 'Feudal', 3: 'Castle', 4: 'Imperial' }
@@ -27,10 +29,12 @@ const AGE_NAME: Record<2 | 3 | 4, string> = { 2: 'Feudal', 3: 'Castle', 4: 'Impe
  */
 export function MatchPrepCard({ matches }: { matches: StoredMatch[] }) {
   const { data: live } = useLiveMatch()
+  const { data: settings } = useSettings()
+  const profileId = settings?.profileId ?? null
 
   const stats = useMemo(() => {
     const games: StatGame[] = matches.map((m) => ({
-      result: m.result,
+      result: m.result ?? resultFromPerPlayer(m.perPlayer, profileId),
       civ: m.civ,
       oppCiv: m.oppCiv,
       map: m.map,
@@ -40,7 +44,7 @@ export function MatchPrepCard({ matches }: { matches: StoredMatch[] }) {
       playedAt: m.playedAt,
     }))
     return computePlayerStats(games, { civLabel: civDisplayName })
-  }, [matches])
+  }, [matches, profileId])
 
   const liveOppCiv = live?.isLive && !live.custom ? (live.opponent?.civ ?? null) : null
   const myCiv = (live?.isLive ? live.myCiv : null) ?? stats.byCiv[0]?.key ?? null

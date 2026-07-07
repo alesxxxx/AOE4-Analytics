@@ -2,12 +2,12 @@ import { useState } from 'react'
 import { ChevronLeft, ChevronRight, Radio, Trophy } from 'lucide-react'
 import type { Leaderboard } from '@api/types'
 import type { LeaderboardRow } from '@domain/leaderboard'
-import { countryFlag, formatRankLevel, formatRating, rankColor } from '@shared/format'
+import { countryFlag, formatPercent, formatRankLevel, formatRating, rankColor } from '@shared/format'
 import { cn } from '@shared/lib/utils'
 import { Card, CardContent } from '@shared/components/ui/card'
 import { Skeleton } from '@shared/components/ui/skeleton'
 import { useLeaderboard } from '../queries/useLeaderboard'
-import { ErrorBox } from '../components/feedback'
+import { EmptyBox, ErrorBox } from '../components/feedback'
 
 const LADDERS: { label: string; value: Leaderboard }[] = [
   { label: 'Ranked 1v1', value: 'rm_solo' },
@@ -20,23 +20,63 @@ const LADDERS: { label: string; value: Leaderboard }[] = [
 
 const COUNTRIES: { code: string | undefined; label: string }[] = [
   { code: undefined, label: 'All countries' },
-  { code: 'us', label: 'United States' },
-  { code: 'gb', label: 'United Kingdom' },
-  { code: 'de', label: 'Germany' },
-  { code: 'fr', label: 'France' },
-  { code: 'ca', label: 'Canada' },
-  { code: 'cn', label: 'China' },
-  { code: 'kr', label: 'South Korea' },
-  { code: 'ru', label: 'Russia' },
-  { code: 'br', label: 'Brazil' },
+  { code: 'ar', label: 'Argentina' },
   { code: 'au', label: 'Australia' },
-  { code: 'se', label: 'Sweden' },
-  { code: 'pl', label: 'Poland' },
-  { code: 'es', label: 'Spain' },
-  { code: 'nl', label: 'Netherlands' },
-  { code: 'vn', label: 'Vietnam' },
-  { code: 'ua', label: 'Ukraine' },
+  { code: 'at', label: 'Austria' },
+  { code: 'be', label: 'Belgium' },
+  { code: 'br', label: 'Brazil' },
+  { code: 'bg', label: 'Bulgaria' },
+  { code: 'ca', label: 'Canada' },
+  { code: 'cl', label: 'Chile' },
+  { code: 'cn', label: 'China' },
+  { code: 'co', label: 'Colombia' },
+  { code: 'cz', label: 'Czechia' },
+  { code: 'dk', label: 'Denmark' },
+  { code: 'eg', label: 'Egypt' },
+  { code: 'fi', label: 'Finland' },
+  { code: 'fr', label: 'France' },
+  { code: 'de', label: 'Germany' },
+  { code: 'gr', label: 'Greece' },
+  { code: 'hk', label: 'Hong Kong' },
+  { code: 'hu', label: 'Hungary' },
+  { code: 'in', label: 'India' },
+  { code: 'id', label: 'Indonesia' },
+  { code: 'ie', label: 'Ireland' },
+  { code: 'il', label: 'Israel' },
+  { code: 'it', label: 'Italy' },
   { code: 'jp', label: 'Japan' },
+  { code: 'kz', label: 'Kazakhstan' },
+  { code: 'my', label: 'Malaysia' },
+  { code: 'mx', label: 'Mexico' },
+  { code: 'ma', label: 'Morocco' },
+  { code: 'nl', label: 'Netherlands' },
+  { code: 'nz', label: 'New Zealand' },
+  { code: 'no', label: 'Norway' },
+  { code: 'pe', label: 'Peru' },
+  { code: 'ph', label: 'Philippines' },
+  { code: 'pl', label: 'Poland' },
+  { code: 'pt', label: 'Portugal' },
+  { code: 'ro', label: 'Romania' },
+  { code: 'ru', label: 'Russia' },
+  { code: 'sa', label: 'Saudi Arabia' },
+  { code: 'rs', label: 'Serbia' },
+  { code: 'sg', label: 'Singapore' },
+  { code: 'sk', label: 'Slovakia' },
+  { code: 'za', label: 'South Africa' },
+  { code: 'kr', label: 'South Korea' },
+  { code: 'es', label: 'Spain' },
+  { code: 'se', label: 'Sweden' },
+  { code: 'ch', label: 'Switzerland' },
+  { code: 'tw', label: 'Taiwan' },
+  { code: 'th', label: 'Thailand' },
+  { code: 'tr', label: 'Turkey' },
+  { code: 'ua', label: 'Ukraine' },
+  { code: 'ae', label: 'United Arab Emirates' },
+  { code: 'gb', label: 'United Kingdom' },
+  { code: 'us', label: 'United States' },
+  { code: 'uy', label: 'Uruguay' },
+  { code: 've', label: 'Venezuela' },
+  { code: 'vn', label: 'Vietnam' },
 ]
 
 export function LeaderboardPanel({ embedded = false }: { embedded?: boolean } = {}) {
@@ -108,10 +148,7 @@ export function LeaderboardPanel({ embedded = false }: { embedded?: boolean } = 
             </h3>
             <Stat label="Rank" value={`#${result.you.rank.toLocaleString()}`} />
             <Stat label="Rating" value={formatRating(result.you.rating)} />
-            <Stat
-              label="Win rate"
-              value={result.you.winRate != null ? `${Math.round(result.you.winRate)}%` : '—'}
-            />
+            <Stat label="Win rate" value={formatPercent(result.you.winRate)} />
             <Stat label="Games" value={result.you.games.toLocaleString()} />
           </CardContent>
         </Card>
@@ -122,19 +159,25 @@ export function LeaderboardPanel({ embedded = false }: { embedded?: boolean } = 
         <ErrorBox message={data.error.message} onRetry={() => refetch()} />
       )}
 
-      {!isLoading && result && (
+      {!isLoading && result && result.rows.length === 0 && (
+        <EmptyBox>
+          <p>No players found for this filter.</p>
+        </EmptyBox>
+      )}
+
+      {!isLoading && result && result.rows.length > 0 && (
         <>
           <Card>
             <CardContent className={cn('p-0', isFetching && 'opacity-60')}>
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted-foreground">
-                    <th className="px-4 py-2.5 font-medium">#</th>
-                    <th className="px-2 py-2.5 font-medium">Player</th>
-                    <th className="px-2 py-2.5 text-right font-medium">Rating</th>
-                    <th className="px-2 py-2.5 text-right font-medium">Win %</th>
-                    <th className="px-2 py-2.5 text-right font-medium">Games</th>
-                    <th className="px-4 py-2.5 text-right font-medium">Streak</th>
+                  <tr className="border-b border-border text-left">
+                    <th className="rts-ledger-head px-4 py-2.5">#</th>
+                    <th className="rts-ledger-head px-2 py-2.5">Player</th>
+                    <th className="rts-ledger-head px-2 py-2.5 text-right">Rating</th>
+                    <th className="rts-ledger-head px-2 py-2.5 text-right">Win %</th>
+                    <th className="rts-ledger-head px-2 py-2.5 text-right">Games</th>
+                    <th className="rts-ledger-head px-4 py-2.5 text-right">Streak</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -216,7 +259,7 @@ function Row({ r }: { r: LeaderboardRow }) {
       </td>
       <td className="px-2 py-2 text-right font-semibold tabular-nums">{formatRating(r.rating)}</td>
       <td className="px-2 py-2 text-right tabular-nums text-muted-foreground">
-        {r.winRate != null ? `${Math.round(r.winRate)}%` : '—'}
+        {formatPercent(r.winRate)}
       </td>
       <td className="px-2 py-2 text-right tabular-nums text-muted-foreground">
         {r.games.toLocaleString()}

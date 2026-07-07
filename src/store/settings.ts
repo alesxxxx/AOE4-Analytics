@@ -9,7 +9,11 @@ export interface OverlaySettings {
    * which would dim the text too.
    */
   opacity: number
-  /** Snap position at the top of the screen, or 'custom' (user-dragged). */
+  /**
+   * DORMANT: window-level snap presets from the old single-panel overlay —
+   * nothing reads this since the overlay went full-display with per-widget
+   * `widgetPositions`. Kept so stored settings stay shape-stable.
+   */
   position: OverlayPosition
   /** When locked the overlay is click-through; unlock to drag/resize. */
   locked: boolean
@@ -47,6 +51,11 @@ export interface OverlaySettings {
    */
   showAgeTargets: boolean
   /**
+   * The session-tracker chip (today's W–L record + net rating change), so a
+   * losing streak is visible without leaving the game. Small, on by default.
+   */
+  showSession: boolean
+  /**
    * The bundled build order pinned to the overlay, keyed by its unique `name`
    * (set from Guides → Build Orders → "Show in overlay"). Null = widget hidden.
    */
@@ -72,7 +81,13 @@ export interface OverlayWidgets {
   ageTargets: boolean
 }
 
-export type OverlayWidgetKey = 'matchup' | 'apm' | 'postGame' | 'buildOrder' | 'ageTargets'
+export type OverlayWidgetKey =
+  | 'matchup'
+  | 'apm'
+  | 'postGame'
+  | 'buildOrder'
+  | 'ageTargets'
+  | 'session'
 
 export type OverlayWidgetAnchor =
   | 'top-left'
@@ -108,6 +123,8 @@ export const DEFAULT_OVERLAY_WIDGET_POSITIONS: OverlayWidgetPositions = {
   postGame: { anchor: 'top-center', x: 0, y: 40 },
   buildOrder: { anchor: 'top-left', x: 12, y: 96 },
   ageTargets: { anchor: 'top-right', x: 12, y: 96 },
+  // Stacked just above the APM counter (both clear of the game's bottom HUD).
+  session: { anchor: 'bottom-left', x: 12, y: 56 },
 }
 
 /** Global hotkey bindings, in Electron accelerator format (e.g. "Alt+O"). */
@@ -228,6 +245,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
     gateToGame: true,
     troopsPos: 'bar',
     showAgeTargets: true,
+    showSession: true,
     buildOrderId: null,
     scale: 1,
     widgetPositions: DEFAULT_OVERLAY_WIDGET_POSITIONS,
@@ -352,6 +370,7 @@ function sanitizeOverlay(v: unknown): Partial<OverlaySettings> | undefined {
     if (s) out.troopsPos = s
   }
   if ('showAgeTargets' in v) out.showAgeTargets = Boolean(v.showAgeTargets)
+  if ('showSession' in v) out.showSession = Boolean(v.showSession)
   if ('buildOrderId' in v) {
     const s = stringOrNull(v.buildOrderId)
     if (s !== undefined) out.buildOrderId = s

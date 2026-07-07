@@ -31,12 +31,14 @@ import { civFromToken } from '@domain/statsSummary'
 import { villagerGaps, type VillagerProductionRhythm } from '@domain/summaryCoaching'
 import { civDisplayName } from '@domain/civ'
 import { landmarksForCiv } from '@domain/landmarks'
+import { formatDurationShort } from '@shared/format'
 import { cn } from '@shared/lib/utils'
 import { Card, CardContent } from '@shared/components/ui/card'
 
-const GRID = 'hsl(220, 16%, 17%)'
-const MUTED = 'hsl(217, 12%, 58%)'
-const SERIES_COLORS = ['hsl(190, 95%, 50%)', 'hsl(0, 72%, 55%)', 'hsl(38, 92%, 55%)', 'hsl(280, 65%, 62%)']
+const GRID = 'hsl(var(--border))'
+const MUTED = 'hsl(var(--muted-foreground))'
+// "You" always draws in the accent; the rest stay fixed but distinct from it.
+const SERIES_COLORS = ['hsl(var(--primary))', 'hsl(var(--loss))', 'hsl(190, 95%, 50%)', 'hsl(280, 65%, 62%)']
 const RESOURCE_KEYS = ['food', 'wood', 'gold', 'stone'] as const
 
 type ResourceKey = (typeof RESOURCE_KEYS)[number]
@@ -53,12 +55,6 @@ const CATEGORY_STYLE: Record<BuildEvent['category'], string> = {
   building: 'text-primary',
   upgrade: 'text-warn',
   other: 'text-muted-foreground',
-}
-
-function fmtTime(sec: number | null | undefined): string {
-  if (sec == null || !Number.isFinite(sec)) return '-'
-  const s = Math.round(sec)
-  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
 }
 
 /**
@@ -123,8 +119,8 @@ export function GameSummaryPanel({
           <InsightCard
             icon={<Clock className="h-4 w-4 text-primary" />}
             label="Age timing"
-            value={fmtTime(myAge.get(2))}
-            hint={`Castle ${fmtTime(myAge.get(3))} / Imperial ${fmtTime(myAge.get(4))}`}
+            value={formatDurationShort(myAge.get(2))}
+            hint={`Castle ${formatDurationShort(myAge.get(3))} / Imperial ${formatDurationShort(myAge.get(4))}`}
           />
           <InsightCard
             icon={<Users className="h-4 w-4 text-primary" />}
@@ -372,9 +368,9 @@ function AgeTable({
       rowKey={(r) => String(r.player.playerId)}
       columns={[
         { key: 'player', label: 'Player', value: (r) => playerLabel(r.player), display: (_, r) => playerLabel(r.player) },
-        { key: 'age2', label: 'Age II', align: 'right', better: 'low', value: (r) => r.timings.get(2) ?? null, display: (v) => fmtTime(typeof v === 'number' ? v : null) },
-        { key: 'age3', label: 'Age III', align: 'right', better: 'low', value: (r) => r.timings.get(3) ?? null, display: (v) => fmtTime(typeof v === 'number' ? v : null) },
-        { key: 'age4', label: 'Age IV', align: 'right', better: 'low', value: (r) => r.timings.get(4) ?? null, display: (v) => fmtTime(typeof v === 'number' ? v : null) },
+        { key: 'age2', label: 'Age II', align: 'right', better: 'low', value: (r) => r.timings.get(2) ?? null, display: (v) => formatDurationShort(typeof v === 'number' ? v : null) },
+        { key: 'age3', label: 'Age III', align: 'right', better: 'low', value: (r) => r.timings.get(3) ?? null, display: (v) => formatDurationShort(typeof v === 'number' ? v : null) },
+        { key: 'age4', label: 'Age IV', align: 'right', better: 'low', value: (r) => r.timings.get(4) ?? null, display: (v) => formatDurationShort(typeof v === 'number' ? v : null) },
         {
           key: 'upgrades',
           label: 'Upgrades',
@@ -494,13 +490,19 @@ function TimeChart({
             fontSize={11}
             tickLine={false}
             axisLine={false}
-            tickFormatter={fmtTime}
+            tickFormatter={formatDurationShort}
           />
           <YAxis stroke={MUTED} fontSize={11} tickLine={false} axisLine={false} width={44} tickFormatter={fmtK} />
           <Tooltip
-            contentStyle={{ background: 'hsl(222, 26%, 8%)', border: `1px solid ${GRID}`, borderRadius: 8, fontSize: 12 }}
+            contentStyle={{
+              background: 'hsl(var(--popover))',
+              color: 'hsl(var(--popover-foreground))',
+              border: `1px solid ${GRID}`,
+              borderRadius: 8,
+              fontSize: 12,
+            }}
             labelStyle={{ color: MUTED }}
-            labelFormatter={(t) => fmtTime(Number(t))}
+            labelFormatter={(t) => formatDurationShort(Number(t))}
             formatter={(v, key) => {
               const pid = Number(String(key).slice(1))
               const p = players.find((x) => x.playerId === pid)
@@ -545,7 +547,7 @@ function BuildOrderColumn({ player, me, color }: { player: PlayerSummary; me: bo
       <div className="max-h-96 overflow-y-auto">
         {rows.map((r, i) => (
           <div key={i} className="flex items-baseline gap-2 px-3 py-1 text-xs">
-            <span className="w-10 shrink-0 tabular-nums text-muted-foreground">{fmtTime(r.timeSec)}</span>
+            <span className="w-10 shrink-0 tabular-nums text-muted-foreground">{formatDurationShort(r.timeSec)}</span>
             <span className={cn('flex-1 truncate', CATEGORY_STYLE[r.category])}>
               {r.name}
               {r.count > 1 && <span className="text-muted-foreground"> x{r.count}</span>}
@@ -634,7 +636,7 @@ function villagerHint(
   if (tc) {
     parts.push(
       tc.idleWindows > 0
-        ? `${tc.idleWindows} long gap(s), longest ${fmtTime(tc.longestGapSec)}`
+        ? `${tc.idleWindows} long gap(s), longest ${formatDurationShort(tc.longestGapSec)}`
         : 'no long villager gaps',
     )
   }

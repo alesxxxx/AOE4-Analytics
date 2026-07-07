@@ -11,7 +11,8 @@ RTSLytics is read-only. It uses public APIs and your own local AoE4 files.
 ## Features
 
 - Pre-game scouting: opponent rank, rating, recent form, favorite civs, and matchup notes.
-- In-game overlay: top matchup bar, civ flags, ranks, key units, counters, and optional live APM.
+- In-game overlay: top matchup bar, civ flags, ranks, key units, counters, win odds by rating, and optional live APM.
+- Session tracker: today's record at a glance ("3W – 1L +42") on the overlay, so a losing streak is visible without leaving the game.
 - Live match clock widgets: a step-by-step build-order guide (pin any build from Guides) and age-up pace targets for your rank, driven by the real game clock (your own log file, pauses included).
 - Post-game review: result card, economy grade, APM, trends, and game history.
 - Guides and data: civ pages, tier lists, counters, build orders, landmarks, and matchup stats.

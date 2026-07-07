@@ -37,6 +37,18 @@ export function createMainWindow(): BrowserWindow {
   win.on('maximize', () => win.webContents.send(IpcChannels.windowMaximizedChanged, true))
   win.on('unmaximize', () => win.webContents.send(IpcChannels.windowMaximizedChanged, false))
 
+  // Crash recovery (same treatment as the overlay window): a dead or hung
+  // renderer would otherwise leave a permanently blank frameless window with
+  // no way to close it but the task manager.
+  win.webContents.on('render-process-gone', (_e, details) => {
+    console.warn('[main] renderer gone:', details.reason)
+    if (!win.isDestroyed()) win.webContents.reload()
+  })
+  win.on('unresponsive', () => {
+    console.warn('[main] renderer unresponsive — reloading')
+    if (!win.isDestroyed()) win.webContents.reload()
+  })
+
   // Open external links in the browser; block in-app navigation/other schemes.
   hardenWindow(win)
 

@@ -1,7 +1,4 @@
 /**
- * DORMANT: the only consumer is PerformanceTrends.tsx, which is not currently
- * rendered. Pure + tested; kept for a future trends surface.
- *
  * Recent-performance trends for the dashboard (pure). Computes sparkline series
  * and "vs earlier" deltas from the stored game history — the DPM-style metric
  * tiles, but only from data we actually have (rating, result, duration).

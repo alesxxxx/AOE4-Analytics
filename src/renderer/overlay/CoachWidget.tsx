@@ -26,8 +26,9 @@ interface Checkpoint {
 /**
  * DORMANT (2026-07-02): built, shipped, and REMOVED from the overlay the same day
  * — the user found log-clock-driven reminders too rough in practice. NOT imported
- * by OverlayApp. The overlay:gameClock channel it would use currently has NO
- * producer (the push is not wired). Kept in case a tighter design comes back.
+ * by OverlayApp. The overlay:gameClock channel it would use IS live (pollService
+ * pushes the anchor each second for the build/age widgets), so re-enabling is
+ * render-only — but don't without a fundamentally tighter design.
  *
  * The in-game coach: quiet, timed reminder chips driven by the REAL game clock
  * (warnings.log sim start + pauses — no game memory is ever read). Shows the

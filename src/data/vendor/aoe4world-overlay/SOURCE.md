@@ -6,6 +6,19 @@
 - **Files:** 24 civilization flag PNGs (incl. `unknown.png` fallback), 104×56 RGBA.
 - **Used by:** the in-game overlay matchup bar (`src/renderer/overlay/MatchupBar.tsx` via `flags.ts`).
 
+## Unit + building icons (`units/`, `buildings/`)
+
+- **Source:** `data.aoe4world.com/images/{units,buildings}/<slug>-<n>.png` (the
+  CDN the overlay previously fetched from at match start).
+- **Fetched:** 2026-07-07 via `scripts/vendor-unit-icons.mjs` (re-run it after
+  adding units to `src/domain/civUnits.ts` or slugs to `buildIcons.ts`; it
+  regenerates `units.ts` + `buildings.ts`).
+- **Files:** 46 unit + 13 building icon PNGs — every `CivKeyUnit.icon` slug in
+  the troop cheat-sheet plus every build-order widget slug.
+- **Used by:** the matchup bar's troop rows (`MatchupBar.tsx` via `units.ts`)
+  and the build-order widget (`buildIcons.ts`), with the CDN kept as a
+  fallback for not-yet-vendored slugs.
+
 ## License / attribution
 
 These flag images depict *Age of Empires IV* civilizations and are © Microsoft,

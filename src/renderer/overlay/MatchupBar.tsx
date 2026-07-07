@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react'
 import { civDisplayName } from '@domain/civ'
 import type { CivKeyUnit, MatchupTroops } from '@domain/civUnits'
 import type { LiveMatchup, MatchupPlayer } from '@domain/liveMatch'
+import { winProbability } from '@domain/winProbability'
+import { UNIT_ICONS } from '@data/vendor/aoe4world-overlay/units'
 import { formatRankLevel, formatRating } from '@shared/format'
 import { cn } from '@shared/lib/utils'
 import { CivFlag } from './CivFlag'
@@ -36,6 +38,18 @@ export function MatchupBar({
   const hasTeams = teams.length >= 2 && teams.some((t) => t.length > 0)
   const hasTroops = !!troops && (troops.mine.length > 0 || troops.theirs.length > 0)
   const maxTeamSize = hasTeams ? Math.max(...teams.map((t) => t.length)) : 1
+  // Pre-game win odds by rating gap (Elo expectation) — 1v1 with two rated
+  // humans only; anything else (teams, AI, missing rating) hides the chip.
+  const winOdds = useMemo(() => {
+    const t = matchup?.teams ?? []
+    if (t.length >= 2 && t.some((team) => team.length > 0)) {
+      const mine = t[0] ?? []
+      const theirs = t.slice(1).flat()
+      if (mine.length !== 1 || theirs.length !== 1 || theirs[0]!.isAI) return null
+      return winProbability(mine[0]!.rating, theirs[0]!.rating)
+    }
+    return opponent.isAI ? null : winProbability(me.rating, opponent.rating)
+  }, [matchup, me.rating, opponent.isAI, opponent.rating])
 
   return (
     <div
@@ -49,6 +63,7 @@ export function MatchupBar({
               label={maxTeamSize > 1 ? 'Your Team' : null}
               players={teams[0] ?? []}
               align="left"
+              winOdds={winOdds}
             />
             <div className="w-[220px] shrink-0" aria-hidden />
             <TeamColumn
@@ -71,7 +86,7 @@ export function MatchupBar({
       ) : (
         <div className="flex flex-col items-center">
           <div className="flex items-start">
-            <LegacySide side={me} align="left" />
+            <LegacySide side={me} align="left" winOdds={winOdds} />
             <div className="w-[280px] shrink-0" aria-hidden />
             <LegacySide side={opponent} align="right" />
           </div>
@@ -92,10 +107,13 @@ function TeamColumn({
   label,
   players,
   align,
+  winOdds,
 }: {
   label: string | null
   players: MatchupPlayer[]
   align: 'left' | 'right'
+  /** Pre-game win odds (%) shown on the primary line; my column in a 1v1 only. */
+  winOdds?: number | null
 }) {
   const isRight = align === 'right'
   const color = isRight ? 'hsl(var(--loss))' : 'hsl(var(--win))'
@@ -131,7 +149,7 @@ function TeamColumn({
           {label}
         </div>
       )}
-      {primary && <PlayerLine player={primary} align={align} />}
+      {primary && <PlayerLine player={primary} align={align} winOdds={winOdds} />}
       {rest.length > 0 && (
         <div className="divide-y divide-white/10 border-t border-white/10">
           {rest.map((p, i) => (
@@ -147,7 +165,15 @@ function TeamColumn({
   )
 }
 
-function PlayerLine({ player, align }: { player: MatchupPlayer; align: 'left' | 'right' }) {
+function PlayerLine({
+  player,
+  align,
+  winOdds,
+}: {
+  player: MatchupPlayer
+  align: 'left' | 'right'
+  winOdds?: number | null
+}) {
   const isRight = align === 'right'
   const color = player.isMe ? 'hsl(var(--primary))' : isRight ? 'hsl(var(--loss))' : 'hsl(var(--win))'
   const rank =
@@ -174,16 +200,30 @@ function PlayerLine({ player, align }: { player: MatchupPlayer; align: 'left' | 
             <span className="max-w-[150px] truncate">{player.name}</span>
           </span>
         </div>
-        {(rank || player.rating != null) && (
+        {(rank || player.rating != null || winOdds != null) && (
           <div className={cn('mt-1 flex items-center gap-2 text-[11px] text-white/65', isRight && 'flex-row-reverse')}>
             {rank && <span className="whitespace-nowrap">{rank}</span>}
             {player.rating != null && (
               <span className="font-semibold tabular-nums text-white/85">{formatRating(player.rating)}</span>
             )}
+            {winOdds != null && <WinOddsChip pct={winOdds} />}
           </div>
         )}
       </div>
     </div>
+  )
+}
+
+/**
+ * Pre-game win odds from the rating gap (Elo expectation) — an estimate, so the
+ * label says "by rating" rather than presenting it as a prediction.
+ */
+function WinOddsChip({ pct }: { pct: number }) {
+  return (
+    <span className="whitespace-nowrap tabular-nums">
+      <span className={pct >= 50 ? 'text-win' : 'text-loss'}>{Math.round(pct)}%</span>{' '}
+      <span className="text-white/55">by rating</span>
+    </span>
   )
 }
 
@@ -242,10 +282,15 @@ function TroopsCol({
 }
 
 function UnitIcon({ unit, priority }: { unit: CivKeyUnit; priority?: boolean }) {
-  const candidates = useMemo(
-    () => Array.from(new Set([`-${unit.age}`, '-1', '-2', '-3', '-4', ''])),
-    [unit.age],
-  )
+  // Vendored icon first (bundled — instant, offline); the CDN self-heal chain
+  // stays as the fallback for units added before the next vendoring run.
+  const candidates = useMemo(() => {
+    const cdn = Array.from(new Set([`-${unit.age}`, '-1', '-2', '-3', '-4', ''])).map(
+      (suffix) => `${UNIT_CDN}/${unit.icon}${suffix}.png`,
+    )
+    const vendored = UNIT_ICONS[unit.icon]
+    return vendored ? [vendored, ...cdn] : cdn
+  }, [unit.age, unit.icon])
   const [idx, setIdx] = useState(0)
   const broken = idx >= candidates.length
   const ring = priority ? 'ring-2 ring-win' : 'ring-1 ring-white/15'
@@ -266,7 +311,7 @@ function UnitIcon({ unit, priority }: { unit: CivKeyUnit; priority?: boolean }) 
       ) : (
         <img
           key={candidates[idx]}
-          src={`${UNIT_CDN}/${unit.icon}${candidates[idx]}.png`}
+          src={candidates[idx]}
           alt={unit.name}
           onError={() => setIdx((i) => i + 1)}
           className={cn('h-11 w-11 rounded bg-black/40 object-contain', ring)}
@@ -280,12 +325,25 @@ function UnitIcon({ unit, priority }: { unit: CivKeyUnit; priority?: boolean }) 
   )
 }
 
-function LegacySide({ side, align }: { side: MatchupSide; align: 'left' | 'right' }) {
+function LegacySide({
+  side,
+  align,
+  winOdds,
+}: {
+  side: MatchupSide
+  align: 'left' | 'right'
+  winOdds?: number | null
+}) {
   const isRight = align === 'right'
   const color = isRight ? 'hsl(var(--loss))' : 'hsl(var(--win))'
   const rank = side.rankLevel && /[a-z]/i.test(side.rankLevel) ? formatRankLevel(side.rankLevel) : null
   const hasRow2 =
-    !side.isAI && (rank != null || side.rating != null || side.winRate != null || side.favoriteCivs.length > 0)
+    !side.isAI &&
+    (rank != null ||
+      side.rating != null ||
+      side.winRate != null ||
+      side.favoriteCivs.length > 0 ||
+      winOdds != null)
   return (
     <div
       className={cn(
@@ -326,6 +384,7 @@ function LegacySide({ side, align }: { side: MatchupSide; align: 'left' | 'right
                 WR
               </span>
             )}
+            {winOdds != null && <WinOddsChip pct={winOdds} />}
             {side.favoriteCivs.length > 0 && (
               <span className={cn('flex items-center gap-1', isRight && 'flex-row-reverse')}>
                 {side.favoriteCivs.map((c) => (

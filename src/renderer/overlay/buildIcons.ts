@@ -4,10 +4,14 @@
  * (like a League item path) instead of a wall of text. Keyword-matched against
  * the existing note prose, so no build-order data has to be re-authored.
  *
- * Icons come from aoe4world's CDN (already allow-listed in the CSP img-src):
- *   https://data.aoe4world.com/images/{buildings|units}/<slug>-1.png
- * Missing/404 icons fall back to the unit/building name (see BuildIcon).
+ * Icons are bundled (vendored from data.aoe4world.com — see
+ * scripts/vendor-unit-icons.mjs), so they render instantly and offline; the
+ * CDN (still CSP-allow-listed) is only the fallback for a slug added here
+ * before the next vendoring run. Missing icons fall back to the name text.
  */
+import { BUILDING_ICONS } from '@data/vendor/aoe4world-overlay/buildings'
+import { UNIT_ICONS } from '@data/vendor/aoe4world-overlay/units'
+
 export interface BuildTarget {
   label: string
   kind: 'building' | 'unit'
@@ -15,8 +19,8 @@ export interface BuildTarget {
 }
 
 const CDN = 'https://data.aoe4world.com/images'
-const b = (slug: string): string => `${CDN}/buildings/${slug}-1.png`
-const u = (slug: string): string => `${CDN}/units/${slug}-1.png`
+const b = (slug: string): string => BUILDING_ICONS[slug] ?? `${CDN}/buildings/${slug}-1.png`
+const u = (slug: string): string => UNIT_ICONS[slug] ?? `${CDN}/units/${slug}-1.png`
 
 /**
  * Common beginner-relevant buildings + units, matched word-boundary so "Archery

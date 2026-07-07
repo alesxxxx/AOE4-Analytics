@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import {
   ArrowLeftRight,
@@ -27,7 +27,7 @@ import { Card, CardContent } from '@shared/components/ui/card'
 import { Skeleton } from '@shared/components/ui/skeleton'
 import { useCivMeta } from '../queries/useCivMeta'
 import { TierBadge } from '../components/TierBadge'
-import { ErrorBox } from '../components/feedback'
+import { EmptyBox, ErrorBox } from '../components/feedback'
 
 const LADDERS: { label: string; value: StatsLeaderboard }[] = [
   { label: 'Ranked 1v1', value: 'rm_solo' },
@@ -60,7 +60,19 @@ function rankFilterable(lb: StatsLeaderboard): boolean {
 type SortKey = 'civName' | 'winRate' | 'pickRate' | 'games'
 
 export function CivMeta() {
-  const [tab, setTab] = useState<TabKey>('tier')
+  // Tab lives in the URL so a refresh or deep link restores it.
+  const [searchParams, setSearchParams] = useSearchParams()
+  const tabParam = searchParams.get('tab')
+  const tab: TabKey = TABS.some((t) => t.key === tabParam) ? (tabParam as TabKey) : 'tier'
+  const setTab = (key: TabKey) =>
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev)
+        next.set('tab', key)
+        return next
+      },
+      { replace: true },
+    )
   const [leaderboard, setLeaderboard] = useState<StatsLeaderboard>('rm_solo')
   const [bracketIdx, setBracketIdx] = useState(0)
   const [sort, setSort] = useState<{ key: SortKey; dir: 'asc' | 'desc' }>({
@@ -109,11 +121,13 @@ export function CivMeta() {
       />
 
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap gap-1">
+        <div className="flex flex-wrap gap-1" role="tablist">
           {TABS.map((t) => (
             <button
               key={t.key}
               type="button"
+              role="tab"
+              aria-selected={tab === t.key}
               onClick={() => setTab(t.key)}
               className={cn(
                 'inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm transition-colors',
@@ -162,29 +176,31 @@ export function CivMeta() {
         </p>
       )}
 
-      {tab === 'matchups' ? (
-        <MatchupsTab />
-      ) : isLoading ? (
-        <Skeleton className="h-96" />
-      ) : data && !data.ok ? (
-        <ErrorBox message={data.error.message} onRetry={() => refetch()} />
-      ) : data?.ok ? (
-        <div className={cn('space-y-5', isFetching && 'opacity-60')}>
-          {tab === 'tier' && <TierTab byTier={byTier} />}
-          {tab === 'stats' && <CivStatsTable civs={sortedCivs} sort={sort} onSort={toggleSort} />}
-          {tab === 'maps' && <MapTable maps={maps} />}
+      <div role="tabpanel">
+        {tab === 'matchups' ? (
+          <MatchupsTab />
+        ) : isLoading ? (
+          <Skeleton className="h-96" />
+        ) : data && !data.ok ? (
+          <ErrorBox message={data.error.message} onRetry={() => refetch()} />
+        ) : data?.ok ? (
+          <div className={cn('space-y-5', isFetching && 'opacity-60')}>
+            {tab === 'tier' && <TierTab byTier={byTier} />}
+            {tab === 'stats' && <CivStatsTable civs={sortedCivs} sort={sort} onSort={toggleSort} />}
+            {tab === 'maps' && <MapTable maps={maps} />}
 
-          <div className="flex items-start gap-2 rounded-lg border border-border bg-card/50 p-4 text-xs text-muted-foreground">
-            <Info className="mt-0.5 h-4 w-4 shrink-0" />
-            <p className="leading-relaxed">
-              Live aggregates from AoE4World ({data.data.totalCivGames.toLocaleString()} games in
-              this slice). Win rate near 50% is normal — a few points is a real edge across many
-              games, but at beginner level your own fundamentals matter far more than civ choice.
-              Per-patch history isn&apos;t exposed by the API, so this reflects the current dataset.
-            </p>
+            <div className="flex items-start gap-2 rounded-lg border border-border bg-card/50 p-4 text-xs text-muted-foreground">
+              <Info className="mt-0.5 h-4 w-4 shrink-0" />
+              <p className="leading-relaxed">
+                Live aggregates from AoE4World ({data.data.totalCivGames.toLocaleString()} games in
+                this slice). Win rate near 50% is normal — a few points is a real edge across many
+                games, but at beginner level your own fundamentals matter far more than civ choice.
+                Per-patch history isn&apos;t exposed by the API, so this reflects the current dataset.
+              </p>
+            </div>
           </div>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
     </div>
   )
 }
@@ -241,18 +257,18 @@ function CivStatsTable({
       <CardContent className="p-0">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted-foreground">
-              <th className="px-4 py-2.5 font-medium">
+            <tr className="border-b border-border">
+              <th className="rts-ledger-head px-4 py-2.5 text-left">
                 <SortBtn label="Civilization" col="civName" sort={sort} onClick={onSort} />
               </th>
-              <th className="px-2 py-2.5 text-center font-medium">Tier</th>
-              <th className="px-2 py-2.5 text-right font-medium">
+              <th className="rts-ledger-head px-2 py-2.5 text-center">Tier</th>
+              <th className="rts-ledger-head px-2 py-2.5 text-right">
                 <SortBtn label="Win %" col="winRate" sort={sort} onClick={onSort} right />
               </th>
-              <th className="px-2 py-2.5 text-right font-medium">
+              <th className="rts-ledger-head px-2 py-2.5 text-right">
                 <SortBtn label="Pick %" col="pickRate" sort={sort} onClick={onSort} right />
               </th>
-              <th className="px-4 py-2.5 text-right font-medium">
+              <th className="rts-ledger-head px-4 py-2.5 text-right">
                 <SortBtn label="Games" col="games" sort={sort} onClick={onSort} right />
               </th>
             </tr>
@@ -329,7 +345,9 @@ function CivRow({ c }: { c: CivTier }) {
 }
 
 function MapTable({ maps }: { maps: MapStat[] }) {
-  if (maps.length === 0) return null
+  if (maps.length === 0) {
+    return <EmptyBox>No map stats for this leaderboard yet — try another ladder.</EmptyBox>
+  }
   return (
     <Card>
       <CardContent className="space-y-3 p-4">
@@ -339,11 +357,11 @@ function MapTable({ maps }: { maps: MapStat[] }) {
         </h3>
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted-foreground">
-              <th className="py-2 pr-2 font-medium">Map</th>
-              <th className="px-2 py-2 text-right font-medium">Play %</th>
-              <th className="px-2 py-2 text-right font-medium">Avg length</th>
-              <th className="py-2 pl-2 text-right font-medium">Strongest civ</th>
+            <tr className="border-b border-border">
+              <th className="rts-ledger-head py-2 pr-2 text-left">Map</th>
+              <th className="rts-ledger-head px-2 py-2 text-right">Play %</th>
+              <th className="rts-ledger-head px-2 py-2 text-right">Avg length</th>
+              <th className="rts-ledger-head py-2 pl-2 text-right">Strongest civ</th>
             </tr>
           </thead>
           <tbody>
@@ -466,7 +484,7 @@ function MatchupsTab() {
       {plan ? (
         <section className="space-y-3 rounded-lg border border-border bg-card/50 p-5">
           <h2 className="flex items-center gap-2 text-sm font-semibold">
-            <ShieldHalf className="h-4 w-4 text-cyan-400" />
+            <ShieldHalf className="h-4 w-4 text-primary" />
             How to beat {civDisplayName(oppCiv)}
           </h2>
           <div className="text-sm text-muted-foreground">

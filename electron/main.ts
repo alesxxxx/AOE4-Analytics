@@ -27,6 +27,16 @@ if (process.env['RTSLYTICS_VERIFY'] || process.env['RTSLYTICS_SMOKE'] === '1') {
   app.setPath('userData', join(app.getPath('temp'), 'rtslytics-diag'))
 }
 
+// Last-resort safety net: a rejected fire-and-forget promise (poll tick, IPC
+// push, Steam restore) or a stray throw must never take the whole app down —
+// log it and keep running. Anything that lands here is a bug to fix upstream.
+process.on('unhandledRejection', (reason) => {
+  console.error('[rtslytics] unhandled rejection:', reason)
+})
+process.on('uncaughtException', (err) => {
+  console.error('[rtslytics] uncaught exception:', err)
+})
+
 let mainWindow: BrowserWindow | null = null
 let overlay: OverlayController | null = null
 let poll: PollManager | null = null

@@ -246,6 +246,18 @@ export class OverlayController {
   }
 
   /**
+   * Whether input should count as GAME input right now — the APM counter's
+   * gate, sharing the overlay's own visibility semantics: fail OPEN when
+   * gating is off or the watcher is down (never zero a live counter on a
+   * watcher hiccup), otherwise the debounced "game/own-app is foreground"
+   * state (so alt-tabbed typing doesn't inflate APM).
+   */
+  isGameFocusedForInput(): boolean {
+    if (!this.gatingEnabled || !this.watcher.isRunning()) return true
+    return this.gameForeground
+  }
+
+  /**
    * (Re)apply the focus-gating setting: when `overlay.gateToGame` is on (and on
    * Windows, outside diagnostics) watch the foreground window and hide the overlay
    * off-game; when off, stop watching and always allow the overlay while wanted.

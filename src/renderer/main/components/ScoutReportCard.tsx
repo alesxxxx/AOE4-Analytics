@@ -2,7 +2,7 @@ import type { ScoutReport } from '@domain/types'
 import { Link } from 'react-router-dom'
 import { Swords, Map as MapIcon, Info, ShieldCheck, ArrowRight } from 'lucide-react'
 import { Card, CardContent } from '@shared/components/ui/card'
-import { countryFlag, formatRating, formatDurationShort, winRateTone } from '@shared/format'
+import { countryFlag, formatPercent, formatRating, formatDurationShort, winRateTone } from '@shared/format'
 import { counterPlanForCiv } from '@domain/civUnits'
 import { RankBadge } from './RankBadge'
 import { FormPips } from './FormPips'
@@ -62,9 +62,7 @@ export function ScoutReportCard({
         )}
 
         <section>
-          <h3 className="mb-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-            Recent form
-          </h3>
+          <h3 className="rts-ledger-head mb-1.5">Recent form</h3>
           <FormPips form={report.recentForm} />
           {report.recentForm.avgDurationSec != null && (
             <div className="mt-1 text-xs text-muted-foreground">
@@ -75,7 +73,7 @@ export function ScoutReportCard({
 
         {report.topCivs.length > 0 && (
           <section>
-            <h3 className="mb-2 flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            <h3 className="rts-ledger-head mb-2 flex items-center gap-1.5">
               <Swords className="h-3.5 w-3.5" />
               Most-played civs
             </h3>
@@ -90,7 +88,7 @@ export function ScoutReportCard({
                     />
                   </div>
                   <span className="w-24 shrink-0 text-right text-xs text-muted-foreground">
-                    {c.games}g{c.winRate != null ? ` · ${c.winRate}%` : ''}
+                    {c.games}g{c.winRate != null ? ` · ${formatPercent(c.winRate)}` : ''}
                   </span>
                 </div>
               ))}
@@ -100,7 +98,7 @@ export function ScoutReportCard({
 
         {counterPlan && topCiv && counterPlan.counters.length > 0 && (
           <section>
-            <h3 className="mb-1.5 flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            <h3 className="rts-ledger-head mb-1.5 flex items-center gap-1.5">
               <ShieldCheck className="h-3.5 w-3.5" />
               How to beat their {topCiv.civName}
             </h3>
@@ -121,7 +119,7 @@ export function ScoutReportCard({
 
         {report.topMaps.length > 0 && (
           <section>
-            <h3 className="mb-2 flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+            <h3 className="rts-ledger-head mb-2 flex items-center gap-1.5">
               <MapIcon className="h-3.5 w-3.5" />
               Favourite maps
             </h3>
@@ -136,7 +134,7 @@ export function ScoutReportCard({
         )}
 
         <section>
-          <h3 className="mb-1.5 flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+          <h3 className="rts-ledger-head mb-1.5 flex items-center gap-1.5">
             <Info className="h-3.5 w-3.5" />
             What to expect
           </h3>

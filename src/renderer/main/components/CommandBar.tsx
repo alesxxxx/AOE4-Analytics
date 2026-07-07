@@ -142,7 +142,9 @@ function WinButton({
       onClick={onClick}
       className={cn(
         'flex h-12 w-11 items-center justify-center text-muted-foreground transition-colors',
-        danger ? 'hover:bg-red-600 hover:text-white' : 'hover:bg-foreground/10 hover:text-foreground',
+        danger
+          ? 'hover:bg-destructive hover:text-destructive-foreground'
+          : 'hover:bg-foreground/10 hover:text-foreground',
       )}
     >
       {children}

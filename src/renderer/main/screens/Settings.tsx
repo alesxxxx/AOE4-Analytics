@@ -11,7 +11,7 @@ import { matchSteamAccount, type SteamAccount } from '@domain/steamAccounts'
 import { ipc } from '@shared/ipc'
 import { cn } from '@shared/lib/utils'
 import { useDebounce } from '@shared/hooks/useDebounce'
-import { ACCENT_PRESETS } from '@shared/accent'
+import { ACCENT_PRESETS, currentAccentHex } from '@shared/accent'
 import { Card, CardContent } from '@shared/components/ui/card'
 import { useSettings, useUpdateSettings, useRemoveAccount } from '../queries/useProfile'
 import { PageHead } from '../components/PageHead'
@@ -333,6 +333,27 @@ export function Settings() {
                 className="h-4 w-4 shrink-0 accent-[hsl(var(--primary))]"
               />
             </label>
+            <label className="flex cursor-pointer items-center justify-between gap-3 text-sm">
+              <span>
+                Session tracker
+                <span className="block text-[11px] text-muted-foreground">
+                  Today&apos;s record at a glance — &quot;3W – 1L +42&quot; — so a losing streak is
+                  visible without leaving the game.
+                </span>
+              </span>
+              <input
+                type="checkbox"
+                checked={settings?.overlay.showSession ?? true}
+                onChange={(e) => {
+                  if (!settings) return
+                  update.mutate(
+                    { overlay: { ...settings.overlay, showSession: e.target.checked } },
+                    { onSuccess: () => void ipc.applyOverlaySettings() },
+                  )
+                }}
+                className="h-4 w-4 shrink-0 accent-[hsl(var(--primary))]"
+              />
+            </label>
             <div className="flex items-center justify-between gap-3 text-sm">
               <span>
                 Build order on overlay
@@ -589,7 +610,7 @@ function AccentPicker({
           Custom
           <input
             type="color"
-            value={value ?? '#1fa8e0'}
+            value={value ?? currentAccentHex()}
             onChange={(e) => onChange(e.target.value)}
             className="h-0 w-0 opacity-0"
           />

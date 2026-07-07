@@ -1,4 +1,11 @@
-/** Pure geometry helpers for placing the overlay window safely. */
+/**
+ * Pure geometry helpers for placing the overlay window safely.
+ *
+ * DORMANT (2026-07-07): no production caller since the overlay moved to
+ * full-display bounds + per-widget positions (overlayController.applyPosition).
+ * The `overlay.position` setting these presets served is likewise unused.
+ * Kept (tested) in case window-level presets come back.
+ */
 
 export interface Rect {
   x: number

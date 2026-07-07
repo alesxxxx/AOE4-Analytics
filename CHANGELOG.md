@@ -4,6 +4,49 @@ All notable changes to RTSLytics are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project aims
 to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2026-07-07
+
+### Added
+
+- Session tracker overlay widget: today's record at a glance ("3W – 1L +42")
+  during the match and on the post-game screen. Placeable like the other
+  widgets; toggle in Settings → Overlay.
+- Win odds on the matchup bar: your Elo-expected win chance from the rating
+  gap ("62% by rating") for ranked 1v1s with two rated players.
+- Trend arrows on the My Stats performance tiles (APM / win rate / economy
+  direction across your recent games).
+
+### Changed
+
+- All overlay unit and building icons are now bundled with the app — the
+  matchup troops row and build-order widget render instantly and fully
+  offline instead of fetching from aoe4world's CDN at match start.
+- Win rates render at one consistent precision app-wide (whole percent);
+  durations use one shared formatter.
+- Charts follow your accent colour and the app theme (rating history and
+  post-game summary charts previously used fixed colours).
+- Guides and Civ Meta tabs are URL-addressable (deep-link + refresh restore
+  the tab) and expose proper tab semantics to screen readers.
+- The Scout report uses the page width; leaderboard country filter covers ~60
+  countries; ledger-style headers across Scout, leaderboard, and civ tables.
+- The live APM counter only counts input while the game is focused —
+  alt-tabbed typing no longer inflates your APM.
+
+### Fixed
+
+- Your per-civ win rate on civ pages now counts team games (previously they
+  were dropped there but counted on My Stats).
+- The Dashboard ladder panel refreshes right after a game ends or a sync
+  completes, instead of waiting for a window refocus.
+- The main window now recovers automatically if its renderer crashes or
+  hangs, matching the overlay's existing self-recovery.
+- A crash-safety net logs unhandled errors in the main process instead of
+  letting a stray rejection take the app down.
+- The Settings custom-colour picker opens on the actual current accent
+  instead of always suggesting blue.
+- Empty leaderboard filters and empty civ map tables show a friendly message
+  instead of a blank area; failed game launches surface an error.
+
 ## [0.3.0] - 2026-07-07
 
 ### Added
@@ -93,6 +136,7 @@ to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Initial release: pre-game scouting, in-game overlay, post-game review, and
   civ/guide/tier-list data, powered by local AoE4 files and public APIs.
 
+[0.4.0]: https://github.com/alesxxxx/AOE4-Analytics/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/alesxxxx/AOE4-Analytics/compare/v0.2.3...v0.3.0
 [0.2.2]: https://github.com/alesxxxx/AOE4-Analytics/compare/v0.2.1...v0.2.3
 [0.2.1]: https://github.com/alesxxxx/AOE4-Analytics/compare/v0.2.0...v0.2.1

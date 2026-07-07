@@ -15,9 +15,11 @@ import { unitsForCiv, type VendoredUnit } from '@data/gameData'
 import { BUNDLED_BUILD_ORDERS } from '@data/buildOrders'
 import type { BuildOrder } from '@domain/buildOrderSchema'
 import { roleFromUnit, counterFor } from '@domain/counters'
+import { resultFromPerPlayer } from '@domain/analysis'
 import type { CivMatchup } from '@domain/civDetailStats'
 import { computePlayerStats, type StatGame } from '@domain/playerStats'
 import { civDisplayName } from '@domain/civ'
+import { formatDurationShort, formatPercent } from '@shared/format'
 import { Badge } from '@shared/components/ui/badge'
 import { Card, CardContent } from '@shared/components/ui/card'
 import { BuildOrderViewer } from '../components/BuildOrderViewer'
@@ -27,6 +29,8 @@ import { TierBadge } from '../components/TierBadge'
 import { useCivDetailStats } from '../queries/useCivDetailStats'
 import { LandmarkPlan } from '../components/LandmarkPlan'
 import { useHistory } from '../queries/useHistory'
+import { useSettings } from '../queries/useProfile'
+import { ErrorBox } from '../components/feedback'
 import { useQuery } from '@tanstack/react-query'
 import { ipc } from '@shared/ipc'
 
@@ -176,8 +180,10 @@ function BackLink() {
 
 /** Live meta stats for the civ: global + your personal win rate, matchups, maps. */
 function CivMetaSection({ slug }: { slug: string }) {
-  const { data, isLoading } = useCivDetailStats(slug)
+  const { data, isLoading, refetch } = useCivDetailStats(slug)
   const { data: history } = useHistory()
+  const { data: settings } = useSettings()
+  const profileId = settings?.profileId ?? null
 
   const stats = data?.ok ? data.data : null
 
@@ -185,7 +191,7 @@ function CivMetaSection({ slug }: { slug: string }) {
   const mine = useMemo(() => {
     const matches = history?.ok ? history.data : []
     const games: StatGame[] = matches.map((m) => ({
-      result: m.result,
+      result: m.result ?? resultFromPerPlayer(m.perPlayer, profileId),
       civ: m.civ,
       oppCiv: m.oppCiv,
       map: m.map,
@@ -195,12 +201,16 @@ function CivMetaSection({ slug }: { slug: string }) {
       playedAt: m.playedAt,
     }))
     return computePlayerStats(games).byCiv.find((b) => b.key === slug) ?? null
-  }, [history, slug])
+  }, [history, slug, profileId])
 
   if (isLoading) {
     return (
       <div className="h-24 animate-pulse rounded-lg border border-border bg-card/40" aria-hidden />
     )
+  }
+
+  if (data && !data.ok) {
+    return <ErrorBox message={data.error.message} onRetry={() => refetch()} />
   }
 
   const hasMeta = stats != null && stats.winRate != null
@@ -214,7 +224,8 @@ function CivMetaSection({ slug }: { slug: string }) {
           value={
             stats?.winRate != null ? (
               <span className="flex items-center gap-2">
-                {stats.winRate}%{stats.tier && <TierBadge tier={stats.tier} />}
+                {formatPercent(stats.winRate)}
+                {stats.tier && <TierBadge tier={stats.tier} />}
               </span>
             ) : (
               '—'
@@ -225,7 +236,7 @@ function CivMetaSection({ slug }: { slug: string }) {
         <StatTile label="Pick rate" value={stats?.pickRate != null ? `${stats.pickRate}%` : '—'} />
         <StatTile
           label="Your win rate"
-          value={mine?.winRate != null ? `${mine.winRate}%` : '—'}
+          value={formatPercent(mine?.winRate)}
           sub={mine ? `${mine.games} of your games` : 'play it to track'}
         />
         <StatTile
@@ -418,7 +429,9 @@ function LandmarkRecordCard({ civ }: { civ: string }) {
                   <td className="px-3 py-2 text-right tabular-nums">
                     {r.wins}W–{r.losses}L
                     {r.games >= 2 && (
-                      <span className="ml-1.5 text-xs text-muted-foreground">{r.winRate}%</span>
+                      <span className="ml-1.5 text-xs text-muted-foreground">
+                        {formatPercent(r.winRate)}
+                      </span>
                     )}
                   </td>
                 </tr>
@@ -450,8 +463,6 @@ function LandmarkStatsCard({ civ }: { civ: string }) {
   })
   const rows = data?.ok ? data.data : []
   if (rows.length === 0) return null
-  const fmtUp = (sec: number | null) =>
-    sec == null ? '—' : `${Math.floor(sec / 60)}:${String(Math.round(sec % 60)).padStart(2, '0')}`
   return (
     <Card>
       <CardContent className="space-y-3 p-4">
@@ -491,13 +502,17 @@ function LandmarkStatsCard({ civ }: { civ: string }) {
                       <div className="min-w-24 flex-1">
                         <WinRateBar winRate={r.winRate} />
                       </div>
-                      <span className="w-12 text-right tabular-nums text-xs">{r.winRate}%</span>
+                      <span className="w-12 text-right tabular-nums text-xs">
+                        {formatPercent(r.winRate)}
+                      </span>
                     </div>
                   </td>
                   <td className="px-2 py-2 text-right tabular-nums text-muted-foreground">
                     {r.games.toLocaleString()}
                   </td>
-                  <td className="px-3 py-2 text-right tabular-nums">{fmtUp(r.avgAgeUpSec)}</td>
+                  <td className="px-3 py-2 text-right tabular-nums">
+                    {formatDurationShort(r.avgAgeUpSec)}
+                  </td>
                 </tr>
               ))}
             </tbody>

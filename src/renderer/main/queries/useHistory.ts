@@ -23,7 +23,12 @@ export function useAnalyzeRecent() {
   const qc = useQueryClient()
   return useMutation({
     mutationFn: (count?: number) => ipc.analyzeRecentGames(count),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['history'] }),
+    // New games move the dashboard's ladder numbers too, not just the list.
+    onSuccess: () =>
+      Promise.all([
+        qc.invalidateQueries({ queryKey: ['history'] }),
+        qc.invalidateQueries({ queryKey: ['dashboard'] }),
+      ]),
   })
 }
 

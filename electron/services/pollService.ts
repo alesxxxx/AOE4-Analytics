@@ -6,9 +6,10 @@ import {
   type LiveMatchInfo,
 } from '@domain/liveMatch'
 import { buildScoutReport, pickPrimaryMode } from '@domain/scouting'
+import { sessionSummary, type SessionSummary } from '@domain/session'
 import type { RankInfo } from '@domain/types'
 import type { GameClock } from '@domain/localStats'
-import { getClient, getMainWindow, getSettings } from './appContext'
+import { getClient, getHistoryStore, getMainWindow, getSettings } from './appContext'
 import { analyzeRecentGames, listHistory } from './analysisService'
 import { IpcChannels, type PostGameSummary } from '../ipc/contract'
 import { getGameClock, getLiveTeamMatchup, getSessionState } from './localDataService'
@@ -98,6 +99,12 @@ export class PollManager {
    */
   private clockTimer: ReturnType<typeof setInterval> | null = null
   private clockAnchor: GameClock | null = null
+  /**
+   * Today's session line ("3W–1L +42"), carried on every overlay update.
+   * Refreshed at match start and again after the post-game fold so the
+   * just-finished game counts; null until the first finished game today.
+   */
+  private session: SessionSummary | null = null
 
   constructor(
     private readonly overlay: OverlayController,
@@ -125,15 +132,20 @@ export class PollManager {
   private scheduleNext(delay: number): void {
     if (!this.running) return
     this.timer = setTimeout(() => {
-      void this.tick().finally(() => {
-        const polling = getSettings().getAll().polling
-        // Poll fast whenever the GAME IS OPEN (live, or process up and a match is
-        // loading) so the matchup resolves in a few seconds instead of ~20s; fall
-        // back to the polite idle cadence only when AoE4 is closed (D9).
-        const gameOpen = this.liveInfo.isLive || this.liveInfo.processRunning === true
-        const interval = gameOpen ? polling.activeIntervalMs : polling.idleIntervalMs
-        this.scheduleNext(interval)
-      })
+      // A throw anywhere in the tick must not become a recurring unhandled
+      // rejection (every path inside is individually guarded today, but the
+      // loop itself shouldn't depend on that staying true).
+      void this.tick()
+        .catch((err) => console.error('[poll] tick failed:', err))
+        .finally(() => {
+          const polling = getSettings().getAll().polling
+          // Poll fast whenever the GAME IS OPEN (live, or process up and a match is
+          // loading) so the matchup resolves in a few seconds instead of ~20s; fall
+          // back to the polite idle cadence only when AoE4 is closed (D9).
+          const gameOpen = this.liveInfo.isLive || this.liveInfo.processRunning === true
+          const interval = gameOpen ? polling.activeIntervalMs : polling.idleIntervalMs
+          this.scheduleNext(interval)
+        })
     }, delay)
   }
 
@@ -250,6 +262,23 @@ export class PollManager {
     }
   }
 
+  /**
+   * Recomputes today's session summary from stored history — a raw store read
+   * (listMatches), NOT listHistory, so a poll tick never triggers the summary
+   * enrichment that listHistory performs as a side effect.
+   */
+  private async refreshSession(): Promise<void> {
+    try {
+      const store = await getHistoryStore()
+      const s = sessionSummary(store.listMatches(60), Date.now(), {
+        excludeAi: getSettings().getAll().localData.excludeAiFromStats,
+      })
+      this.session = s.games > 0 ? s : null
+    } catch {
+      this.session = null
+    }
+  }
+
   private async onStarted(ctx: {
     matchId: string
     opponentProfileId: number | null
@@ -265,6 +294,7 @@ export class PollManager {
       clearTimeout(this.hideTimer)
       this.hideTimer = null
     }
+    await this.refreshSession()
     const kind = ctx.game ? kindLabel(ctx.game) : null
     this.overlay.sendUpdate({
       matchState: 'ongoing',
@@ -279,6 +309,7 @@ export class PollManager {
       oppIsAI: false,
       matchup: null,
       kind,
+      session: this.session,
     })
     this.overlay.show()
 
@@ -317,6 +348,7 @@ export class PollManager {
         oppIsAI: false,
         matchup,
         kind,
+        session: this.session,
       })
     } catch {
       // private profile / network — keep the "scouting…" state
@@ -376,6 +408,7 @@ export class PollManager {
       oppIsAI: enemyTeam.length > 0 && enemyTeam.every((p) => p.isAI),
       matchup,
       kind: 'Custom / AI',
+      session: this.session,
     })
   }
 
@@ -396,7 +429,7 @@ export class PollManager {
     }
     // Show "analyzing…" immediately, keep the overlay up, then push the results
     // card once the just-finished game has been analyzed + folded into history.
-    this.overlay.sendUpdate({ ...base, postGame: null })
+    this.overlay.sendUpdate({ ...base, postGame: null, session: this.session })
     this.overlay.show()
     let postGame: { summary: PostGameSummary; matchId: string } | null = null
     try {
@@ -405,8 +438,10 @@ export class PollManager {
     } catch {
       // best-effort
     }
+    // The just-finished game is folded now — today's line includes it.
+    await this.refreshSession()
     if (postGame) {
-      this.overlay.sendUpdate({ ...base, postGame: postGame.summary })
+      this.overlay.sendUpdate({ ...base, postGame: postGame.summary, session: this.session })
       // The user's requested flow: after a win/loss the APP comes to the front
       // on that game's full summary (the desktop score screen). Toggleable.
       if (getSettings().getAll().openSummaryOnGameEnd) this.openAppOnSummary(postGame.matchId)

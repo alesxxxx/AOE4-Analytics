@@ -60,7 +60,11 @@ export class ApmTracker {
         // eslint-disable-next-line @typescript-eslint/no-require-imports
         const mod = require('uiohook-napi') as { uIOhook: InputHook }
         const bump = (): void => {
-          if (this.enabled && this.inMatch) this.actions.push(Date.now())
+          // in-match AND game-focused: alt-tabbed typing (Discord, browser)
+          // during a live/paused match must not count as game actions.
+          if (this.enabled && this.inMatch && this.overlay.isGameFocusedForInput()) {
+            this.actions.push(Date.now())
+          }
         }
         // require() returns a cached singleton emitter — attach the listeners
         // exactly once per process, or every enable/disable cycle stacks another

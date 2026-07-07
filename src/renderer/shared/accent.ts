@@ -58,6 +58,40 @@ export function applyAccent(hex: string | null): void {
   for (const v of FG_VARS) root.style.setProperty(v, fg)
 }
 
+/** `"H S% L%"` triplet (our CSS-var form) → `#rrggbb`; null when unparsable. */
+function tripletToHex(triplet: string): string | null {
+  const m = /^(\d+(?:\.\d+)?)\s+(\d+(?:\.\d+)?)%\s+(\d+(?:\.\d+)?)%$/.exec(triplet.trim())
+  if (!m) return null
+  const h = Number(m[1]) / 360
+  const s = Number(m[2]) / 100
+  const l = Number(m[3]) / 100
+  const q = l < 0.5 ? l * (1 + s) : l + s - l * s
+  const p = 2 * l - q
+  const channel = (t: number): number => {
+    if (t < 0) t += 1
+    if (t > 1) t -= 1
+    if (t < 1 / 6) return p + (q - p) * 6 * t
+    if (t < 1 / 2) return q
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6
+    return p
+  }
+  const to255 = (v: number): string =>
+    Math.round(v * 255)
+      .toString(16)
+      .padStart(2, '0')
+  return `#${to255(channel(h + 1 / 3))}${to255(channel(h))}${to255(channel(h - 1 / 3))}`
+}
+
+/**
+ * The accent hex currently in effect (custom override or the theme default),
+ * read from the live `--primary` token — for UI that needs a concrete colour,
+ * like the Settings custom-colour input's initial value.
+ */
+export function currentAccentHex(): string {
+  const triplet = getComputedStyle(document.documentElement).getPropertyValue('--primary')
+  return tripletToHex(triplet) ?? '#c9ad6e'
+}
+
 /** Curated quick-pick accents (the default is electric blue). */
 export const ACCENT_PRESETS: { name: string; hex: string }[] = [
   { name: 'Blue', hex: '#1fa8e0' },

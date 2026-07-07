@@ -26,8 +26,11 @@ describe('extractBuildTargets', () => {
     expect(extractBuildTargets(undefined)).toEqual([])
   })
 
-  it('produces a CDN icon url for each target', () => {
+  it('produces a bundled (vendored) icon url for each known target', () => {
     const t = extractBuildTargets(['Build a Barracks.'])
-    expect(t[0]!.url).toBe('https://data.aoe4world.com/images/buildings/barracks-1.png')
+    // Vendored asset, not a data.aoe4world.com fetch — icons must render
+    // offline / instantly at match start.
+    expect(t[0]!.url).toMatch(/barracks\.png$/)
+    expect(t[0]!.url).not.toMatch(/^https:/)
   })
 })

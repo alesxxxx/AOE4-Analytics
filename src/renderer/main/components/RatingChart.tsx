@@ -9,9 +9,9 @@ import {
 } from 'recharts'
 import type { StoredMatch } from '@store/historyStore'
 
-const ACCENT = 'hsl(190, 95%, 50%)'
-const GRID = 'hsl(220, 16%, 17%)'
-const MUTED = 'hsl(217, 12%, 58%)'
+const ACCENT = 'hsl(var(--primary))'
+const GRID = 'hsl(var(--border))'
+const MUTED = 'hsl(var(--muted-foreground))'
 
 /** Rating over time, oldest → newest. */
 export function RatingChart({ matches }: { matches: StoredMatch[] }) {
@@ -44,7 +44,8 @@ export function RatingChart({ matches }: { matches: StoredMatch[] }) {
           />
           <Tooltip
             contentStyle={{
-              background: 'hsl(222, 26%, 8%)',
+              background: 'hsl(var(--popover))',
+              color: 'hsl(var(--popover-foreground))',
               border: `1px solid ${GRID}`,
               borderRadius: 8,
               fontSize: 12,
