@@ -8,6 +8,7 @@ import {
   Hourglass,
   RefreshCw,
   ChevronRight,
+  Filter,
 } from 'lucide-react'
 import type { StoredMatch } from '@store/historyStore'
 import { resourcesPerMinute, resultFromPerPlayer, villagersPerMinute } from '@domain/analysis'
@@ -25,7 +26,7 @@ import { formatDurationShort, relativeTime } from '@shared/format'
 import { cn } from '@shared/lib/utils'
 import { Card, CardContent } from '@shared/components/ui/card'
 import { useHistory, useAnalyzeRecent } from '../queries/useHistory'
-import { useDashboard, useSettings } from '../queries/useProfile'
+import { useDashboard, useSettings, useUpdateSettings } from '../queries/useProfile'
 import { WinRateBar } from '../components/WinRateBar'
 import { RatingChart } from '../components/RatingChart'
 import { PlaystyleRadar } from '../components/PlaystyleRadar'
@@ -39,6 +40,7 @@ export function Stats() {
   const { data: settings } = useSettings()
   const { data: dash } = useDashboard(settings?.profileId != null)
   const analyze = useAnalyzeRecent()
+  const updateSettings = useUpdateSettings()
   const excludeAi = settings?.localData.excludeAiFromStats ?? false
   const matches = useMemo(
     () => (data?.ok ? data.data : []).filter((m) => !excludeAi || (!m.vsAI && !m.custom)),
@@ -52,15 +54,41 @@ export function Stats() {
         title="My Stats"
         sub="Your playstyle, win-rate breakdowns, and game-by-game history."
         aside={
-          <button
-            type="button"
-            onClick={() => analyze.mutate(20)}
-            disabled={analyze.isPending}
-            className="inline-flex items-center gap-2 rounded-sm bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-60"
-          >
-            <RefreshCw className={cn('h-3.5 w-3.5', analyze.isPending && 'animate-spin')} />
-            {analyze.isPending ? 'Analyzing…' : 'Sync recent games'}
-          </button>
+          <div className="flex flex-wrap items-center justify-end gap-2">
+            <button
+              type="button"
+              disabled={!settings || updateSettings.isPending}
+              onClick={() => {
+                if (!settings) return
+                updateSettings.mutate({
+                  localData: {
+                    ...settings.localData,
+                    excludeAiFromStats: !excludeAi,
+                  },
+                })
+              }}
+              aria-pressed={excludeAi}
+              title="Keep AI and custom practice games out of the stats on this page"
+              className={cn(
+                'inline-flex items-center gap-1.5 rounded-sm border px-3 py-1.5 text-sm transition-colors disabled:opacity-50',
+                excludeAi
+                  ? 'border-primary/50 bg-primary/10 text-primary'
+                  : 'border-border text-muted-foreground hover:bg-secondary hover:text-foreground',
+              )}
+            >
+              <Filter className="h-3.5 w-3.5" />
+              {excludeAi ? 'Practice games hidden' : 'Hide AI / custom'}
+            </button>
+            <button
+              type="button"
+              onClick={() => analyze.mutate(20)}
+              disabled={analyze.isPending}
+              className="inline-flex items-center gap-2 rounded-sm bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-60"
+            >
+              <RefreshCw className={cn('h-3.5 w-3.5', analyze.isPending && 'animate-spin')} />
+              {analyze.isPending ? 'Analyzing…' : 'Sync recent games'}
+            </button>
+          </div>
         }
       />
 

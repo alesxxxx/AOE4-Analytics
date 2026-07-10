@@ -77,7 +77,12 @@ export function MatchupBar({
             // progress banner top-center BELOW its HUD bar — exactly at troop-row
             // height — so the icons must keep clear of a bigger center band.
             <div className="mt-1 flex items-start">
-              <TroopsCol units={troops!.mine} priority={troops!.priority} align="left" label="Your army" />
+              <TroopsCol
+                units={troops!.mine}
+                priority={troops!.priority}
+                align="left"
+                label="Your army"
+              />
               <div className="w-[430px] shrink-0" aria-hidden />
               <TroopsCol units={troops!.theirs} align="right" label="They make" />
             </div>
@@ -92,7 +97,12 @@ export function MatchupBar({
           </div>
           {hasTroops && (
             <div className="mt-1 flex items-start">
-              <TroopsCol units={troops!.mine} priority={troops!.priority} align="left" label="Your army" />
+              <TroopsCol
+                units={troops!.mine}
+                priority={troops!.priority}
+                align="left"
+                label="Your army"
+              />
               <div className="w-[460px] shrink-0" aria-hidden />
               <TroopsCol units={troops!.theirs} align="right" label="They make" />
             </div>
@@ -175,18 +185,29 @@ function PlayerLine({
   winOdds?: number | null
 }) {
   const isRight = align === 'right'
-  const color = player.isMe ? 'hsl(var(--primary))' : isRight ? 'hsl(var(--loss))' : 'hsl(var(--win))'
+  const color = player.isMe
+    ? 'hsl(var(--primary))'
+    : isRight
+      ? 'hsl(var(--loss))'
+      : 'hsl(var(--win))'
   const rank =
     player.rankLevel && /[a-z]/i.test(player.rankLevel) ? formatRankLevel(player.rankLevel) : null
   return (
-    <div className={cn('flex items-center gap-2 px-3 py-2', isRight && 'flex-row-reverse text-right')}>
+    <div
+      className={cn('flex items-center gap-2 px-3 py-2', isRight && 'flex-row-reverse text-right')}
+    >
       <CivFlag civ={player.civ} compact={false} />
       <div className={cn('min-w-0 flex-1', isRight && 'items-end')}>
         <div className={cn('flex items-baseline gap-2', isRight && 'flex-row-reverse')}>
           <span className="whitespace-nowrap text-[15px] font-bold" style={{ color }}>
             {player.civ ? civDisplayName(player.civ) : 'Unknown'}
           </span>
-          <span className={cn('flex min-w-0 items-center gap-1 text-[12px] text-white/85', isRight && 'flex-row-reverse')}>
+          <span
+            className={cn(
+              'flex min-w-0 items-center gap-1 text-[12px] text-white/85',
+              isRight && 'flex-row-reverse',
+            )}
+          >
             {player.isMe && (
               <span className="rounded bg-primary/20 px-1 py-px text-[8px] font-semibold uppercase text-primary">
                 You
@@ -201,10 +222,17 @@ function PlayerLine({
           </span>
         </div>
         {(rank || player.rating != null || winOdds != null) && (
-          <div className={cn('mt-1 flex items-center gap-2 text-[11px] text-white/65', isRight && 'flex-row-reverse')}>
+          <div
+            className={cn(
+              'mt-1 flex items-center gap-2 text-[11px] text-white/65',
+              isRight && 'flex-row-reverse',
+            )}
+          >
             {rank && <span className="whitespace-nowrap">{rank}</span>}
             {player.rating != null && (
-              <span className="font-semibold tabular-nums text-white/85">{formatRating(player.rating)}</span>
+              <span className="font-semibold tabular-nums text-white/85">
+                {formatRating(player.rating)}
+              </span>
             )}
             {winOdds != null && <WinOddsChip pct={winOdds} />}
           </div>
@@ -230,11 +258,22 @@ function WinOddsChip({ pct }: { pct: number }) {
 /** A teammate/opponent beyond the column's primary player — civ + name only, no rank/rating row. */
 function CompactPlayerLine({ player, align }: { player: MatchupPlayer; align: 'left' | 'right' }) {
   const isRight = align === 'right'
-  const color = player.isMe ? 'hsl(var(--primary))' : isRight ? 'hsl(var(--loss))' : 'hsl(var(--win))'
+  const color = player.isMe
+    ? 'hsl(var(--primary))'
+    : isRight
+      ? 'hsl(var(--loss))'
+      : 'hsl(var(--win))'
   return (
-    <div className={cn('flex items-center gap-1.5 px-3 py-1', isRight && 'flex-row-reverse text-right')}>
+    <div
+      className={cn(
+        'flex items-center gap-1.5 px-3 py-1',
+        isRight && 'flex-row-reverse text-right',
+      )}
+    >
       <CivFlag civ={player.civ} compact />
-      <span className={cn('flex min-w-0 items-center gap-1 text-[11px]', isRight && 'flex-row-reverse')}>
+      <span
+        className={cn('flex min-w-0 items-center gap-1 text-[11px]', isRight && 'flex-row-reverse')}
+      >
         <span className="whitespace-nowrap font-semibold" style={{ color }}>
           {player.civ ? civDisplayName(player.civ) : 'Unknown'}
         </span>
@@ -269,7 +308,9 @@ function TroopsCol({
   const isRight = align === 'right'
   return (
     <div className={cn('flex max-w-[430px] flex-col gap-1', isRight && 'items-end')}>
-      <span className={cn('text-[10px] font-bold uppercase', isRight ? 'text-loss/85' : 'text-win/85')}>
+      <span
+        className={cn('text-[10px] font-bold uppercase', isRight ? 'text-loss/85' : 'text-win/85')}
+      >
         {label}
       </span>
       <div className={cn('flex items-start gap-1.5', isRight && 'flex-row-reverse')}>
@@ -298,7 +339,7 @@ function UnitIcon({ unit, priority }: { unit: CivKeyUnit; priority?: boolean }) 
   // this". Un-ringed units are still your civ's core army.
   const title = priority ? `${unit.name} — counters one of their key units` : unit.name
   return (
-    <div className="flex w-[54px] flex-col items-center gap-0.5" title={title}>
+    <div className="flex w-[62px] flex-col items-center gap-0.5" title={title}>
       {broken ? (
         <span
           className={cn(
@@ -317,7 +358,7 @@ function UnitIcon({ unit, priority }: { unit: CivKeyUnit; priority?: boolean }) 
           className={cn('h-11 w-11 rounded bg-black/40 object-contain', ring)}
         />
       )}
-      <span className="w-full truncate text-center text-[9px] font-medium leading-tight text-white/80">
+      <span className="h-[22px] w-full overflow-hidden text-center text-[9px] font-medium leading-[11px] text-white/80">
         {unit.name}
       </span>
       <span className="text-[8px] font-bold leading-none text-white/55">{AGE_ROMAN[unit.age]}</span>
@@ -336,7 +377,8 @@ function LegacySide({
 }) {
   const isRight = align === 'right'
   const color = isRight ? 'hsl(var(--loss))' : 'hsl(var(--win))'
-  const rank = side.rankLevel && /[a-z]/i.test(side.rankLevel) ? formatRankLevel(side.rankLevel) : null
+  const rank =
+    side.rankLevel && /[a-z]/i.test(side.rankLevel) ? formatRankLevel(side.rankLevel) : null
   const hasRow2 =
     !side.isAI &&
     (rank != null ||
@@ -357,21 +399,35 @@ function LegacySide({
     >
       <CivFlag civ={side.civ} compact={false} />
       <div className={cn('flex min-w-0 flex-col gap-1', isRight && 'items-end')}>
-        <div className={cn('flex items-baseline gap-2 leading-none', isRight && 'flex-row-reverse')}>
+        <div
+          className={cn('flex items-baseline gap-2 leading-none', isRight && 'flex-row-reverse')}
+        >
           <span className="whitespace-nowrap text-[17px] font-bold" style={{ color }}>
             {side.civ ? civDisplayName(side.civ) : 'Unknown'}
           </span>
-          <span className={cn('flex items-center gap-1 text-[12px] font-medium text-white/85', isRight && 'flex-row-reverse')}>
+          <span
+            className={cn(
+              'flex items-center gap-1 text-[12px] font-medium text-white/85',
+              isRight && 'flex-row-reverse',
+            )}
+          >
             {side.isAI && (
               <span className="rounded bg-white/15 px-1 py-px text-[8px] font-semibold uppercase text-white/80">
                 AI
               </span>
             )}
-            <span className="max-w-[170px] truncate">{side.name ?? (isRight ? 'Opponent' : 'You')}</span>
+            <span className="max-w-[170px] truncate">
+              {side.name ?? (isRight ? 'Opponent' : 'You')}
+            </span>
           </span>
         </div>
         {hasRow2 && (
-          <div className={cn('flex items-center gap-2.5 text-[11px] leading-none text-white/75', isRight && 'flex-row-reverse')}>
+          <div
+            className={cn(
+              'flex items-center gap-2.5 text-[11px] leading-none text-white/75',
+              isRight && 'flex-row-reverse',
+            )}
+          >
             {rank && <span className="whitespace-nowrap">{rank}</span>}
             {side.rating != null && (
               <span className="whitespace-nowrap font-semibold tabular-nums text-white/90">
@@ -380,7 +436,9 @@ function LegacySide({
             )}
             {side.winRate != null && (
               <span className="whitespace-nowrap tabular-nums">
-                <span className={side.winRate >= 50 ? 'text-win' : 'text-loss'}>{Math.round(side.winRate)}%</span>{' '}
+                <span className={side.winRate >= 50 ? 'text-win' : 'text-loss'}>
+                  {Math.round(side.winRate)}%
+                </span>{' '}
                 WR
               </span>
             )}

@@ -360,7 +360,11 @@ export class OverlayController {
     this.reconcile()
   }
 
-  togglePlacementMode(): void {
+  /**
+   * Toggle the draggable widget-placement preview. Shared by the global hotkey
+   * and the Settings control so both entry points have identical behavior.
+   */
+  togglePlacementMode(): boolean {
     this.placementMode = !this.placementMode
     this.locked = !this.placementMode
     const current = getSettings().getAll().overlay
@@ -373,6 +377,7 @@ export class OverlayController {
     }
     this.applyLock()
     this.reconcile()
+    return this.placementMode
   }
 
   private lastThemeCiv: string | null = null

@@ -142,6 +142,9 @@ export function registerIpcHandlers(): void {
   ipcMain.handle(IpcChannels.overlayToggle, () => {
     getOverlayController()?.toggle()
   })
+  ipcMain.handle(IpcChannels.overlayTogglePlacement, () =>
+    getOverlayController()?.togglePlacementMode() ?? false,
+  )
   ipcMain.handle(IpcChannels.overlayInteractive, (_e, hover: unknown) => {
     getOverlayController()?.setInteractiveHover(hover === true)
   })

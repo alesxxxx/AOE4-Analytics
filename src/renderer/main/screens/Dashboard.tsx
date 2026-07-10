@@ -1,4 +1,6 @@
 import { useMemo } from 'react'
+import { Link } from 'react-router-dom'
+import { History } from 'lucide-react'
 import type { DashboardData } from '@ipc/contract'
 import {
   countryFlag,
@@ -38,10 +40,26 @@ export function Dashboard() {
     () => (history?.ok ? history.data : []).filter((m) => !excludeAi || (!m.vsAI && !m.custom)),
     [history, excludeAi],
   )
+  const latestMatch = matches[0]
 
   return (
     <div className="animate-fade-in space-y-5">
-      <PageHead kicker="War room" title="Dashboard" sub="Your ranks, rating, and recent form." />
+      <PageHead
+        kicker="War room"
+        title="Dashboard"
+        sub="Your ranks, rating, and recent form."
+        aside={
+          latestMatch ? (
+            <Link
+              to={`/game/${latestMatch.id}`}
+              className="inline-flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:border-primary/40 hover:bg-secondary hover:text-foreground"
+            >
+              <History className="h-3.5 w-3.5" />
+              Review latest game
+            </Link>
+          ) : null
+        }
+      />
 
       <LiveMatchCard />
 
@@ -94,7 +112,11 @@ function LadderStanding({ data }: { data: DashboardData }) {
 
       {/* Vitals */}
       <div className="grid grid-cols-2 divide-x divide-border border-b border-border sm:grid-cols-4">
-        <Vital label="Rating" value={formatRating(primary?.rating)} sub={formatLeaderboard(primary?.leaderboard)} />
+        <Vital
+          label="Rating"
+          value={formatRating(primary?.rating)}
+          sub={formatLeaderboard(primary?.leaderboard)}
+        />
         <Vital label="Peak" value={formatRating(primary?.maxRating)} />
         <Vital label="Rank" value={primary?.rank != null ? `#${primary.rank}` : '—'} />
         <Vital

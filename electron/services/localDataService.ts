@@ -13,7 +13,11 @@ import {
   type ParsedLocalStats,
   type SessionState,
 } from '@domain/localStats'
-import { parseMatchHistory, type LocalMatch } from '@domain/localMatch'
+import {
+  parseMatchHistory,
+  sortMatchHistoryIdsNewestFirst,
+  type LocalMatch,
+} from '@domain/localMatch'
 import {
   parseReplayHeader,
   replayMatchup,
@@ -183,10 +187,10 @@ export function getLatestLocalMatch(): LocalMatch | null {
   try {
     const dir = join(gameDir(), 'matchhistory')
     if (!existsSync(dir)) return null
-    const folders = readdirSync(dir)
-      .filter((f) => /^\d+$/.test(f))
-      .sort() // folder ids are monotonically increasing → last is newest
-    const latest = folders[folders.length - 1]
+    // Folder ids are numeric and monotonically increasing. Do not use the
+    // default string sort here: it puts "999" after "1000".
+    const folders = sortMatchHistoryIdsNewestFirst(readdirSync(dir).filter((f) => /^\d+$/.test(f)))
+    const latest = folders[0]
     if (!latest) return null
     const file = join(dir, latest, 'match_history.jsn')
     if (!existsSync(file)) return null
@@ -364,17 +368,17 @@ export interface LocalGameFiles {
  * `match_history.jsn` (result/timing) and usually a `replay.rec` (civs/opponent),
  * the basis for folding CUSTOM/AI games into History. Newest first; consent-gated.
  */
-export function listLocalGames(limit = 25): LocalGameFiles[] {
+export function listLocalGames(limit = 25, profileId?: number): LocalGameFiles[] {
   if (!getSettings().getAll().localData.consentGranted) return []
   try {
     const dir = join(gameDir(), 'matchhistory')
     if (!existsSync(dir)) return []
-    const myProfileId = getSettings().getAll().profileId ?? undefined
-    const folders = readdirSync(dir)
-      .filter((f) => /^\d+$/.test(f))
-      .sort()
-      .reverse()
-      .slice(0, limit)
+    // A sync snapshots the active profile before it awaits the network. Honour
+    // that identity here instead of re-reading a potentially switched account.
+    const myProfileId = profileId ?? getSettings().getAll().profileId ?? undefined
+    const folders = sortMatchHistoryIdsNewestFirst(
+      readdirSync(dir).filter((f) => /^\d+$/.test(f)),
+    ).slice(0, limit)
     const out: LocalGameFiles[] = []
     for (const f of folders) {
       const mhPath = join(dir, f, 'match_history.jsn')

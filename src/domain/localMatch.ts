@@ -34,6 +34,21 @@ export interface LocalMatch {
   opponentProfileIds: number[]
 }
 
+/**
+ * Orders numeric match-history folder ids newest first without relying on
+ * lexicographic string ordering. BigInt keeps this correct if Relic ids ever
+ * grow beyond JavaScript's safe-integer range.
+ *
+ * Callers must pass the digit-only folder names they read from matchhistory.
+ */
+export function sortMatchHistoryIdsNewestFirst(ids: readonly string[]): string[] {
+  return [...ids].sort((a, b) => {
+    const left = BigInt(a)
+    const right = BigInt(b)
+    return left === right ? 0 : left > right ? -1 : 1
+  })
+}
+
 /** Extracts the first complete JSON object from a string that may have trailing data. */
 export function firstJsonObject(text: string): unknown | null {
   const start = text.indexOf('{')

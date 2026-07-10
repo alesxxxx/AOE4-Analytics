@@ -27,6 +27,7 @@ import { summaryPlayerForMe } from '@domain/summaryCoaching'
 import { civFromToken, type MatchSummary, type PlayerSummary, type ResourceAmounts } from '@domain/statsSummary'
 import { getSteamAccounts } from './steamService'
 import { err, errFrom, ok } from './result'
+import type { CreatedHistoryStore } from '@store/historyStoreFactory'
 
 /**
  * A stored team-format game (2v2+) that predates team-roster capture — it has a
@@ -269,8 +270,21 @@ async function loadSummaryForSync(
   }
 }
 
-/** In-flight sync, shared so poll- and user-triggered syncs can't interleave. */
-let syncInFlight: Promise<IpcResult<AnalyzeResult>> | null = null
+/**
+ * Everything a sync needs that is scoped to the active account. Capture it
+ * before the first await: users can switch accounts while a network-backed sync
+ * is still running, and a later settings read must not redirect account A's
+ * results into account B's history store.
+ */
+interface SyncContext {
+  profileId: number | null
+  playerName: string | null
+  localDataConsentGranted: boolean
+  history: Promise<CreatedHistoryStore> | null
+}
+
+/** In-flight syncs are isolated per account, not globally shared across accounts. */
+const syncInFlightByProfile = new Map<number, Promise<IpcResult<AnalyzeResult>>>()
 
 /**
  * The one coordinator for a full sync: ranked/QM games via AoE4World + Relic,
@@ -282,18 +296,33 @@ let syncInFlight: Promise<IpcResult<AnalyzeResult>> | null = null
  * interleaved syncs would double-download summary blobs and race goal chaining.
  */
 export function analyzeRecentGames(count = 15): Promise<IpcResult<AnalyzeResult>> {
-  if (syncInFlight) return syncInFlight
-  syncInFlight = runSync(count).finally(() => {
-    syncInFlight = null
+  const settings = getSettings().getAll()
+  const profileId = settings.profileId
+  // 0 is only the no-profile key; real AoE4 profile ids are positive.
+  const key = profileId ?? 0
+  const inFlight = syncInFlightByProfile.get(key)
+  if (inFlight) return inFlight
+
+  const context: SyncContext = {
+    profileId,
+    playerName: settings.playerName,
+    localDataConsentGranted: settings.localData.consentGranted,
+    // Resolve the active account's history promise now, while the account is
+    // still known. getHistory() chooses its database synchronously.
+    history: profileId == null ? null : getHistory(),
+  }
+  const sync = runSync(count, context).finally(() => {
+    syncInFlightByProfile.delete(key)
   })
-  return syncInFlight
+  syncInFlightByProfile.set(key, sync)
+  return sync
 }
 
-async function runSync(count: number): Promise<IpcResult<AnalyzeResult>> {
-  const ranked = await analyzeRankedGames(count)
+async function runSync(count: number, context: SyncContext): Promise<IpcResult<AnalyzeResult>> {
+  const ranked = await analyzeRankedGames(count, context)
   let localAnalyzed = 0
   try {
-    localAnalyzed = await analyzeLocalGames()
+    localAnalyzed = await analyzeLocalGames(context)
   } catch {
     // best-effort — a bad replay/log never blocks the ranked sync result
   }
@@ -312,10 +341,13 @@ async function runSync(count: number): Promise<IpcResult<AnalyzeResult>> {
  * (Tier-1 + matchup enrichment; local stats arrive in Phase 4.5), chains goals
  * across games, and persists. Idempotent — already-stored games are skipped.
  */
-async function analyzeRankedGames(count: number): Promise<IpcResult<AnalyzeResult>> {
-  const settings = getSettings().getAll()
-  if (settings.profileId == null) return err('not_found', 'No profile set.')
-  const profileId = settings.profileId
+async function analyzeRankedGames(
+  count: number,
+  context: SyncContext,
+): Promise<IpcResult<AnalyzeResult>> {
+  const profileId = context.profileId
+  const historyPromise = context.history
+  if (profileId == null || !historyPromise) return err('not_found', 'No profile set.')
 
   try {
     const client = getClient()
@@ -346,7 +378,8 @@ async function analyzeRankedGames(count: number): Promise<IpcResult<AnalyzeResul
     const relicRecent = await getRecentRelicMatchHistory(profileId)
     const perPlayerByGame = relicPerPlayerStatsByGameId(relicRecent)
 
-    const { store } = await getHistory()
+    const history = await historyPromise
+    const { store } = history
     const oldestFirst = [...gamesRes.games].filter((g) => !g.ongoing).reverse()
     let analyzed = 0
     // At most this many ranked-summary DOWNLOADS per sync (disk-cached blobs and
@@ -459,7 +492,7 @@ async function analyzeRankedGames(count: number): Promise<IpcResult<AnalyzeResul
     return ok({
       analyzed,
       total: store.listMatches().length,
-      backend: (await getHistory()).backend,
+      backend: history.backend,
     })
   } catch (e) {
     return errFrom(e)
@@ -474,21 +507,22 @@ async function analyzeRankedGames(count: number): Promise<IpcResult<AnalyzeResul
  * are already stored. Consent-gated, idempotent. Returns how many new games
  * were added.
  */
-async function analyzeLocalGames(): Promise<number> {
-  const settings = getSettings().getAll()
-  if (!settings.localData.consentGranted || settings.profileId == null) return 0
+async function analyzeLocalGames(context: SyncContext): Promise<number> {
+  const profileId = context.profileId
+  const historyPromise = context.history
+  if (!context.localDataConsentGranted || profileId == null || !historyPromise) return 0
   try {
-    const games = listLocalGames(25)
+    const games = listLocalGames(25, profileId)
 
-    const { store } = await getHistory()
+    const { store } = await historyPromise
     const accounts = await getSteamAccounts()
     const steamIds = accounts.map((a) => a.steamId)
     const bracket = bracketFromRankLevel(null) // heuristic benchmarks; no rank for customs
     const bench = getBenchmarks(bracket)
-    const localStats = getLatestLocalStats(settings.profileId)
+    const localStats = getLatestLocalStats(profileId)
     // Relic keeps counters for custom/AI games too (folder id == Relic match id).
     const perPlayerByGame = relicPerPlayerStatsByGameId(
-      await getRecentRelicMatchHistory(settings.profileId),
+      await getRecentRelicMatchHistory(profileId),
     )
 
     // Oldest first so goals chain correctly; skip already-stored folders. The
@@ -511,7 +545,7 @@ async function analyzeLocalGames(): Promise<number> {
       const warningStats = g.id === newestId && localStats?.gameTimeSec != null ? localStats : undefined
       const summaryStats = localStatsFromSummary(
         readGameSummary(g.id),
-        settings.profileId,
+        profileId,
         built.game.civ,
         built.game.durationSec,
       )
@@ -569,28 +603,28 @@ async function analyzeLocalGames(): Promise<number> {
       !hasNearbyMatchhistory &&
       (!existingTemp || (existingTemp.custom && !existingTemp.hidden))
     ) {
-      const matchup = replayMatchupForUser(tempReplay.info, steamIds, settings.playerName)
+      const matchup = replayMatchupForUser(tempReplay.info, steamIds, context.playerName)
       const me = matchup.me
       if (me?.civSlug) {
-        const live = getLiveTeamMatchup(settings.profileId)
+        const live = getLiveTeamMatchup(profileId)
         const livePlayers = live?.teams.flat() ?? []
         const civByProfile = new Map(livePlayers.map((p) => [p.profileId, p.civ]))
         const perPlayer = tempResult.players.map((p) => ({
           ...p,
           civ: p.civ ?? civByProfile.get(p.profileId) ?? null,
         }))
-        const result = resultFromPerPlayer(perPlayer, settings.profileId)
-        const mine = perPlayer.find((p) => p.profileId === settings.profileId)
+        const result = resultFromPerPlayer(perPlayer, profileId)
+        const mine = perPlayer.find((p) => p.profileId === profileId)
         const enemies = live
           ? live.teams
-              .filter((t) => !t.some((p) => p.profileId === settings.profileId))
+              .filter((t) => !t.some((p) => p.profileId === profileId))
               .flat()
               .map((p) => ({ civ: p.civ ?? 'unknown', name: p.name }))
           : matchup.opponents.map((p) => ({ civ: p.civSlug ?? p.civName, name: p.name || null }))
         const teammates = live
           ? (live.teams
-              .find((t) => t.some((p) => p.profileId === settings.profileId))
-              ?.filter((p) => p.profileId !== settings.profileId)
+              .find((t) => t.some((p) => p.profileId === profileId))
+              ?.filter((p) => p.profileId !== profileId)
               .map((p) => ({ civ: p.civ ?? 'unknown', name: p.name })) ?? [])
           : []
         const local = mergeLocalStats(localStats ?? undefined, null)

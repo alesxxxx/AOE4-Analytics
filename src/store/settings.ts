@@ -120,7 +120,10 @@ export const DEFAULT_OVERLAY_WIDGETS: OverlayWidgets = {
 export const DEFAULT_OVERLAY_WIDGET_POSITIONS: OverlayWidgetPositions = {
   matchup: { anchor: 'top-center', x: 0, y: 8 },
   apm: { anchor: 'bottom-left', x: 12, y: 12 },
-  postGame: { anchor: 'top-center', x: 0, y: 40 },
+  // The result card appears after the matchup has cleared. Centering it avoids
+  // covering the game HUD and keeps the placement preview from stacking it on
+  // top of the matchup widget.
+  postGame: { anchor: 'center', x: 0, y: 0 },
   buildOrder: { anchor: 'top-left', x: 12, y: 96 },
   ageTargets: { anchor: 'top-right', x: 12, y: 96 },
   // Stacked just above the APM counter (both clear of the game's bottom HUD).
@@ -265,14 +268,27 @@ const KEY = 'settings'
 const HEX_COLOR = /^#[0-9a-f]{6}$/i
 
 const LEADERBOARDS: readonly Leaderboard[] = [
-  'rm_solo', 'rm_team', 'rm_1v1', 'rm_2v2', 'rm_3v3', 'rm_4v4',
-  'qm_1v1', 'qm_2v2', 'qm_3v3', 'qm_4v4',
+  'rm_solo',
+  'rm_team',
+  'rm_1v1',
+  'rm_2v2',
+  'rm_3v3',
+  'rm_4v4',
+  'qm_1v1',
+  'qm_2v2',
+  'qm_3v3',
+  'qm_4v4',
 ]
 const OVERLAY_POSITIONS = ['top-left', 'top-center', 'top-right', 'custom'] as const
 const APM_CORNERS = ['top-left', 'top-right', 'bottom-left', 'bottom-right'] as const
 const TROOPS_POS = ['bar', 'hidden'] as const
 const WIDGET_ANCHORS: readonly OverlayWidgetAnchor[] = [
-  'top-left', 'top-center', 'top-right', 'bottom-left', 'bottom-right', 'center',
+  'top-left',
+  'top-center',
+  'top-right',
+  'bottom-left',
+  'bottom-right',
+  'center',
 ]
 
 function finite(v: unknown): number | undefined {
@@ -295,9 +311,7 @@ function stringOrNull(v: unknown): string | null | undefined {
 }
 
 function oneOf<T extends string>(v: unknown, values: readonly T[]): T | undefined {
-  return typeof v === 'string' && (values as readonly string[]).includes(v)
-    ? (v as T)
-    : undefined
+  return typeof v === 'string' && (values as readonly string[]).includes(v) ? (v as T) : undefined
 }
 
 function isObject(v: unknown): v is Record<string, unknown> {
@@ -565,9 +579,7 @@ export class SettingsService {
         : current.overlay,
       hotkeys: patch.hotkeys ? { ...current.hotkeys, ...patch.hotkeys } : current.hotkeys,
       polling: patch.polling ? { ...current.polling, ...patch.polling } : current.polling,
-      localData: patch.localData
-        ? { ...current.localData, ...patch.localData }
-        : current.localData,
+      localData: patch.localData ? { ...current.localData, ...patch.localData } : current.localData,
     }
     this.store.set(KEY, next)
     return next

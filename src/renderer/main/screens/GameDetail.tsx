@@ -53,7 +53,9 @@ export function GameDetail() {
       {!isLoading && data && !data.ok && (
         <ErrorBox message={data.error.message} onRetry={() => refetch()} />
       )}
-      {!isLoading && data?.ok && <Resolve matchId={matchId} matches={data.data} settings={settings} />}
+      {!isLoading && data?.ok && (
+        <Resolve matchId={matchId} matches={data.data} settings={settings} />
+      )}
     </div>
   )
 }
@@ -79,7 +81,11 @@ function Resolve({
     )
   }
   return (
-    <Detail match={match} myProfileId={settings?.profileId ?? null} myName={settings?.playerName ?? null} />
+    <Detail
+      match={match}
+      myProfileId={settings?.profileId ?? null}
+      myName={settings?.playerName ?? null}
+    />
   )
 }
 
@@ -147,7 +153,11 @@ function Detail({
           <span
             className={cn(
               'inline-flex h-9 items-center rounded-md px-3 text-sm font-bold uppercase tracking-wide',
-              win ? 'bg-win/20 text-win' : loss ? 'bg-destructive/20 text-destructive' : 'bg-secondary text-muted-foreground',
+              win
+                ? 'bg-win/20 text-win'
+                : loss
+                  ? 'bg-destructive/20 text-destructive'
+                  : 'bg-secondary text-muted-foreground',
             )}
           >
             {resultWord}
@@ -198,8 +208,8 @@ function Detail({
         <Card>
           <CardContent className="p-4 text-sm text-muted-foreground">
             No per-player breakdown for this game yet. Click{' '}
-            <span className="font-medium text-foreground">Sync recent games</span> on My Stats to pull
-            the production, combat and tech numbers from Relic.
+            <span className="font-medium text-foreground">Sync recent games</span> on My Stats to
+            pull the production, combat and tech numbers from Relic.
           </CardContent>
         </Card>
       )}
@@ -234,11 +244,13 @@ function Detail({
         </Card>
       </section>
 
-      {summary && <BuildTrainerCard summary={summary} myCiv={match.civ} />}
+      {summary && (
+        <BuildTrainerCard summary={summary} myCiv={match.civ} myProfileId={myProfileId} />
+      )}
 
       <section className="space-y-2">
         <h2 className="text-lg font-semibold tracking-tight">Economy &amp; build order</h2>
-        {summary && (summary.players.length > 0) ? (
+        {summary && summary.players.length > 0 ? (
           <GameSummaryPanel
             summary={summary}
             myCiv={match.civ}
@@ -249,7 +261,11 @@ function Detail({
           <Card>
             <CardContent className="space-y-2 p-4 text-sm">
               {vpm != null && (
-                <Metric label="Villagers / min" value={String(vpm)} hint="your economy pace — the AoE4 CS/min" />
+                <Metric
+                  label="Villagers / min"
+                  value={String(vpm)}
+                  hint="your economy pace — the AoE4 CS/min"
+                />
               )}
               <p className="text-muted-foreground">
                 {summaryLoading
@@ -321,7 +337,7 @@ function ComparisonTable({
             <tbody>
               {rows.map((r) => {
                 const isMe = r.profileId === myProfileId
-                const name = isMe ? (myName ?? 'You') : (r.civ ? nameByCiv.get(r.civ) : undefined)
+                const name = isMe ? (myName ?? 'You') : r.civ ? nameByCiv.get(r.civ) : undefined
                 return (
                   <tr
                     key={r.profileId}
@@ -381,9 +397,9 @@ function ComparisonTable({
         </CardContent>
       </Card>
       <p className="text-[11px] text-muted-foreground">
-        Production, combat, tech and APM from Relic (the same source AoE4World reads). Deaths include
-        villagers — the game's military tab counts troops only. Economy isn't in this feed, so it
-        isn't shown as a column.
+        Production, combat, tech and APM from Relic (the same source AoE4World reads). Deaths
+        include villagers — the game's military tab counts troops only. Economy isn't in this feed,
+        so it isn't shown as a column.
       </p>
     </section>
   )
@@ -435,7 +451,10 @@ function matchTitle(match: StoredMatch): string {
 }
 
 /** Rows grouped as (my team, me first) then the enemy team. */
-function orderRows(perPlayer: PerPlayerMatchStats[], myProfileId: number | null): PerPlayerMatchStats[] {
+function orderRows(
+  perPlayer: PerPlayerMatchStats[],
+  myProfileId: number | null,
+): PerPlayerMatchStats[] {
   const me = perPlayer.find((p) => p.profileId === myProfileId)
   const myTeamId = me?.teamId ?? null
   return [...perPlayer].sort((a, b) => {

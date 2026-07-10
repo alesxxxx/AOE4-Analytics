@@ -1,21 +1,30 @@
 import { Dumbbell } from 'lucide-react'
-import { civFromToken, type MatchSummary } from '@domain/statsSummary'
+import type { MatchSummary } from '@domain/statsSummary'
 import { BUNDLED_BUILD_ORDERS } from '@data/buildOrders'
 import { buildIndexForCiv } from '@domain/buildOrderSchema'
 import { gradeBuildFollow, type TrainerCheckpoint } from '@domain/buildTrainer'
 import { formatDuration } from '@domain/format'
 import { cn } from '@shared/lib/utils'
 import { Card, CardContent } from '@shared/components/ui/card'
+import { selectTrainerPlayer } from './gameSummaryHelpers'
 
 /**
  * The practice loop: this game's decoded build events graded against the
  * bundled reference build for your civ. Renders nothing when there's no
  * bundled build, no decoded events for you, or no timed reference steps.
  */
-export function BuildTrainerCard({ summary, myCiv }: { summary: MatchSummary; myCiv: string }) {
+export function BuildTrainerCard({
+  summary,
+  myCiv,
+  myProfileId,
+}: {
+  summary: MatchSummary
+  myCiv: string
+  myProfileId?: number | null
+}) {
   const idx = buildIndexForCiv(BUNDLED_BUILD_ORDERS, myCiv)
   const reference = idx != null ? BUNDLED_BUILD_ORDERS[idx]! : null
-  const me = summary.players.find((p) => civFromToken(p.civToken) === myCiv) ?? null
+  const me = selectTrainerPlayer(summary.players, myProfileId, myCiv)
   if (!reference || !me || me.buildOrder.length === 0) return null
 
   const report = gradeBuildFollow({ reference, events: me.buildOrder, civ: myCiv })
@@ -51,7 +60,12 @@ export function BuildTrainerCard({ summary, myCiv }: { summary: MatchSummary; my
 
 function ScoreBadge({ score }: { score: number | null }) {
   if (score == null) return null
-  const tone = score >= 80 ? 'bg-win/15 text-win' : score >= 50 ? 'bg-warn/15 text-warn' : 'bg-loss/15 text-loss'
+  const tone =
+    score >= 80
+      ? 'bg-win/15 text-win'
+      : score >= 50
+        ? 'bg-warn/15 text-warn'
+        : 'bg-loss/15 text-loss'
   return (
     <span className={cn('rounded-sm px-2.5 py-0.5 text-xs font-bold tabular-nums', tone)}>
       {score}% on plan

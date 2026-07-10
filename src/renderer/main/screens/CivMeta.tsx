@@ -73,14 +73,40 @@ export function CivMeta() {
       },
       { replace: true },
     )
-  const [leaderboard, setLeaderboard] = useState<StatsLeaderboard>('rm_solo')
-  const [bracketIdx, setBracketIdx] = useState(0)
+  const ladderParam = searchParams.get('ladder')
+  const leaderboard: StatsLeaderboard = LADDERS.some((l) => l.value === ladderParam)
+    ? (ladderParam as StatsLeaderboard)
+    : 'rm_solo'
+  const rankParam = searchParams.get('rank')
+  const rankLevel = rankFilterable(leaderboard)
+    ? BRACKETS.find((b) => b.value === rankParam)?.value
+    : undefined
+  const setLeaderboard = (value: StatsLeaderboard) =>
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev)
+        if (value === 'rm_solo') next.delete('ladder')
+        else next.set('ladder', value)
+        if (!rankFilterable(value)) next.delete('rank')
+        return next
+      },
+      { replace: true },
+    )
+  const setRankLevel = (value: RankLevel | undefined) =>
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev)
+        if (value) next.set('rank', value)
+        else next.delete('rank')
+        return next
+      },
+      { replace: true },
+    )
   const [sort, setSort] = useState<{ key: SortKey; dir: 'asc' | 'desc' }>({
     key: 'winRate',
     dir: 'desc',
   })
 
-  const rankLevel = rankFilterable(leaderboard) ? BRACKETS[bracketIdx]!.value : undefined
   const { data, isLoading, isFetching, refetch } = useCivMeta({ leaderboard, rankLevel })
 
   const maps = data?.ok ? data.data.maps : []
@@ -146,6 +172,7 @@ export function CivMeta() {
             <select
               value={leaderboard}
               onChange={(e) => setLeaderboard(e.target.value as StatsLeaderboard)}
+              aria-label="Leaderboard"
               className="h-9 rounded-md border border-border bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               {LADDERS.map((l) => (
@@ -155,13 +182,14 @@ export function CivMeta() {
               ))}
             </select>
             <select
-              value={bracketIdx}
+              value={rankLevel ?? ''}
               disabled={!rankFilterable(leaderboard)}
-              onChange={(e) => setBracketIdx(Number(e.target.value))}
+              onChange={(e) => setRankLevel((e.target.value || undefined) as RankLevel | undefined)}
+              aria-label="Rank bracket"
               className="h-9 rounded-md border border-border bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
             >
-              {BRACKETS.map((b, i) => (
-                <option key={b.label} value={i}>
+              {BRACKETS.map((b) => (
+                <option key={b.label} value={b.value ?? ''}>
                   {b.label}
                 </option>
               ))}
@@ -195,7 +223,8 @@ export function CivMeta() {
                 Live aggregates from AoE4World ({data.data.totalCivGames.toLocaleString()} games in
                 this slice). Win rate near 50% is normal — a few points is a real edge across many
                 games, but at beginner level your own fundamentals matter far more than civ choice.
-                Per-patch history isn&apos;t exposed by the API, so this reflects the current dataset.
+                Per-patch history isn&apos;t exposed by the API, so this reflects the current
+                dataset.
               </p>
             </div>
           </div>

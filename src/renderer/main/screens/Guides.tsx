@@ -1,5 +1,6 @@
+import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { BookOpen, ListOrdered, Shield, Sparkles, ArrowLeft, Clock } from 'lucide-react'
+import { BookOpen, ListOrdered, Shield, Sparkles, ArrowLeft, Clock, Search } from 'lucide-react'
 import { GUIDES, type Guide } from '@data/guides'
 import { BUNDLED_BUILD_ORDERS } from '@data/buildOrders'
 import type { BuildOrder } from '@domain/buildOrderSchema'
@@ -158,6 +159,7 @@ const DIFFICULTY_TONE: Record<string, string> = {
  */
 function BuildLibrary() {
   const builds = BUNDLED_BUILD_ORDERS as unknown as BuildOrder[]
+  const [query, setQuery] = useState('')
   // The selected build lives in the URL (`?build=index`) so it survives a refresh.
   const [searchParams, setSearchParams] = useSearchParams()
   const rawIdx = Number(searchParams.get('build'))
@@ -173,10 +175,18 @@ function BuildLibrary() {
     )
   const active = builds[idx]
 
-  // Group by primary civ label, keeping library order within each group.
+  // Group by primary civ label, keeping library order within each group. Search
+  // spans civ, build name, archetype, difficulty, and author so the full bundled
+  // library stays practical as more builds are added.
+  const needle = query.trim().toLocaleLowerCase()
   const groups = new Map<string, { bo: BuildOrder; i: number }[]>()
   builds.forEach((bo, i) => {
     const civ = buildOrderCivLabel(bo)
+    const haystack = [civ, bo.name, bo.archetype, bo.difficulty, bo.author]
+      .filter(Boolean)
+      .join(' ')
+      .toLocaleLowerCase()
+    if (needle && !haystack.includes(needle)) return
     const list = groups.get(civ) ?? []
     list.push({ bo, i })
     groups.set(civ, list)
@@ -185,6 +195,24 @@ function BuildLibrary() {
 
   return (
     <div className="space-y-4">
+      <label className="relative block max-w-lg">
+        <span className="sr-only">Search build orders</span>
+        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search by civilization, build, style, or author…"
+          className="h-10 w-full rounded-md border border-border bg-background pl-9 pr-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary"
+        />
+      </label>
+
+      {civNames.length === 0 && (
+        <div className="rounded-md border border-dashed border-border px-4 py-8 text-center text-sm text-muted-foreground">
+          No bundled build orders match “{query.trim()}”.
+        </div>
+      )}
+
       <div className="grid gap-x-6 gap-y-2 sm:grid-cols-2 xl:grid-cols-3">
         {civNames.map((civ) => (
           <div key={civ} className="space-y-1">
@@ -235,8 +263,8 @@ function BuildLibrary() {
               >
                 aoe4guides.com
               </a>
-              . Curation: we pull only the top-scored builds that match proven meta archetypes;
-              step timings are the author&apos;s.
+              . Curation: we pull only the top-scored builds that match proven meta archetypes; step
+              timings are the author&apos;s.
             </p>
           )}
         </div>

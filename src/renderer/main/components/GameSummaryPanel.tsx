@@ -34,11 +34,17 @@ import { landmarksForCiv } from '@domain/landmarks'
 import { formatDurationShort } from '@shared/format'
 import { cn } from '@shared/lib/utils'
 import { Card, CardContent } from '@shared/components/ui/card'
+import { finiteMetricValue } from './gameSummaryHelpers'
 
 const GRID = 'hsl(var(--border))'
 const MUTED = 'hsl(var(--muted-foreground))'
 // "You" always draws in the accent; the rest stay fixed but distinct from it.
-const SERIES_COLORS = ['hsl(var(--primary))', 'hsl(var(--loss))', 'hsl(190, 95%, 50%)', 'hsl(280, 65%, 62%)']
+const SERIES_COLORS = [
+  'hsl(var(--primary))',
+  'hsl(var(--loss))',
+  'hsl(190, 95%, 50%)',
+  'hsl(280, 65%, 62%)',
+]
 const RESOURCE_KEYS = ['food', 'wood', 'gold', 'stone'] as const
 
 type ResourceKey = (typeof RESOURCE_KEYS)[number]
@@ -79,7 +85,9 @@ export function GameSummaryPanel({
     Number(isMe(b, myProfileId ?? null, myCiv)) - Number(isMe(a, myProfileId ?? null, myCiv))
   const players = [...summary.players].sort(meFirst)
   const me = players.find((p) => isMe(p, myProfileId ?? null, myCiv)) ?? players[0] ?? null
-  const colorOf = new Map(players.map((p, i) => [p.playerId, SERIES_COLORS[i % SERIES_COLORS.length]!]))
+  const colorOf = new Map(
+    players.map((p, i) => [p.playerId, SERIES_COLORS[i % SERIES_COLORS.length]!]),
+  )
 
   const ecoData = mergeSeries(players, (p) =>
     p.resources.map((r) => ({
@@ -108,7 +116,9 @@ export function GameSummaryPanel({
             icon={<Coins className="h-4 w-4 text-primary" />}
             label="Resources gathered"
             value={myResources ? fmtInt(totalResources(myResources)) : '-'}
-            hint={myResources ? resourceLine(myResources) : 'Summary did not include resource totals.'}
+            hint={
+              myResources ? resourceLine(myResources) : 'Summary did not include resource totals.'
+            }
           />
           <InsightCard
             icon={<Trophy className="h-4 w-4 text-primary" />}
@@ -141,24 +151,42 @@ export function GameSummaryPanel({
         <ScoreTable players={players} />
         <ResourceTable players={players} />
         <AgeTable players={players} myProfileId={myProfileId ?? null} myCiv={myCiv} />
-        <CombatTable perPlayer={perPlayer ?? []} players={players} myProfileId={myProfileId ?? null} />
+        <CombatTable
+          perPlayer={perPlayer ?? []}
+          players={players}
+          myProfileId={myProfileId ?? null}
+        />
       </div>
       <p className="text-[11px] leading-relaxed text-muted-foreground">
-        Scores are the game&apos;s last sampled values (up to ~20s before the end screen), so they can
-        sit slightly under the score screen&apos;s finals. Resource totals count DELIVERED resources —
-        the game&apos;s own screen also credits what villagers were still carrying when the game ended.
+        Scores are the game&apos;s last sampled values (up to ~20s before the end screen), so they
+        can sit slightly under the score screen&apos;s finals. Resource totals count DELIVERED
+        resources — the game&apos;s own screen also credits what villagers were still carrying when
+        the game ended.
       </p>
 
       {(hasEco || hasScore) && (
         <div className="grid gap-4 lg:grid-cols-2">
           {hasEco && (
-            <ChartCard title="Resources over time" icon={<LineChartIcon className="h-4 w-4 text-primary" />}>
-              <TimeChart data={ecoData} players={players} colorOf={colorOf} meId={me?.playerId ?? null} />
+            <ChartCard
+              title="Resources over time"
+              icon={<LineChartIcon className="h-4 w-4 text-primary" />}
+            >
+              <TimeChart
+                data={ecoData}
+                players={players}
+                colorOf={colorOf}
+                meId={me?.playerId ?? null}
+              />
             </ChartCard>
           )}
           {hasScore && (
             <ChartCard title="Score over time" icon={<Trophy className="h-4 w-4 text-primary" />}>
-              <TimeChart data={scoreData} players={players} colorOf={colorOf} meId={me?.playerId ?? null} />
+              <TimeChart
+                data={scoreData}
+                players={players}
+                colorOf={colorOf}
+                meId={me?.playerId ?? null}
+              />
             </ChartCard>
           )}
         </div>
@@ -241,7 +269,9 @@ function DataTable<T>({
   const best = new Map<string, number>()
   for (const col of columns) {
     if (!col.better) continue
-    const nums = rows.map((r) => Number(col.value(r))).filter((n) => Number.isFinite(n))
+    const nums = rows
+      .map((r) => finiteMetricValue(col.value(r)))
+      .filter((n): n is number => n != null)
     if (nums.length === 0) continue
     best.set(col.key, col.better === 'low' ? Math.min(...nums) : Math.max(...nums))
   }
@@ -253,7 +283,9 @@ function DataTable<T>({
           {title}
         </div>
         {rows.length === 0 ? (
-          <p className="p-4 text-sm text-muted-foreground">{empty ?? 'No data decoded for this table.'}</p>
+          <p className="p-4 text-sm text-muted-foreground">
+            {empty ?? 'No data decoded for this table.'}
+          </p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[520px] text-sm">
@@ -262,7 +294,10 @@ function DataTable<T>({
                   {columns.map((c) => (
                     <th
                       key={c.key}
-                      className={cn('rts-ledger-head px-3 py-2', c.align === 'right' ? 'text-right' : 'text-left')}
+                      className={cn(
+                        'rts-ledger-head px-3 py-2',
+                        c.align === 'right' ? 'text-right' : 'text-left',
+                      )}
                     >
                       {c.label}
                     </th>
@@ -271,11 +306,14 @@ function DataTable<T>({
               </thead>
               <tbody>
                 {rows.map((row, i) => (
-                  <tr key={rowKey(row, i)} className={cn('border-b border-border/50 last:border-b-0', rowClassName?.(row))}>
+                  <tr
+                    key={rowKey(row, i)}
+                    className={cn('border-b border-border/50 last:border-b-0', rowClassName?.(row))}
+                  >
                     {columns.map((c) => {
                       const raw = c.value(row)
-                      const n = Number(raw)
-                      const isBest = c.better && Number.isFinite(n) && n === best.get(c.key)
+                      const n = finiteMetricValue(raw)
+                      const isBest = c.better && n != null && n === best.get(c.key)
                       return (
                         <td
                           key={c.key}
@@ -311,12 +349,47 @@ function ScoreTable({ players }: { players: PlayerSummary[] }) {
       rows={rows}
       rowKey={(r) => String(r.player.playerId)}
       columns={[
-        { key: 'player', label: 'Player', value: (r) => playerLabel(r.player), display: (_, r) => playerLabel(r.player) },
-        { key: 'total', label: 'Total', align: 'right', better: 'high', value: (r) => r.score.total },
-        { key: 'military', label: 'Military', align: 'right', better: 'high', value: (r) => r.score.military },
-        { key: 'economy', label: 'Economy', align: 'right', better: 'high', value: (r) => r.score.economy },
-        { key: 'technology', label: 'Tech', align: 'right', better: 'high', value: (r) => r.score.technology },
-        { key: 'society', label: 'Society', align: 'right', better: 'high', value: (r) => r.score.society },
+        {
+          key: 'player',
+          label: 'Player',
+          value: (r) => playerLabel(r.player),
+          display: (_, r) => playerLabel(r.player),
+        },
+        {
+          key: 'total',
+          label: 'Total',
+          align: 'right',
+          better: 'high',
+          value: (r) => r.score.total,
+        },
+        {
+          key: 'military',
+          label: 'Military',
+          align: 'right',
+          better: 'high',
+          value: (r) => r.score.military,
+        },
+        {
+          key: 'economy',
+          label: 'Economy',
+          align: 'right',
+          better: 'high',
+          value: (r) => r.score.economy,
+        },
+        {
+          key: 'technology',
+          label: 'Tech',
+          align: 'right',
+          better: 'high',
+          value: (r) => r.score.technology,
+        },
+        {
+          key: 'society',
+          label: 'Society',
+          align: 'right',
+          better: 'high',
+          value: (r) => r.score.society,
+        },
       ]}
     />
   )
@@ -333,15 +406,62 @@ function ResourceTable({ players }: { players: PlayerSummary[] }) {
       rows={rows}
       rowKey={(r) => String(r.player.playerId)}
       columns={[
-        { key: 'player', label: 'Player', value: (r) => playerLabel(r.player), display: (_, r) => playerLabel(r.player) },
+        {
+          key: 'player',
+          label: 'Player',
+          value: (r) => playerLabel(r.player),
+          display: (_, r) => playerLabel(r.player),
+        },
         // Whole numbers, like the game's own screen (raw values are floats).
-        { key: 'total', label: 'Total', align: 'right', better: 'high', value: (r) => Math.round(totalResources(r.resources)) },
-        { key: 'food', label: 'Food', align: 'right', better: 'high', value: (r) => Math.round(r.resources.food) },
-        { key: 'wood', label: 'Wood', align: 'right', better: 'high', value: (r) => Math.round(r.resources.wood) },
-        { key: 'stone', label: 'Stone', align: 'right', better: 'high', value: (r) => Math.round(r.resources.stone) },
-        { key: 'gold', label: 'Gold', align: 'right', better: 'high', value: (r) => Math.round(r.resources.gold) },
-        { key: 'foodRate', label: 'Max food/min', align: 'right', better: 'high', value: (r) => maxGatherRate(r.player, 'food') },
-        { key: 'woodRate', label: 'Max wood/min', align: 'right', better: 'high', value: (r) => maxGatherRate(r.player, 'wood') },
+        {
+          key: 'total',
+          label: 'Total',
+          align: 'right',
+          better: 'high',
+          value: (r) => Math.round(totalResources(r.resources)),
+        },
+        {
+          key: 'food',
+          label: 'Food',
+          align: 'right',
+          better: 'high',
+          value: (r) => Math.round(r.resources.food),
+        },
+        {
+          key: 'wood',
+          label: 'Wood',
+          align: 'right',
+          better: 'high',
+          value: (r) => Math.round(r.resources.wood),
+        },
+        {
+          key: 'stone',
+          label: 'Stone',
+          align: 'right',
+          better: 'high',
+          value: (r) => Math.round(r.resources.stone),
+        },
+        {
+          key: 'gold',
+          label: 'Gold',
+          align: 'right',
+          better: 'high',
+          value: (r) => Math.round(r.resources.gold),
+        },
+        {
+          key: 'foodRate',
+          label: 'Max food/min',
+          align: 'right',
+          better: 'high',
+          value: (r) => maxGatherRate(r.player, 'food'),
+        },
+        {
+          key: 'woodRate',
+          label: 'Max wood/min',
+          align: 'right',
+          better: 'high',
+          value: (r) => maxGatherRate(r.player, 'wood'),
+        },
       ]}
     />
   )
@@ -358,7 +478,10 @@ function AgeTable({
 }) {
   const rows = players.map((player) => ({
     player,
-    timings: ageTimings(player, isMe(player, myProfileId, myCiv) ? myCiv : civFromToken(player.civToken)),
+    timings: ageTimings(
+      player,
+      isMe(player, myProfileId, myCiv) ? myCiv : civFromToken(player.civToken),
+    ),
   }))
   return (
     <DataTable
@@ -367,10 +490,36 @@ function AgeTable({
       rows={rows}
       rowKey={(r) => String(r.player.playerId)}
       columns={[
-        { key: 'player', label: 'Player', value: (r) => playerLabel(r.player), display: (_, r) => playerLabel(r.player) },
-        { key: 'age2', label: 'Age II', align: 'right', better: 'low', value: (r) => r.timings.get(2) ?? null, display: (v) => formatDurationShort(typeof v === 'number' ? v : null) },
-        { key: 'age3', label: 'Age III', align: 'right', better: 'low', value: (r) => r.timings.get(3) ?? null, display: (v) => formatDurationShort(typeof v === 'number' ? v : null) },
-        { key: 'age4', label: 'Age IV', align: 'right', better: 'low', value: (r) => r.timings.get(4) ?? null, display: (v) => formatDurationShort(typeof v === 'number' ? v : null) },
+        {
+          key: 'player',
+          label: 'Player',
+          value: (r) => playerLabel(r.player),
+          display: (_, r) => playerLabel(r.player),
+        },
+        {
+          key: 'age2',
+          label: 'Age II',
+          align: 'right',
+          better: 'low',
+          value: (r) => r.timings.get(2) ?? null,
+          display: (v) => formatDurationShort(typeof v === 'number' ? v : null),
+        },
+        {
+          key: 'age3',
+          label: 'Age III',
+          align: 'right',
+          better: 'low',
+          value: (r) => r.timings.get(3) ?? null,
+          display: (v) => formatDurationShort(typeof v === 'number' ? v : null),
+        },
+        {
+          key: 'age4',
+          label: 'Age IV',
+          align: 'right',
+          better: 'low',
+          value: (r) => r.timings.get(4) ?? null,
+          display: (v) => formatDurationShort(typeof v === 'number' ? v : null),
+        },
         {
           key: 'upgrades',
           label: 'Upgrades',
@@ -395,7 +544,9 @@ function CombatTable({
   myProfileId: number | null
 }) {
   const labelByCiv = labelsByCiv(players)
-  const rows = [...perPlayer].sort((a, b) => Number(b.profileId === myProfileId) - Number(a.profileId === myProfileId))
+  const rows = [...perPlayer].sort(
+    (a, b) => Number(b.profileId === myProfileId) - Number(a.profileId === myProfileId),
+  )
   // The game's "Largest Army" lives in the stat-summary header (Relic's counters
   // only carry units PRODUCED, a different stat) — join it in by profile id.
   const largestArmyFor = (profileId: number): number | null =>
@@ -417,23 +568,73 @@ function CombatTable({
           value: (r) => combatPlayerLabel(r, labelByCiv, myProfileId),
           display: (_, r) => combatPlayerLabel(r, labelByCiv, myProfileId),
         },
-        { key: 'units', label: 'Units made', align: 'right', better: 'high', value: (r) => r.unitsProduced },
-        { key: 'army', label: 'Largest army', align: 'right', better: 'high', value: (r) => largestArmyFor(r.profileId) },
-        { key: 'villHigh', label: 'Vill high', align: 'right', better: 'high', value: (r) => villagerHighFor(r.profileId) },
+        {
+          key: 'units',
+          label: 'Units made',
+          align: 'right',
+          better: 'high',
+          value: (r) => r.unitsProduced,
+        },
+        {
+          key: 'army',
+          label: 'Largest army',
+          align: 'right',
+          better: 'high',
+          value: (r) => largestArmyFor(r.profileId),
+        },
+        {
+          key: 'villHigh',
+          label: 'Vill high',
+          align: 'right',
+          better: 'high',
+          value: (r) => villagerHighFor(r.profileId),
+        },
         { key: 'kills', label: 'Killed', align: 'right', better: 'high', value: (r) => r.kills },
         { key: 'deaths', label: 'Lost', align: 'right', better: 'low', value: (r) => r.deaths },
         { key: 'kd', label: 'K/D', align: 'right', better: 'high', value: (r) => r.kd },
-        { key: 'buildings', label: 'Buildings', align: 'right', better: 'high', value: (r) => r.buildingsProduced },
-        { key: 'blost', label: 'Bldgs lost', align: 'right', better: 'low', value: (r) => r.buildingsLost ?? null },
-        { key: 'struct', label: 'Struct dmg', align: 'right', better: 'high', value: (r) => r.structureDamage ?? null },
-        { key: 'techs', label: 'Techs', align: 'right', better: 'high', value: (r) => r.techsResearched },
+        {
+          key: 'buildings',
+          label: 'Buildings',
+          align: 'right',
+          better: 'high',
+          value: (r) => r.buildingsProduced,
+        },
+        {
+          key: 'blost',
+          label: 'Bldgs lost',
+          align: 'right',
+          better: 'low',
+          value: (r) => r.buildingsLost ?? null,
+        },
+        {
+          key: 'struct',
+          label: 'Struct dmg',
+          align: 'right',
+          better: 'high',
+          value: (r) => r.structureDamage ?? null,
+        },
+        {
+          key: 'techs',
+          label: 'Techs',
+          align: 'right',
+          better: 'high',
+          value: (r) => r.techsResearched,
+        },
         { key: 'apm', label: 'APM', align: 'right', better: 'high', value: (r) => r.apm },
       ]}
     />
   )
 }
 
-function ChartCard({ title, icon, children }: { title: string; icon: ReactNode; children: ReactNode }) {
+function ChartCard({
+  title,
+  icon,
+  children,
+}: {
+  title: string
+  icon: ReactNode
+  children: ReactNode
+}) {
   return (
     <Card>
       <CardContent className="p-4">
@@ -492,7 +693,14 @@ function TimeChart({
             axisLine={false}
             tickFormatter={formatDurationShort}
           />
-          <YAxis stroke={MUTED} fontSize={11} tickLine={false} axisLine={false} width={44} tickFormatter={fmtK} />
+          <YAxis
+            stroke={MUTED}
+            fontSize={11}
+            tickLine={false}
+            axisLine={false}
+            width={44}
+            tickFormatter={fmtK}
+          />
           <Tooltip
             contentStyle={{
               background: 'hsl(var(--popover))',
@@ -527,16 +735,31 @@ function TimeChart({
   )
 }
 
-function BuildOrderColumn({ player, me, color }: { player: PlayerSummary; me: boolean; color: string }) {
+function BuildOrderColumn({
+  player,
+  me,
+  color,
+}: {
+  player: PlayerSummary
+  me: boolean
+  color: string
+}) {
   const rows = collapseRuns(player.buildOrder)
   const rhythm = villagerGaps(player)
   return (
-    <div className={cn('overflow-hidden rounded-md border border-border', me && 'ring-1 ring-primary/40')}>
+    <div
+      className={cn(
+        'overflow-hidden rounded-md border border-border',
+        me && 'ring-1 ring-primary/40',
+      )}
+    >
       <div className="flex items-center gap-2 border-b border-border px-3 py-2">
         <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: color }} />
         <span className="truncate text-sm font-medium">{playerLabel(player)}</span>
         {me && (
-          <span className="rounded bg-primary/15 px-1 text-[9px] font-semibold uppercase text-primary">You</span>
+          <span className="rounded bg-primary/15 px-1 text-[9px] font-semibold uppercase text-primary">
+            You
+          </span>
         )}
         {rhythm && (
           <span className="ml-auto whitespace-nowrap text-[11px] text-muted-foreground">
@@ -547,7 +770,9 @@ function BuildOrderColumn({ player, me, color }: { player: PlayerSummary; me: bo
       <div className="max-h-96 overflow-y-auto">
         {rows.map((r, i) => (
           <div key={i} className="flex items-baseline gap-2 px-3 py-1 text-xs">
-            <span className="w-10 shrink-0 tabular-nums text-muted-foreground">{formatDurationShort(r.timeSec)}</span>
+            <span className="w-10 shrink-0 tabular-nums text-muted-foreground">
+              {formatDurationShort(r.timeSec)}
+            </span>
             <span className={cn('flex-1 truncate', CATEGORY_STYLE[r.category])}>
               {r.name}
               {r.count > 1 && <span className="text-muted-foreground"> x{r.count}</span>}
@@ -627,10 +852,7 @@ function maxGatherRate(p: PlayerSummary, key: ResourceKey): number | null {
   return max > 0 ? Math.round(max) : null
 }
 
-function villagerHint(
-  tc: VillagerProductionRhythm | null,
-  villagerHigh: number | null,
-): string {
+function villagerHint(tc: VillagerProductionRhythm | null, villagerHigh: number | null): string {
   const parts: string[] = []
   if (villagerHigh != null && tc) parts.push(`${tc.villagersMade} trained`)
   if (tc) {
@@ -670,7 +892,11 @@ function ageTimings(player: PlayerSummary, civ: string | null | undefined): Map<
 }
 
 function normName(name: string): string {
-  return name.normalize('NFKD').toLowerCase().replace(/[\u2018\u2019'`]/g, '').replace(/[^a-z0-9]+/g, '')
+  return name
+    .normalize('NFKD')
+    .toLowerCase()
+    .replace(/[\u2018\u2019'`]/g, '')
+    .replace(/[^a-z0-9]+/g, '')
 }
 
 function strongestScoreLane(score: ScorePoint): string {

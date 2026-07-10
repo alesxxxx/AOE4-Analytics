@@ -98,6 +98,15 @@ const PLACEHOLDER_POST_GAME: PostGameSummary = {
   vsAI: false,
 }
 
+const WIDGET_LABELS: Record<OverlayWidgetKey, string> = {
+  matchup: 'Matchup and troops',
+  apm: 'Live APM',
+  postGame: 'Post-game card',
+  buildOrder: 'Build order',
+  ageTargets: 'Age targets',
+  session: 'Session record',
+}
+
 /**
  * Transparent in-game overlay root. The placement hotkey (Ctrl+Alt+O by
  * default) toggles placement mode: the same current widgets become draggable,
@@ -411,6 +420,14 @@ export function OverlayApp() {
         </PlacedWidget>
       )}
 
+      {placementMode && (
+        <div className="pointer-events-none fixed inset-x-0 bottom-5 z-[90] flex justify-center">
+          <span className="rounded-full bg-[#0b0e14]/95 px-4 py-2 text-xs font-medium text-white/85 shadow-2xl ring-1 ring-primary/60">
+            Drag any outlined widget to place it · use the same shortcut when done
+          </span>
+        </div>
+      )}
+
       {!placementMode && !showMatchup && !showPostGame && (
         <div className="pointer-events-none fixed inset-x-0 top-1.5 z-50 flex justify-center">
           <span className="flex items-center gap-1.5 rounded-md bg-[#0b0e14]/85 px-2.5 py-1 text-[11px] text-white/70 shadow-lg ring-1 ring-white/10">
@@ -509,8 +526,9 @@ function PlacedWidget({
       title={placementMode ? 'Move overlay widget' : undefined}
     >
       {placementMode && (
-        <span className="pointer-events-none absolute -left-2 -top-2 z-[70] flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg ring-1 ring-black/50">
+        <span className="pointer-events-none absolute -left-2 -top-3 z-[70] flex h-6 items-center gap-1 rounded-full bg-primary px-2 text-[10px] font-semibold text-primary-foreground shadow-lg ring-1 ring-black/50">
           <Move className="h-3 w-3" />
+          {WIDGET_LABELS[widgetKey]}
         </span>
       )}
       <div className={placementMode ? 'rounded-md ring-1 ring-primary/70' : undefined}>

@@ -4,11 +4,7 @@ import { ChevronRight, Swords } from 'lucide-react'
 import type { StoredMatch } from '@store/historyStore'
 import { BUNDLED_BUILD_ORDERS } from '@data/buildOrders'
 import { resultFromPerPlayer } from '@domain/analysis'
-import {
-  buildIndexForCiv,
-  condenseBuildOrder,
-  type BuildKeyTiming,
-} from '@domain/buildOrderSchema'
+import { buildIndexForCiv, condenseBuildOrder, type BuildKeyTiming } from '@domain/buildOrderSchema'
 import { matchupTroops, type CivKeyUnit } from '@domain/civUnits'
 import { landmarksForCiv } from '@domain/landmarks'
 import { civDisplayName } from '@domain/civ'
@@ -59,8 +55,7 @@ export function MatchPrepCard({ matches }: { matches: StoredMatch[] }) {
   const troops = matchupTroops(myCiv, oppCiv)
   const goals = matches[0]?.goals ?? []
 
-  const hasAnything =
-    timings.length > 0 || landmarks != null || troops != null || goals.length > 0
+  const hasAnything = timings.length > 0 || landmarks != null || troops != null || goals.length > 0
   if (!hasAnything) return null
 
   return (
@@ -126,7 +121,11 @@ export function MatchPrepCard({ matches }: { matches: StoredMatch[] }) {
           <PrepCell title={`Counters vs ${civDisplayName(oppCiv)}`}>
             <div className="space-y-1.5">
               {troops.mine.length > 0 && (
-                <TroopsLine label="Build" units={troops.mine.slice(0, 4)} priority={troops.priority} />
+                <TroopsLine
+                  label="Build"
+                  units={troops.mine.slice(0, 4)}
+                  priority={troops.priority}
+                />
               )}
               {troops.theirs.length > 0 && (
                 <TroopsLine label="Expect" units={troops.theirs.slice(0, 4)} />
@@ -165,10 +164,10 @@ function PrepCell({ title, children }: { title: string; children: ReactNode }) {
 
 function TimingRow({ t }: { t: BuildKeyTiming }) {
   return (
-    <li className="flex items-baseline gap-2 text-xs">
-      <span className="w-10 shrink-0 font-semibold tabular-nums text-primary">{t.time ?? '—'}</span>
-      <span className="w-12 shrink-0 tabular-nums text-muted-foreground">{t.villagers} vill</span>
-      <span className="min-w-0 flex-1 truncate">
+    <li className="grid grid-cols-[2.5rem_3rem_minmax(0,1fr)] items-start gap-2 text-xs">
+      <span className="font-semibold tabular-nums text-primary">{t.time ?? '—'}</span>
+      <span className="tabular-nums text-muted-foreground">{t.villagers} vill</span>
+      <span className="min-w-0 leading-snug">
         {t.ageUpTo != null ? `${AGE_NAME[t.ageUpTo]} age` : (t.note ?? 'Opening')}
       </span>
     </li>

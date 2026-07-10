@@ -73,6 +73,8 @@ export const IpcChannels = {
   // Phase 5
   overlayApplySettings: 'overlay:applySettings',
   overlayToggle: 'overlay:toggle',
+  /** Toggle the draggable widget-placement preview (also available through the hotkey). */
+  overlayTogglePlacement: 'overlay:togglePlacement',
   // Overlay renderer → main: post-game card interactivity. The locked overlay
   // is click-through; while the card is up the main process forwards mouse
   // moves, the renderer hit-tests its ✕ button, and these two channels toggle
@@ -382,6 +384,11 @@ export interface RtslyticsApi {
   // Phase 5
   applyOverlaySettings(): Promise<void>
   toggleOverlay(): Promise<void>
+  /**
+   * Enter/leave the draggable widget-placement preview. Resolves to whether
+   * placement mode is active after the toggle.
+   */
+  toggleOverlayPlacement(): Promise<boolean>
   /** Overlay only: the cursor is over (or left) a clickable overlay control (post-game ✕). */
   setOverlayInteractive(hover: boolean): Promise<void>
   /** Overlay only: dismiss the post-game card and hide the overlay. */

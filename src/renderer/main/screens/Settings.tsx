@@ -1,5 +1,16 @@
 import { useCallback, useEffect, useState } from 'react'
-import { User, Monitor, Gauge, Keyboard, Gamepad2, Loader2, Check, Palette, Pipette } from 'lucide-react'
+import {
+  User,
+  Monitor,
+  Gauge,
+  Keyboard,
+  Gamepad2,
+  Loader2,
+  Check,
+  Palette,
+  Pipette,
+  Move,
+} from 'lucide-react'
 import type { Leaderboard } from '@api/types'
 import {
   DEFAULT_HOTKEYS,
@@ -27,6 +38,15 @@ const POLL_OPTIONS = [
   { value: 15_000, label: '15s (recommended)' },
   { value: 30_000, label: '30s' },
 ]
+const SETTINGS_SECTIONS = [
+  ['settings-appearance', 'Appearance'],
+  ['settings-account', 'Account'],
+  ['settings-overlay', 'Overlay'],
+  ['settings-polling', 'Polling'],
+  ['settings-stats', 'Stats'],
+  ['settings-hotkeys', 'Hotkeys'],
+] as const
+
 export function Settings() {
   const { data: settings } = useSettings()
   const update = useUpdateSettings()
@@ -34,6 +54,13 @@ export function Settings() {
 
   const toggleHotkey = settings?.hotkeys.toggleOverlay ?? DEFAULT_HOTKEYS.toggleOverlay
   const placementHotkey = settings?.hotkeys.placementMode ?? DEFAULT_HOTKEYS.placementMode
+  const [arrangingWidgets, setArrangingWidgets] = useState(false)
+
+  // Placement mode persists its locked state in settings, so the button stays
+  // accurate when this screen is revisited after using the global hotkey.
+  useEffect(() => {
+    if (settings) setArrangingWidgets(!settings.overlay.locked)
+  }, [settings])
 
   // The sliders track a local value and commit it debounced — one settings
   // write + overlay IPC after the drag settles instead of one per tick.
@@ -62,9 +89,43 @@ export function Settings() {
 
   return (
     <div className="animate-fade-in space-y-6">
-      <PageHead kicker="Preferences" title="Settings" sub="Profile, appearance, overlay, and data." />
+      <PageHead
+        kicker="Preferences"
+        title="Settings"
+        sub="Profile, appearance, overlay, and data."
+      />
 
-      <Card>
+      <nav className="sticky top-0 z-20 -mx-1 flex flex-wrap items-center gap-1 rounded-md border border-border bg-background/95 p-1 shadow-lg backdrop-blur">
+        {SETTINGS_SECTIONS.map(([id, label]) => (
+          <button
+            key={id}
+            type="button"
+            onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })}
+            className="rounded px-2.5 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+          >
+            {label}
+          </button>
+        ))}
+        <span
+          className={cn(
+            'ml-auto flex items-center gap-1.5 px-2 text-[11px]',
+            update.isError ? 'text-loss' : 'text-muted-foreground',
+          )}
+        >
+          {update.isPending ? (
+            <Loader2 className="h-3 w-3 animate-spin" />
+          ) : (
+            <Check className="h-3 w-3" />
+          )}
+          {update.isPending
+            ? 'Saving…'
+            : update.isError
+              ? 'Save failed'
+              : 'Changes save automatically'}
+        </span>
+      </nav>
+
+      <Card id="settings-appearance" className="scroll-mt-14">
         <CardContent className="space-y-3 p-5">
           <h2 className="flex items-center gap-2 text-base font-semibold">
             <Palette className="h-4 w-4 text-primary" />
@@ -99,44 +160,46 @@ export function Settings() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardContent className="space-y-3 p-5">
-          <h2 className="flex items-center gap-2 text-base font-semibold">
-            <User className="h-4 w-4 text-primary" />
-            Profile
-          </h2>
-          <div className="flex items-center justify-between">
-            <div className="text-sm">
-              <div className="font-medium">{settings?.playerName ?? '—'}</div>
-              <div className="text-xs text-muted-foreground">
-                AoE4World ID {settings?.profileId ?? '—'} · ladder {settings?.leaderboard}
+      <div id="settings-account" className="scroll-mt-14 space-y-6">
+        <Card>
+          <CardContent className="space-y-3 p-5">
+            <h2 className="flex items-center gap-2 text-base font-semibold">
+              <User className="h-4 w-4 text-primary" />
+              Profile
+            </h2>
+            <div className="flex items-center justify-between">
+              <div className="text-sm">
+                <div className="font-medium">{settings?.playerName ?? '—'}</div>
+                <div className="text-xs text-muted-foreground">
+                  AoE4World ID {settings?.profileId ?? '—'} · ladder {settings?.leaderboard}
+                </div>
               </div>
+              <button
+                type="button"
+                disabled={settings?.profileId == null}
+                onClick={() => {
+                  if (settings?.profileId == null) return
+                  if (!window.confirm('Remove this account from RTSLytics? This cannot be undone.'))
+                    return
+                  removeAccount.mutate(settings.profileId)
+                }}
+                className="rounded-md border border-border px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground disabled:opacity-50"
+              >
+                Remove account
+              </button>
             </div>
-            <button
-              type="button"
-              disabled={settings?.profileId == null}
-              onClick={() => {
-                if (settings?.profileId == null) return
-                if (!window.confirm('Remove this account from RTSLytics? This cannot be undone.'))
-                  return
-                removeAccount.mutate(settings.profileId)
-              }}
-              className="rounded-md border border-border px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground disabled:opacity-50"
-            >
-              Remove account
-            </button>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            Switch between or add accounts from the picker in the top command bar.
-          </p>
-        </CardContent>
-      </Card>
+            <p className="text-xs text-muted-foreground">
+              Switch between or add accounts from the picker in the top command bar.
+            </p>
+          </CardContent>
+        </Card>
 
-      <SteamIdentityCard settings={settings} onPin={(steamId) => update.mutate({ steamId })} />
+        <SteamIdentityCard settings={settings} onPin={(steamId) => update.mutate({ steamId })} />
 
-      <SteamConnectCard />
+        <SteamConnectCard />
+      </div>
 
-      <Card>
+      <Card id="settings-overlay" className="scroll-mt-14">
         <CardContent className="space-y-4 p-5">
           <h2 className="flex items-center gap-2 text-base font-semibold">
             <Monitor className="h-4 w-4 text-primary" />
@@ -178,8 +241,8 @@ export function Settings() {
 
           <p className="text-[11px] text-muted-foreground">
             The overlay shows the matchup across the top, a live APM counter, and a results card
-            after each game. Press {toggleHotkey} to show or hide it, and {placementHotkey} to
-            move widgets.
+            after each game. Arrange widgets with the button below or {placementHotkey}; it opens a
+            draggable preview even before a match.
           </p>
 
           <div className="flex flex-wrap gap-2">
@@ -189,6 +252,29 @@ export function Settings() {
               className="rounded-md border border-border px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
             >
               Show / hide overlay ({toggleHotkey})
+            </button>
+            <button
+              type="button"
+              disabled={!settings}
+              onClick={() => {
+                void ipc.toggleOverlayPlacement().then(setArrangingWidgets)
+              }}
+              className={cn(
+                'inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-sm transition-colors disabled:opacity-50',
+                arrangingWidgets
+                  ? 'border-primary bg-primary text-primary-foreground hover:bg-primary/90'
+                  : 'border-border text-muted-foreground hover:bg-secondary hover:text-foreground',
+              )}
+            >
+              <Move className="h-3.5 w-3.5" />
+              {arrangingWidgets ? 'Done arranging widgets' : 'Arrange overlay widgets'}
+              <span
+                className={
+                  arrangingWidgets ? 'text-primary-foreground/70' : 'text-muted-foreground'
+                }
+              >
+                ({placementHotkey})
+              </span>
             </button>
             <button
               type="button"
@@ -395,7 +481,7 @@ export function Settings() {
         </CardContent>
       </Card>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div id="settings-polling" className="grid scroll-mt-14 gap-4 md:grid-cols-2">
         <Card>
           <CardContent className="space-y-3 p-5">
             <h2 className="flex items-center gap-2 text-base font-semibold">
@@ -450,15 +536,16 @@ export function Settings() {
         </Card>
       </div>
 
-      <Card>
+      <Card id="settings-stats" className="scroll-mt-14">
         <CardContent className="space-y-3 p-5">
           <h2 className="text-base font-semibold">Stats</h2>
           <label className="flex cursor-pointer items-center justify-between gap-3 text-sm">
             <span>
               Exclude AI / custom games from win rate
               <span className="block text-[11px] text-muted-foreground">
-                Keep practice games vs AI out of your win-rate, stats, and history view so they don&apos;t
-                muddy your real (ranked) record. You still get a post-game card after each one.
+                Keep practice games vs AI out of your win-rate, stats, and history view so they
+                don&apos;t muddy your real (ranked) record. You still get a post-game card after
+                each one.
               </span>
             </span>
             <input
@@ -491,7 +578,7 @@ export function Settings() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card id="settings-hotkeys" className="scroll-mt-14">
         <CardContent className="space-y-3 p-5">
           <h2 className="flex items-center gap-2 text-base font-semibold">
             <Keyboard className="h-4 w-4 text-primary" />
@@ -581,8 +668,8 @@ function AccentPicker({
       <div className="text-sm">
         Accent color
         <span className="block text-[11px] text-muted-foreground">
-          The action colour for buttons, links, active tabs, focus rings, and the in-game
-          overlay. Applies everywhere instantly.
+          The action colour for buttons, links, active tabs, focus rings, and the in-game overlay.
+          Applies everywhere instantly.
         </span>
       </div>
       <div className="flex flex-wrap items-center gap-2">

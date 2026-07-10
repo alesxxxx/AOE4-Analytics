@@ -1,8 +1,15 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { ChevronLeft, ChevronRight, Radio, Trophy } from 'lucide-react'
 import type { Leaderboard } from '@api/types'
 import type { LeaderboardRow } from '@domain/leaderboard'
-import { countryFlag, formatPercent, formatRankLevel, formatRating, rankColor } from '@shared/format'
+import {
+  countryFlag,
+  formatPercent,
+  formatRankLevel,
+  formatRating,
+  rankColor,
+} from '@shared/format'
 import { cn } from '@shared/lib/utils'
 import { Card, CardContent } from '@shared/components/ui/card'
 import { Skeleton } from '@shared/components/ui/skeleton'
@@ -239,7 +246,16 @@ function Row({ r }: { r: LeaderboardRow }) {
       <td className="px-2 py-2">
         <span className="flex items-center gap-2">
           <span aria-hidden>{countryFlag(r.country)}</span>
-          <span className={cn('font-medium', r.isYou && 'text-primary')}>{r.name}</span>
+          <Link
+            to={`/profile/${r.profileId}`}
+            className={cn(
+              'font-medium underline-offset-2 hover:text-primary hover:underline',
+              r.isYou && 'text-primary',
+            )}
+            title={`Open ${r.name}'s full profile`}
+          >
+            {r.name}
+          </Link>
           {r.isYou && <span className="text-[10px] text-primary">you</span>}
           {r.live && (
             <span
@@ -267,11 +283,7 @@ function Row({ r }: { r: LeaderboardRow }) {
       <td
         className={cn(
           'px-4 py-2 text-right tabular-nums',
-          r.streak > 0
-            ? 'text-win'
-            : r.streak < 0
-              ? 'text-loss'
-              : 'text-muted-foreground',
+          r.streak > 0 ? 'text-win' : r.streak < 0 ? 'text-loss' : 'text-muted-foreground',
         )}
       >
         {r.streak > 0 ? `+${r.streak}` : r.streak}

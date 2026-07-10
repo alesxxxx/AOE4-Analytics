@@ -4,6 +4,24 @@ All notable changes to RTSLytics are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project aims
 to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.1] - 2026-07-09
+
+### Added
+
+- Added sortable post-game score, economy, technology, military, resource-over-time, score-over-time, and build-order breakdowns.
+- Added an in-app overlay arrangement preview, labeled drag handles, and a Settings shortcut for placing every overlay widget before a match.
+- Added dashboard latest-game review, leaderboard profile links, searchable build orders, deep-linkable Civ Meta filters, Settings section navigation, and project/support links.
+
+### Changed
+
+- Improved matchup troop labels, match-prep instruction wrapping, overlay placement guidance, and post-game player identification in mirror matches.
+- Release metadata aligned for the 0.4.1 portable Windows build.
+
+### Fixed
+
+- Isolated in-flight match syncs per account so switching accounts cannot write results into the wrong history store.
+- Sorted numeric local match folders correctly and kept missing post-game metrics out of table comparisons.
+
 ## [0.4.0] - 2026-07-07
 
 ### Added
@@ -136,6 +154,7 @@ to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Initial release: pre-game scouting, in-game overlay, post-game review, and
   civ/guide/tier-list data, powered by local AoE4 files and public APIs.
 
+[0.4.1]: https://github.com/alesxxxx/AOE4-Analytics/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/alesxxxx/AOE4-Analytics/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/alesxxxx/AOE4-Analytics/compare/v0.2.3...v0.3.0
 [0.2.2]: https://github.com/alesxxxx/AOE4-Analytics/compare/v0.2.1...v0.2.3
