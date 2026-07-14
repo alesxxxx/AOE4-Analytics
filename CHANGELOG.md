@@ -6,6 +6,8 @@ to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-07-14
+
 ### Added
 
 - Added a Turning-Point Story and Adaptive Build Coach recovery plans to post-game review.
@@ -165,6 +167,8 @@ to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Initial release: pre-game scouting, in-game overlay, post-game review, and
   civ/guide/tier-list data, powered by local AoE4 files and public APIs.
 
+[Unreleased]: https://github.com/alesxxxx/AOE4-Analytics/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/alesxxxx/AOE4-Analytics/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/alesxxxx/AOE4-Analytics/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/alesxxxx/AOE4-Analytics/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/alesxxxx/AOE4-Analytics/compare/v0.2.3...v0.3.0
