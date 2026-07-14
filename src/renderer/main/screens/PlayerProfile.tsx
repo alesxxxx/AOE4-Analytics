@@ -9,7 +9,9 @@ import {
   rankColor,
 } from '@shared/format'
 import { useScout } from '../queries/useScout'
+import { useScoutHistory } from '../queries/useProfile'
 import { ScoutReportCard } from '../components/ScoutReportCard'
+import { ScoutHistoryPanel } from '../components/ScoutHistoryPanel'
 import { RankBadge } from '../components/RankBadge'
 import { StatTile } from '../components/StatTile'
 import { EmptyBox, ErrorBox, Spinner } from '../components/feedback'
@@ -23,8 +25,9 @@ import { EmptyBox, ErrorBox, Spinner } from '../components/feedback'
 export function PlayerProfile() {
   const { profileId: raw } = useParams()
   const parsed = raw ? Number(raw) : NaN
-  const profileId = Number.isFinite(parsed) ? parsed : null
+  const profileId = Number.isSafeInteger(parsed) && parsed > 0 ? parsed : null
   const { data, isLoading, refetch } = useScout(profileId)
+  const history = useScoutHistory(profileId)
 
   return (
     <div className="animate-fade-in space-y-6">
@@ -47,7 +50,16 @@ export function PlayerProfile() {
       )}
 
       {!isLoading && data?.ok && (
-        <ProfileBody report={data.data} />
+        <>
+          <ProfileBody report={data.data} />
+          <ScoutHistoryPanel
+            result={history.data}
+            isLoading={history.isLoading}
+            error={history.error}
+            viewedName={data.data.name}
+            onRetry={() => void history.refetch()}
+          />
+        </>
       )}
     </div>
   )

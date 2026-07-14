@@ -59,20 +59,42 @@ function unavailableFileFor(gameId: string): string | null {
 function readCachedEntry(gameId: string): CachedSummaryEntry | null {
   const file = fileFor(gameId)
   if (!file) return null
+  if (!existsSync(file)) return null
+
+  let stat: ReturnType<typeof statSync>
   try {
-    if (!existsSync(file)) return null
-    const stat = statSync(file)
-    if (!stat.isFile()) return null
-    const memo = cachedSummaries.get(file)
-    if (memo && memo.mtimeMs === stat.mtimeMs && memo.size === stat.size)
-      return memoize(file, memo)
+    stat = statSync(file)
+  } catch {
+    cachedSummaries.delete(file)
+    return null
+  }
+  if (!stat.isFile()) return null
+  const memo = cachedSummaries.get(file)
+  if (memo && memo.mtimeMs === stat.mtimeMs && memo.size === stat.size) return memoize(file, memo)
+
+  let compressed: Buffer
+  try {
+    compressed = readFileSync(file)
+  } catch {
+    cachedSummaries.delete(file)
+    return null
+  }
+
+  try {
     return memoize(file, {
       mtimeMs: stat.mtimeMs,
       size: stat.size,
-      bytes: new Uint8Array(gunzipSync(readFileSync(file))),
+      bytes: new Uint8Array(gunzipSync(compressed)),
     })
   } catch {
     cachedSummaries.delete(file)
+    // A confirmed corrupt/truncated gzip must not permanently block a network
+    // re-fetch. Transient stat/read failures above deliberately keep the file.
+    try {
+      rmSync(file, { force: true })
+    } catch {
+      /* ignore */
+    }
     return null
   }
 }

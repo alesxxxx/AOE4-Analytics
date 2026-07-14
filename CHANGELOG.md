@@ -4,6 +4,17 @@ All notable changes to RTSLytics are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project aims
 to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- Added a Turning-Point Story and Adaptive Build Coach recovery plans to post-game review.
+- Added recent public matches and exact personal head-to-head history to Scout.
+- Added Benchmark Lens comparisons with a visible sample size for every metric.
+- Added Matchup Lab with directional global matchup data and separately labeled personal local results.
+- Added public civilization-based team plans and raw post-game contribution breakdowns.
+- Added a patch-aware Data Studio with bookmarkable filters for civilization, opponent, map, format, patch or season, result, duration, and time window.
+
 ## [0.4.1] - 2026-07-09
 
 ### Added

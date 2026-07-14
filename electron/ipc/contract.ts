@@ -23,6 +23,7 @@ import type { SteamAccount } from '@domain/steamAccounts'
 import type { GameClock } from '@domain/localStats'
 import type { LandmarkRecordRow } from '@domain/landmarkRecord'
 import type { LandmarkStatRow } from '@domain/landmarkStats'
+import type { GlobalMatchupSummary } from '@domain/matchupLab'
 import type { Leaderboard, RankLevel, StatsLeaderboard } from '@api/types'
 
 export type Platform = 'win32' | 'darwin' | 'linux' | (string & {})
@@ -38,10 +39,12 @@ export const IpcChannels = {
   profileRemove: 'profile:remove',
   profileDashboard: 'profile:dashboard',
   scoutGet: 'scout:get',
+  scoutHistoryGet: 'scout:historyGet',
   settingsGet: 'settings:get',
   settingsUpdate: 'settings:update',
   // Phase 2
   civMetaGet: 'civMeta:get',
+  matchupLabGet: 'matchupLab:get',
   civDetailGet: 'civDetail:get',
   leaderboardGet: 'leaderboard:get',
   // Phase 3
@@ -208,6 +211,13 @@ export interface CivMetaResult {
   totalCivGames: number
 }
 
+export interface MatchupLabQuery {
+  civilization: string
+  opponentCivilization: string
+  leaderboard?: StatsLeaderboard
+  rankLevel?: RankLevel
+}
+
 export interface LeaderboardQuery {
   leaderboard: Leaderboard
   page?: number
@@ -282,6 +292,43 @@ export interface IpcErr {
 }
 export type IpcResult<T> = IpcOk<T> | IpcErr
 
+/** One public AoE4World match, viewed from the requested player's perspective. */
+export interface ScoutMatchRow {
+  gameId: number
+  startedAt: string
+  durationSec: number | null
+  map: string | null
+  format: string | null
+  result: 'win' | 'loss' | 'unknown'
+  civilization: string | null
+  opponentCivilizations: string[]
+  opponentNames: string[]
+}
+
+/** A bounded page of public matches. `totalCount` is the API's scoped count. */
+export interface ScoutMatchPage {
+  matches: ScoutMatchRow[]
+  sampleSize: number
+  totalCount: number
+}
+
+/** Personal results against the viewed player, from the active account's perspective. */
+export interface HeadToHeadData extends ScoutMatchPage {
+  wins: number
+  losses: number
+  decidedGames: number
+  winRate: number | null
+}
+
+/** Recent public matches plus optional active-account head-to-head data. */
+export interface ScoutHistoryData {
+  viewedProfileId: number
+  activeProfile: { profileId: number; name: string | null } | null
+  recent: IpcResult<ScoutMatchPage>
+  /** Null when there is no active account, or the viewed player is the active account. */
+  headToHead: IpcResult<HeadToHeadData> | null
+}
+
 /** A trimmed search hit for the onboarding / scout pickers. */
 export interface PlayerSearchHit {
   profileId: number
@@ -318,10 +365,12 @@ export interface RtslyticsApi {
   removeAccount(profileId: number): Promise<AppSettings>
   getDashboard(): Promise<IpcResult<DashboardData>>
   scoutPlayer(profileId: number): Promise<IpcResult<ScoutReport>>
+  getScoutHistory(profileId: number): Promise<IpcResult<ScoutHistoryData>>
   getSettings(): Promise<AppSettings>
   updateSettings(patch: AppSettingsPatch): Promise<AppSettings>
   // Phase 2
   getCivMeta(query: CivMetaQuery): Promise<IpcResult<CivMetaResult>>
+  getMatchupLab(query: MatchupLabQuery): Promise<IpcResult<GlobalMatchupSummary | null>>
   getCivDetailStats(civ: string): Promise<IpcResult<CivDetailStats>>
   getLeaderboard(query: LeaderboardQuery): Promise<IpcResult<LeaderboardPage>>
   // Phase 3

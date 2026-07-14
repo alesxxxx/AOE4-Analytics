@@ -59,6 +59,8 @@ export interface GamesQuery {
   leaderboard?: Leaderboard
   limit?: number
   page?: number
+  /** Restrict the list to games against this exact AoE4World profile. */
+  opponentProfileId?: number
   /** Incremental sync cursor (filters by `started_at`). */
   since?: string
   /** Bypass the cache — for folding results, which change after a game ends. */
@@ -81,6 +83,8 @@ export class Aoe4WorldClient {
   private readonly rateLimiter: RateLimiter
   private readonly fetchFn: typeof fetch
   private readonly baseUrl: string
+  /** One network/parse pipeline per URL so concurrent cache misses share work. */
+  private readonly inFlight = new Map<string, Promise<unknown>>()
 
   constructor(options: ClientOptions) {
     this.cache = options.cache
@@ -94,19 +98,30 @@ export class Aoe4WorldClient {
     const cached = this.cache.get<T>(url, ttlMs)
     if (cached !== null) return cached
 
-    const res = await this.rateLimiter.schedule(() =>
-      fetchWithTimeout(
-        this.fetchFn,
-        url,
-        { headers: { 'User-Agent': USER_AGENT, Accept: 'application/json' } },
-        REQUEST_TIMEOUT_MS,
-      ),
-    )
-    if (!res.ok) throw new ApiError(res.status, url)
+    const existing = this.inFlight.get(url)
+    if (existing) return (await existing) as T
 
-    const body = (await res.json()) as T
-    this.cache.set(url, body)
-    return body
+    const request = (async (): Promise<T> => {
+      const res = await this.rateLimiter.schedule(() =>
+        fetchWithTimeout(
+          this.fetchFn,
+          url,
+          { headers: { 'User-Agent': USER_AGENT, Accept: 'application/json' } },
+          REQUEST_TIMEOUT_MS,
+        ),
+      )
+      if (!res.ok) throw new ApiError(res.status, url)
+
+      const body = (await res.json()) as T
+      this.cache.set(url, body)
+      return body
+    })()
+    this.inFlight.set(url, request)
+    try {
+      return await request
+    } finally {
+      if (this.inFlight.get(url) === request) this.inFlight.delete(url)
+    }
   }
 
   searchPlayers(query: string): Promise<SearchResponse> {
@@ -124,9 +139,15 @@ export class Aoe4WorldClient {
     // which silently hid every QM game from History.
     if (query.leaderboard) params.set('leaderboard', query.leaderboard)
     if (query.page) params.set('page', String(query.page))
+    if (query.opponentProfileId) {
+      params.set('opponent_profile_id', String(query.opponentProfileId))
+    }
     if (query.since) params.set('since', query.since)
     // ttl 0 = always a cache miss → fresh fetch (results change after a game ends).
-    return this.getJson(`/players/${profileId}/games?${params.toString()}`, query.fresh ? 0 : TTL.games)
+    return this.getJson(
+      `/players/${profileId}/games?${params.toString()}`,
+      query.fresh ? 0 : TTL.games,
+    )
   }
 
   getLastGame(profileId: number): Promise<Game> {
@@ -168,7 +189,12 @@ export class Aoe4WorldClient {
   getMatchupStats(query: StatsQuery = {}): Promise<MatchupStatsResponse> {
     const lb = query.leaderboard ?? 'rm_solo'
     const params = new URLSearchParams()
-    if (query.rankLevel) params.set('rank_level', query.rankLevel)
+    // AoE4World currently exposes rank-band slices only for the 1v1 stats
+    // ladders. Omitting it on team ladders avoids implying a filter the source
+    // cannot apply.
+    if (query.rankLevel && (lb === 'rm_solo' || lb === 'qm_1v1')) {
+      params.set('rank_level', query.rankLevel)
+    }
     if (query.patch) params.set('patch', query.patch)
     const qs = params.toString()
     return this.getJson(`/stats/${lb}/matchups${qs ? `?${qs}` : ''}`, TTL.stats)

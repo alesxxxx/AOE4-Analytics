@@ -33,5 +33,11 @@ jobs:
         # falls back to the JSON store when it is absent.
         run: npm ci --ignore-scripts
 
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=high
+
       - name: Verify
         run: npm run verify
+
+      - name: Build production bundles
+        run: npm run bundle

@@ -55,6 +55,31 @@ describe('RelicClient', () => {
     expect(fake.calls.length).toBe(1)
   })
 
+  it('coalesces concurrent identical cache misses', async () => {
+    const fake = fakeFetch(loadFixture('relic/recentMatchHistory_23656868.json'))
+    const client = makeClient(fake.fetch)
+    const [first, second] = await Promise.all([
+      client.getRecentMatchHistory(23656868),
+      client.getRecentMatchHistory(23656868),
+    ])
+    expect(first).toEqual(second)
+    expect(fake.calls.length).toBe(1)
+  })
+
+  it('clears a failed in-flight request so a later call can retry', async () => {
+    const fake = fakeFetch({ result: { code: 0, message: '' } }, 503)
+    const client = makeClient(fake.fetch)
+    const attempts = await Promise.allSettled([
+      client.getRecentMatchHistory(1),
+      client.getRecentMatchHistory(1),
+    ])
+    expect(attempts.every((attempt) => attempt.status === 'rejected')).toBe(true)
+    expect(fake.calls.length).toBe(1)
+
+    await expect(client.getRecentMatchHistory(1)).rejects.toBeInstanceOf(ApiError)
+    expect(fake.calls.length).toBe(2)
+  })
+
   it('throws ApiError on a non-2xx response', async () => {
     const client = makeClient(fakeFetch({ result: { code: 0, message: '' } }, 500).fetch)
     await expect(client.getRecentMatchHistory(1)).rejects.toBeInstanceOf(ApiError)

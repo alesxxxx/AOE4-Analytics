@@ -11,7 +11,9 @@ import {
   Filter,
 } from 'lucide-react'
 import type { StoredMatch } from '@store/historyStore'
+import { filterPersonalHistory } from '@domain/historyFilters'
 import { resourcesPerMinute, resultFromPerPlayer, villagersPerMinute } from '@domain/analysis'
+import type { BenchmarkGame } from '@domain/benchmarkLens'
 import { computePlayerStats, type Breakdown, type StatGame } from '@domain/playerStats'
 import { computePlaystyle, type PlaystyleGame } from '@domain/playstyle'
 import {
@@ -33,6 +35,7 @@ import { PlaystyleRadar } from '../components/PlaystyleRadar'
 import { StatTile } from '../components/StatTile'
 import { CivOverviewTable, ProfileIdentityCard } from '../components/ProfileOverview'
 import { PageHead } from '../components/PageHead'
+import { BenchmarkLens } from '../components/BenchmarkLens'
 import { EmptyBox, Spinner, ErrorBox } from '../components/feedback'
 
 export function Stats() {
@@ -43,7 +46,7 @@ export function Stats() {
   const updateSettings = useUpdateSettings()
   const excludeAi = settings?.localData.excludeAiFromStats ?? false
   const matches = useMemo(
-    () => (data?.ok ? data.data : []).filter((m) => !excludeAi || (!m.vsAI && !m.custom)),
+    () => filterPersonalHistory(data?.ok ? data.data : [], excludeAi),
     [data, excludeAi],
   )
 
@@ -199,6 +202,23 @@ function Content({
 
   const r = s.recent2w
   const recentWr = r.wins + r.losses > 0 ? Math.round((r.wins / (r.wins + r.losses)) * 100) : null
+  const benchmarkGames = useMemo<BenchmarkGame[]>(
+    () =>
+      matches.map((match) => {
+        const mine = match.perPlayer?.find((player) => player.profileId === profileId)
+        return {
+          playedAt: match.playedAt,
+          result: displayedResult(match, profileId),
+          civ: match.civ,
+          map: match.map,
+          format: match.format ?? null,
+          apm: mine?.apm ?? match.analysis.apm,
+          resourcesPerMinute: resourcesPerMinute(match.local),
+          villagersPerMinute: villagersPerMinute(match.local),
+        }
+      }),
+    [matches, profileId],
+  )
 
   return (
     <>
@@ -237,6 +257,8 @@ function Content({
           </div>
         </CardContent>
       </Card>
+
+      <BenchmarkLens games={benchmarkGames} />
 
       <CivOverviewTable rows={overview.civs} />
 

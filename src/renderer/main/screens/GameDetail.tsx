@@ -18,6 +18,7 @@ import { useDeleteMatch, useGameSummary, useHistory } from '../queries/useHistor
 import { useSettings } from '../queries/useProfile'
 import { GameSummaryPanel } from '../components/GameSummaryPanel'
 import { BuildTrainerCard } from '../components/BuildTrainerCard'
+import { TurningPointStory } from '../components/TurningPointStory'
 import { EmptyBox, ErrorBox, Spinner } from '../components/feedback'
 
 const SEVERITY_STYLE: Record<Severity, string> = {
@@ -214,6 +215,13 @@ function Detail({
         </Card>
       )}
 
+      <TurningPointStory
+        summary={summary}
+        loading={summaryLoading}
+        myProfileId={myProfileId}
+        myCiv={match.civ}
+      />
+
       <section className="space-y-2">
         <h2 className="text-lg font-semibold tracking-tight">What to improve</h2>
         <Card>
@@ -248,7 +256,7 @@ function Detail({
         <BuildTrainerCard summary={summary} myCiv={match.civ} myProfileId={myProfileId} />
       )}
 
-      <section className="space-y-2">
+      <section id="game-summary-evidence" className="scroll-mt-4 space-y-2">
         <h2 className="text-lg font-semibold tracking-tight">Economy &amp; build order</h2>
         {summary && summary.players.length > 0 ? (
           <GameSummaryPanel

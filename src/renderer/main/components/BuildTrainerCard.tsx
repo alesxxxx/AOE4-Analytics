@@ -3,6 +3,7 @@ import type { MatchSummary } from '@domain/statsSummary'
 import { BUNDLED_BUILD_ORDERS } from '@data/buildOrders'
 import { buildIndexForCiv } from '@domain/buildOrderSchema'
 import { gradeBuildFollow, type TrainerCheckpoint } from '@domain/buildTrainer'
+import { buildRecoveryPlan, type RecoveryRecommendation } from '@domain/adaptiveBuild'
 import { formatDuration } from '@domain/format'
 import { cn } from '@shared/lib/utils'
 import { Card, CardContent } from '@shared/components/ui/card'
@@ -11,7 +12,8 @@ import { selectTrainerPlayer } from './gameSummaryHelpers'
 /**
  * The practice loop: this game's decoded build events graded against the
  * bundled reference build for your civ. Renders nothing when there's no
- * bundled build, no decoded events for you, or no timed reference steps.
+ * bundled build, no player row, or no timed reference steps. Missing decoded
+ * events now render as an honest data-gap recovery item instead of disappearing.
  */
 export function BuildTrainerCard({
   summary,
@@ -25,10 +27,11 @@ export function BuildTrainerCard({
   const idx = buildIndexForCiv(BUNDLED_BUILD_ORDERS, myCiv)
   const reference = idx != null ? BUNDLED_BUILD_ORDERS[idx]! : null
   const me = selectTrainerPlayer(summary.players, myProfileId, myCiv)
-  if (!reference || !me || me.buildOrder.length === 0) return null
+  if (!reference || !me) return null
 
   const report = gradeBuildFollow({ reference, events: me.buildOrder, civ: myCiv })
   if (report.checkpoints.length === 0) return null
+  const recovery = buildRecoveryPlan(report)
 
   return (
     <section className="space-y-2">
@@ -48,6 +51,7 @@ export function BuildTrainerCard({
               <CheckpointRow key={i} c={c} />
             ))}
           </div>
+          {recovery.length > 0 && <RecoveryPlan recommendations={recovery} />}
           <p className="text-[11px] text-muted-foreground">
             Villager counts assume the reference's opening villagers plus your production (the stat
             file doesn't record losses); age-ups are read from when your landmark went down.
@@ -55,6 +59,27 @@ export function BuildTrainerCard({
         </CardContent>
       </Card>
     </section>
+  )
+}
+
+function RecoveryPlan({ recommendations }: { recommendations: RecoveryRecommendation[] }) {
+  return (
+    <div className="rounded-md border border-primary/25 bg-primary/5 p-3">
+      <p className="text-xs font-semibold uppercase tracking-wide text-primary">Recovery plan</p>
+      <div className="mt-2 space-y-2">
+        {recommendations.map((item) => (
+          <div key={item.kind} className="text-xs leading-relaxed">
+            <p className="font-medium text-foreground">{item.title}</p>
+            <p className="text-muted-foreground">
+              <span className="font-medium text-foreground/80">Evidence:</span> {item.evidence}
+            </p>
+            <p className="text-muted-foreground">
+              <span className="font-medium text-foreground/80">Next run:</span> {item.advice}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
   )
 }
 

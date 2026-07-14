@@ -101,7 +101,7 @@ export function App() {
     <div className="relative flex h-screen flex-col overflow-hidden bg-background text-foreground">
       {/* App-wide backdrop, behind everything (incl. the command bar). */}
       <div
-        className="rts-app-backdrop pointer-events-none fixed -inset-5 z-0 opacity-45"
+        className="rts-app-backdrop pointer-events-none fixed -inset-5 z-0 opacity-50"
         style={{ backgroundImage: `url(${menuBackdrop})` }}
       />
       <div className="rts-app-atmosphere pointer-events-none fixed inset-0 z-0" />

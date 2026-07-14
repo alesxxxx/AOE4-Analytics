@@ -43,12 +43,30 @@ function fourPlayerGame(): Game {
     just_finished: false,
     teams: [
       [
-        player({ profile_id: 3, name: 'Enemy A', civilization: 'english', rating: 1200, mmr: 1190 }),
-        player({ profile_id: 4, name: 'Enemy B', civilization: 'mongols', rating: 1210, mmr: 1200 }),
+        player({
+          profile_id: 3,
+          name: 'Enemy A',
+          civilization: 'english',
+          rating: 1200,
+          mmr: 1190,
+        }),
+        player({
+          profile_id: 4,
+          name: 'Enemy B',
+          civilization: 'mongols',
+          rating: 1210,
+          mmr: 1200,
+        }),
       ],
       [
         player({ profile_id: 1, name: 'Me', civilization: 'french', rating: null, mmr: 1500 }),
-        player({ profile_id: 2, name: 'Ally', civilization: 'abbasid_dynasty', rating: 1480, mmr: 1470 }),
+        player({
+          profile_id: 2,
+          name: 'Ally',
+          civilization: 'abbasid_dynasty',
+          rating: 1480,
+          mmr: 1470,
+        }),
       ],
     ],
   } as unknown as Game
@@ -182,6 +200,20 @@ describe('buildLiveMatchInfo — never present the stale last game as a custom/A
     expect(info.startedAt).toBe('2026-06-26T12:00:00.000Z')
     expect(info.opponent?.profileId).toBe(10694733)
     expect(info.opponent?.civ).toBe('mongols')
+    expect(info.teams?.[0]?.[0]?.isMe).toBe(true)
+  })
+
+  it('public 2v2 exposes the existing full roster with my team first', () => {
+    const live: LiveEval = { isLive: true, isStale: false, source: 'ongoing' }
+    const info = buildLiveMatchInfo(fourPlayerGame(), live, true, 1)
+
+    expect(info.teams?.map((team) => team.map((p) => p.name))).toEqual([
+      ['Me', 'Ally'],
+      ['Enemy A', 'Enemy B'],
+    ])
+    expect(info.teams?.[0]?.[0]).toMatchObject({ profileId: 1, civ: 'french', isMe: true })
+    expect(info.opponent?.name).toBe('Enemy A')
+    expect(info.opponent?.name).not.toBe('Ally')
   })
 
   it('local (custom/AI) game: the stale games/last data is IGNORED — no opponent, no civ, no map, no timer', () => {
@@ -192,6 +224,7 @@ describe('buildLiveMatchInfo — never present the stale last game as a custom/A
     expect(info.isLive).toBe(true)
     expect(info.custom).toBe(true)
     expect(info.opponent).toBeNull()
+    expect(info.teams).toBeNull()
     expect(info.myCiv).toBeNull()
     expect(info.map).toBeNull()
     expect(info.startedAt).toBeNull()
@@ -204,6 +237,13 @@ describe('buildLiveMatchInfo — never present the stale last game as a custom/A
     expect(info.custom).toBe(false)
     expect(info.opponent).toBeNull()
     expect(info.processRunning).toBe(true)
+    expect(info.teams).toBeNull()
+  })
+
+  it('keeps a public roster unavailable when the configured player is missing', () => {
+    const live: LiveEval = { isLive: true, isStale: false, source: 'ongoing' }
+    const info = buildLiveMatchInfo(fourPlayerGame(), live, true, 999)
+    expect(info.teams).toBeNull()
   })
 })
 
@@ -287,8 +327,22 @@ describe('buildLocalLiveMatchup', () => {
   it('splits vs-AI rosters when the log repeats the same pseudo-team for everyone', () => {
     const m = buildLocalLiveMatchup(
       [
-        { slot: 0, name: '1.1.1.1.2', id: 22223074, team: 10001, civToken: 'french_ha_01', ai: false },
-        { slot: 1, name: '2 A.I. Intermediate', id: -1, team: 10001, civToken: 'sultanate', ai: true },
+        {
+          slot: 0,
+          name: '1.1.1.1.2',
+          id: 22223074,
+          team: 10001,
+          civToken: 'french_ha_01',
+          ai: false,
+        },
+        {
+          slot: 1,
+          name: '2 A.I. Intermediate',
+          id: -1,
+          team: 10001,
+          civToken: 'sultanate',
+          ai: true,
+        },
       ],
       22223074,
     )!

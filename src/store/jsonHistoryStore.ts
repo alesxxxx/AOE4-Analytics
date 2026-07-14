@@ -53,6 +53,11 @@ export class JsonHistoryStore implements HistoryStore {
     return limit != null ? this.matches.slice(0, limit) : [...this.matches]
   }
 
+  listVisibleMatches(limit?: number): StoredMatch[] {
+    const visible = this.matches.filter((m) => !m.hidden)
+    return limit != null ? visible.slice(0, limit) : visible
+  }
+
   activeGoals(): StoredMatch['goals'] {
     return this.matches[0]?.goals ?? []
   }

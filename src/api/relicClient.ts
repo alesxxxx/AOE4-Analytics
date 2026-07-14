@@ -38,6 +38,8 @@ export class RelicClient {
   private readonly rateLimiter: RateLimiter
   private readonly fetchFn: typeof fetch
   private readonly baseUrl: string
+  /** One network/parse pipeline per URL so concurrent cache misses share work. */
+  private readonly inFlight = new Map<string, Promise<unknown>>()
 
   constructor(options: RelicClientOptions) {
     this.cache = options.cache
@@ -54,24 +56,35 @@ export class RelicClient {
     const cached = this.cache.get<T>(url, ttlMs)
     if (cached !== null) return cached
 
-    const res = await this.rateLimiter.schedule(() =>
-      fetchWithTimeout(
-        this.fetchFn,
-        url,
-        { headers: { 'User-Agent': USER_AGENT, Accept: 'application/json' } },
-        REQUEST_TIMEOUT_MS,
-      ),
-    )
-    if (!res.ok) throw new ApiError(res.status, url)
+    const existing = this.inFlight.get(url)
+    if (existing) return (await existing) as T
 
-    const body = (await res.json()) as T
-    // Relic returns HTTP 200 even for logical errors (code 2, 9, …) — treat a
-    // non-zero result code as a failure so it isn't cached as success.
-    if (!body.result || body.result.code !== 0) {
-      throw new ApiError(body.result?.code ?? -1, url, `Relic error: ${body.result?.message}`)
+    const request = (async (): Promise<T> => {
+      const res = await this.rateLimiter.schedule(() =>
+        fetchWithTimeout(
+          this.fetchFn,
+          url,
+          { headers: { 'User-Agent': USER_AGENT, Accept: 'application/json' } },
+          REQUEST_TIMEOUT_MS,
+        ),
+      )
+      if (!res.ok) throw new ApiError(res.status, url)
+
+      const body = (await res.json()) as T
+      // Relic returns HTTP 200 even for logical errors (code 2, 9, …) — treat a
+      // non-zero result code as a failure so it isn't cached as success.
+      if (!body.result || body.result.code !== 0) {
+        throw new ApiError(body.result?.code ?? -1, url, `Relic error: ${body.result?.message}`)
+      }
+      this.cache.set(url, body)
+      return body
+    })()
+    this.inFlight.set(url, request)
+    try {
+      return await request
+    } finally {
+      if (this.inFlight.get(url) === request) this.inFlight.delete(url)
     }
-    this.cache.set(url, body)
-    return body
   }
 
   getRecentMatchHistory(profileId: number): Promise<RelicRecentMatchHistoryResponse> {

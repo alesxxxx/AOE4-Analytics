@@ -68,6 +68,28 @@ describe('Aoe4WorldClient', () => {
     expect(fake.calls.length).toBe(1)
   })
 
+  it('coalesces concurrent identical cache misses', async () => {
+    const fake = fakeFetch(loadFixture('player-10240693.json'))
+    const client = makeClient(fake.fetch)
+    const [first, second] = await Promise.all([
+      client.getPlayer(10240693),
+      client.getPlayer(10240693),
+    ])
+    expect(first).toEqual(second)
+    expect(fake.calls.length).toBe(1)
+  })
+
+  it('clears a failed in-flight request so a later call can retry', async () => {
+    const fake = fakeFetch({ error: 'unavailable' }, 503)
+    const client = makeClient(fake.fetch)
+    const attempts = await Promise.allSettled([client.getPlayer(123), client.getPlayer(123)])
+    expect(attempts.every((attempt) => attempt.status === 'rejected')).toBe(true)
+    expect(fake.calls.length).toBe(1)
+
+    await expect(client.getPlayer(123)).rejects.toBeInstanceOf(ApiError)
+    expect(fake.calls.length).toBe(2)
+  })
+
   it('parses games/last into a Game with ongoing=false', async () => {
     const client = makeClient(fakeFetch(loadFixture('games-last-10240693.json')).fetch)
     const game = await client.getLastGame(10240693)
@@ -93,5 +115,44 @@ describe('Aoe4WorldClient', () => {
     expect(url).toContain('leaderboard=rm_solo')
     expect(url).toContain('limit=12')
     expect(url).toContain('since=2024-01-01')
+  })
+
+  it('filters head-to-head games by opponent and coalesces identical requests', async () => {
+    const fake = fakeFetch(loadFixture('games-10240693-rmsolo.json'))
+    const client = makeClient(fake.fetch)
+
+    await Promise.all([
+      client.getPlayerGames(10240693, { limit: 20, opponentProfileId: 4635035 }),
+      client.getPlayerGames(10240693, { limit: 20, opponentProfileId: 4635035 }),
+    ])
+
+    expect(fake.calls).toHaveLength(1)
+    expect(fake.calls[0]!.url).toContain('limit=20')
+    expect(fake.calls[0]!.url).toContain('opponent_profile_id=4635035')
+  })
+
+  it('filters matchup stats by supported ladder, rank, and patch', async () => {
+    const fake = fakeFetch(loadFixture('stats-rmsolo-matchups.json'))
+    const client = makeClient(fake.fetch)
+
+    await Promise.all([
+      client.getMatchupStats({ leaderboard: 'qm_1v1', rankLevel: 'gold', patch: '12.1' }),
+      client.getMatchupStats({ leaderboard: 'qm_1v1', rankLevel: 'gold', patch: '12.1' }),
+    ])
+
+    expect(fake.calls).toHaveLength(1)
+    expect(fake.calls[0]!.url).toContain('/stats/qm_1v1/matchups?')
+    expect(fake.calls[0]!.url).toContain('rank_level=gold')
+    expect(fake.calls[0]!.url).toContain('patch=12.1')
+  })
+
+  it('does not claim unsupported rank filtering on team matchup stats', async () => {
+    const fake = fakeFetch(loadFixture('stats-rmsolo-matchups.json'))
+    const client = makeClient(fake.fetch)
+
+    await client.getMatchupStats({ leaderboard: 'rm_2v2', rankLevel: 'gold' })
+
+    expect(fake.calls[0]!.url).toContain('/stats/rm_2v2/matchups')
+    expect(fake.calls[0]!.url).not.toContain('rank_level')
   })
 })

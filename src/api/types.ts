@@ -242,8 +242,8 @@ export interface MatchupEntry {
   win_count: number
   games_count: number
   player_games_count: number
-  duration_median: number
-  duration_average: number
+  duration_median?: number | null
+  duration_average?: number | null
 }
 
 export interface MatchupStatsResponse {

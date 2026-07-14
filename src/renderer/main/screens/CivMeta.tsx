@@ -1,9 +1,11 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
 import {
   ArrowLeftRight,
   ArrowUpDown,
+  BookOpen,
+  ChevronRight,
+  History,
   Info,
   ListOrdered,
   Map as MapIcon,
@@ -16,16 +18,27 @@ import type { CivTier, Tier } from '@domain/tierList'
 import { TIERS } from '@domain/tierList'
 import type { MapStat } from '@domain/mapStats'
 import { CIV_PROFILES } from '@data/civProfiles'
+import { BUNDLED_BUILD_ORDERS } from '@data/buildOrders'
 import { counterPlanForCiv } from '@domain/civUnits'
+import { buildIndexForCiv } from '@domain/buildOrderSchema'
 import { COUNTER_MATRIX } from '@domain/counters'
 import { civDisplayName } from '@domain/civ'
-import { ipc } from '@shared/ipc'
-import { formatDurationShort } from '@shared/format'
+import { buildPersonalMatchup } from '@domain/matchupLab'
+import { filterPersonalHistory } from '@domain/historyFilters'
+import {
+  formatDurationShort,
+  formatLeaderboard,
+  formatPercent,
+  formatRankLevel,
+  relativeTime,
+} from '@shared/format'
 import { cn } from '@shared/lib/utils'
 import { PageHead } from '../components/PageHead'
 import { Card, CardContent } from '@shared/components/ui/card'
 import { Skeleton } from '@shared/components/ui/skeleton'
-import { useCivMeta } from '../queries/useCivMeta'
+import { useCivMeta, useMatchupLab } from '../queries/useCivMeta'
+import { useFullHistory } from '../queries/useHistory'
+import { useSettings } from '../queries/useProfile'
 import { TierBadge } from '../components/TierBadge'
 import { EmptyBox, ErrorBox } from '../components/feedback'
 
@@ -110,8 +123,6 @@ export function CivMeta() {
   const { data, isLoading, isFetching, refetch } = useCivMeta({ leaderboard, rankLevel })
 
   const maps = data?.ok ? data.data.maps : []
-  const showFilter = tab !== 'matchups'
-
   const sortedCivs = useMemo(() => {
     const civs = data?.ok ? data.data.civs : []
     const dir = sort.dir === 'asc' ? 1 : -1
@@ -167,38 +178,36 @@ export function CivMeta() {
             </button>
           ))}
         </div>
-        {showFilter && (
-          <div className="flex flex-wrap gap-2">
-            <select
-              value={leaderboard}
-              onChange={(e) => setLeaderboard(e.target.value as StatsLeaderboard)}
-              aria-label="Leaderboard"
-              className="h-9 rounded-md border border-border bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              {LADDERS.map((l) => (
-                <option key={l.value} value={l.value}>
-                  {l.label}
-                </option>
-              ))}
-            </select>
-            <select
-              value={rankLevel ?? ''}
-              disabled={!rankFilterable(leaderboard)}
-              onChange={(e) => setRankLevel((e.target.value || undefined) as RankLevel | undefined)}
-              aria-label="Rank bracket"
-              className="h-9 rounded-md border border-border bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
-            >
-              {BRACKETS.map((b) => (
-                <option key={b.label} value={b.value ?? ''}>
-                  {b.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
+        <div className="flex flex-wrap gap-2">
+          <select
+            value={leaderboard}
+            onChange={(e) => setLeaderboard(e.target.value as StatsLeaderboard)}
+            aria-label="Leaderboard"
+            className="h-9 rounded-md border border-border bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            {LADDERS.map((l) => (
+              <option key={l.value} value={l.value}>
+                {l.label}
+              </option>
+            ))}
+          </select>
+          <select
+            value={rankLevel ?? ''}
+            disabled={!rankFilterable(leaderboard)}
+            onChange={(e) => setRankLevel((e.target.value || undefined) as RankLevel | undefined)}
+            aria-label="Rank bracket"
+            className="h-9 rounded-md border border-border bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
+          >
+            {BRACKETS.map((b) => (
+              <option key={b.label} value={b.value ?? ''}>
+                {b.label}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
-      {showFilter && !rankFilterable(leaderboard) && (
+      {!rankFilterable(leaderboard) && (
         <p className="text-xs text-muted-foreground">
           Rank-band filtering isn&apos;t available for team ladders — showing all ranks.
         </p>
@@ -206,7 +215,7 @@ export function CivMeta() {
 
       <div role="tabpanel">
         {tab === 'matchups' ? (
-          <MatchupsTab />
+          <MatchupsTab leaderboard={leaderboard} rankLevel={rankLevel} />
         ) : isLoading ? (
           <Skeleton className="h-96" />
         ) : data && !data.ok ? (
@@ -450,18 +459,54 @@ function CivSelect({
   )
 }
 
-function MatchupsTab() {
+function MatchupsTab({
+  leaderboard,
+  rankLevel,
+}: {
+  leaderboard: StatsLeaderboard
+  rankLevel: RankLevel | undefined
+}) {
   const [myCiv, setMyCiv] = useState('english')
   const [oppCiv, setOppCiv] = useState('french')
+  const [mapFilter, setMapFilter] = useState('')
+  const [formatFilter, setFormatFilter] = useState('')
 
-  const { data: wr, isFetching } = useQuery({
-    queryKey: ['matchup', myCiv, oppCiv],
-    queryFn: () => ipc.getMatchupWinRate(myCiv, oppCiv),
-    staleTime: 6 * 60 * 60 * 1000,
+  const global = useMatchupLab({
+    civilization: myCiv,
+    opponentCivilization: oppCiv,
+    leaderboard,
+    rankLevel,
   })
+  const history = useFullHistory()
+  const { data: settings } = useSettings()
+  const excludePractice = settings?.localData.excludeAiFromStats ?? false
+  const matchup = global.data?.ok ? global.data.data : null
+  const wr = matchup?.winRate ?? null
+  const isFetching = global.isFetching
 
   const plan = useMemo(() => counterPlanForCiv(oppCiv), [oppCiv])
+  const buildIndex = useMemo(() => buildIndexForCiv(BUNDLED_BUILD_ORDERS, myCiv), [myCiv])
+  const build = buildIndex != null ? BUNDLED_BUILD_ORDERS[buildIndex]! : null
+  const personalHistory = useMemo(
+    () => filterPersonalHistory(history.data?.ok ? history.data.data : [], excludePractice),
+    [excludePractice, history.data],
+  )
+  const personal = useMemo(
+    () =>
+      buildPersonalMatchup(personalHistory, {
+        civilization: myCiv,
+        opponentCivilization: oppCiv,
+        map: mapFilter || undefined,
+        format: formatFilter || undefined,
+      }),
+    [formatFilter, mapFilter, myCiv, oppCiv, personalHistory],
+  )
   const mirror = myCiv === oppCiv
+
+  useEffect(() => {
+    setMapFilter('')
+    setFormatFilter('')
+  }, [myCiv, oppCiv])
 
   return (
     <div className="space-y-5">
@@ -487,7 +532,11 @@ function MatchupsTab() {
           <Swords className="h-4 w-4 text-muted-foreground" />
           <span>{civDisplayName(oppCiv)}</span>
         </div>
-        {wr == null ? (
+        {global.data && !global.data.ok ? (
+          <div className="mt-4 text-left">
+            <ErrorBox message={global.data.error.message} onRetry={() => global.refetch()} />
+          </div>
+        ) : wr == null ? (
           <p className="mt-2 text-sm text-muted-foreground">
             {isFetching ? 'Loading matchup…' : 'No matchup data for this pairing.'}
           </p>
@@ -504,11 +553,52 @@ function MatchupsTab() {
             <p className="mt-1 text-sm text-muted-foreground">
               {mirror
                 ? 'Mirror match — it comes down to play, not the civ.'
-                : `${civDisplayName(myCiv)} win rate vs ${civDisplayName(oppCiv)} (ranked 1v1, all ranks)`}
+                : `${civDisplayName(myCiv)} directional win rate vs ${civDisplayName(oppCiv)}`}
             </p>
           </>
         )}
+        {matchup && (
+          <>
+            <div className="mt-5 grid gap-2 text-left sm:grid-cols-3">
+              <Metric label="Games in sample" value={matchup.games.toLocaleString()} />
+              {matchup.durationMedianSec != null && (
+                <Metric
+                  label="Median duration"
+                  value={formatDurationShort(matchup.durationMedianSec)}
+                />
+              )}
+              {matchup.durationAverageSec != null && (
+                <Metric
+                  label="Average duration"
+                  value={formatDurationShort(matchup.durationAverageSec)}
+                />
+              )}
+            </div>
+            <div className="mt-4 flex items-start gap-2 rounded-md bg-background/60 p-3 text-left text-xs text-muted-foreground">
+              <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+              <p>
+                {formatLeaderboard(matchup.source.leaderboard)} /{' '}
+                {matchup.source.rankLevel ? formatRankLevel(matchup.source.rankLevel) : 'All ranks'}{' '}
+                / source patch {matchup.source.patch?.replace(/,/g, ', ') || 'not reported'}.{' '}
+                AoE4World&apos;s matchup endpoint does not expose a map filter, so this global
+                sample is not map-filtered.
+              </p>
+            </div>
+          </>
+        )}
       </section>
+
+      <PersonalMatchupSection
+        civilization={myCiv}
+        opponentCivilization={oppCiv}
+        history={history}
+        personal={personal}
+        mapFilter={mapFilter}
+        formatFilter={formatFilter}
+        onMapFilter={setMapFilter}
+        onFormatFilter={setFormatFilter}
+        excludePractice={excludePractice}
+      />
 
       {plan ? (
         <section className="space-y-3 rounded-lg border border-border bg-card/50 p-5">
@@ -548,6 +638,174 @@ function MatchupsTab() {
           No counter data for {civDisplayName(oppCiv)} yet.
         </p>
       )}
+
+      {build && buildIndex != null && (
+        <section className="rounded-lg border border-border bg-card/50 p-5">
+          <h2 className="flex items-center gap-2 text-sm font-semibold">
+            <BookOpen className="h-4 w-4 text-primary" />
+            Bundled build for {civDisplayName(myCiv)}
+          </h2>
+          <div className="mt-2 font-semibold">{build.name}</div>
+          <p className="mt-1 text-xs text-muted-foreground">{buildMetadata(build)}</p>
+          <Link
+            to={`/guides?tab=builds&build=${buildIndex}`}
+            className="mt-3 inline-flex items-center gap-0.5 text-xs font-medium text-primary hover:underline"
+          >
+            Open full build
+            <ChevronRight className="h-3 w-3" />
+          </Link>
+        </section>
+      )}
     </div>
+  )
+}
+
+function buildMetadata(build: { name: string }): string {
+  const details: string[] = []
+  if ('archetype' in build && typeof build.archetype === 'string') {
+    details.push(build.archetype)
+  }
+  if ('difficulty' in build && typeof build.difficulty === 'string') {
+    details.push(build.difficulty)
+  }
+  return details.join(' / ')
+}
+
+function Metric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-md border border-border bg-background/50 p-3">
+      <div className="text-[11px] uppercase tracking-wide text-muted-foreground">{label}</div>
+      <div className="mt-1 text-xl font-bold tabular-nums">{value}</div>
+    </div>
+  )
+}
+
+function PersonalMatchupSection({
+  civilization,
+  opponentCivilization,
+  history,
+  personal,
+  mapFilter,
+  formatFilter,
+  onMapFilter,
+  onFormatFilter,
+  excludePractice,
+}: {
+  civilization: string
+  opponentCivilization: string
+  history: ReturnType<typeof useFullHistory>
+  personal: ReturnType<typeof buildPersonalMatchup>
+  mapFilter: string
+  formatFilter: string
+  onMapFilter: (value: string) => void
+  onFormatFilter: (value: string) => void
+  excludePractice: boolean
+}) {
+  if (history.isLoading) return <Skeleton className="h-48" />
+  if (history.data && !history.data.ok) {
+    return <ErrorBox message={history.data.error.message} onRetry={() => history.refetch()} />
+  }
+
+  return (
+    <section className="space-y-4 rounded-lg border border-border bg-card/50 p-5">
+      <header className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h2 className="flex items-center gap-2 text-sm font-semibold">
+            <History className="h-4 w-4 text-primary" />
+            Your stored history
+          </h2>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Exact {civDisplayName(civilization)} vs {civDisplayName(opponentCivilization)} results.
+            These local filters do not change the global sample above.
+            {excludePractice ? ' Practice games are hidden by your Settings preference.' : ''}
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <select
+            value={mapFilter}
+            onChange={(event) => onMapFilter(event.target.value)}
+            aria-label="Personal history map"
+            className="h-8 rounded-md border border-border bg-background px-2 text-xs"
+          >
+            <option value="">All local maps</option>
+            {personal.availableMaps.map((map) => (
+              <option key={map} value={map}>
+                {map}
+              </option>
+            ))}
+          </select>
+          <select
+            value={formatFilter}
+            onChange={(event) => onFormatFilter(event.target.value)}
+            aria-label="Personal history format"
+            className="h-8 rounded-md border border-border bg-background px-2 text-xs"
+          >
+            <option value="">All local formats</option>
+            {personal.availableFormats.map((format) => (
+              <option key={format} value={format}>
+                {format}
+              </option>
+            ))}
+          </select>
+        </div>
+      </header>
+
+      {personal.sampleSize === 0 ? (
+        <EmptyBox>No matching games in your stored history for these local filters.</EmptyBox>
+      ) : (
+        <>
+          <div className="flex flex-wrap gap-4 text-sm">
+            <span>
+              <strong className="tabular-nums">{personal.sampleSize}</strong>{' '}
+              <span className="text-muted-foreground">games</span>
+            </span>
+            <span className="text-win">
+              <strong className="tabular-nums">{personal.wins}</strong> wins
+            </span>
+            <span className="text-loss">
+              <strong className="tabular-nums">{personal.losses}</strong> losses
+            </span>
+            <span>
+              <strong className="tabular-nums">{formatPercent(personal.winRate)}</strong>{' '}
+              <span className="text-muted-foreground">decided win rate</span>
+            </span>
+          </div>
+
+          <div className="divide-y divide-border rounded-md border border-border">
+            {personal.matches.slice(0, 10).map((match) => (
+              <Link
+                key={match.id}
+                to={`/game/${encodeURIComponent(match.id)}`}
+                className="flex flex-wrap items-center gap-2 px-3 py-2 text-sm transition-colors hover:bg-secondary/50"
+              >
+                <span
+                  className={cn(
+                    'w-5 shrink-0 font-bold',
+                    match.result === 'win'
+                      ? 'text-win'
+                      : match.result === 'loss'
+                        ? 'text-loss'
+                        : 'text-muted-foreground',
+                  )}
+                >
+                  {match.result === 'win' ? 'W' : match.result === 'loss' ? 'L' : '-'}
+                </span>
+                <span className="min-w-36 flex-1 font-medium">{match.map}</span>
+                <span className="text-xs text-muted-foreground">
+                  {match.format ?? 'Unknown format'} / {formatDurationShort(match.durationSec)} /{' '}
+                  {relativeTime(match.playedAt) || 'Date unavailable'}
+                </span>
+                <ChevronRight className="h-3.5 w-3.5 text-muted-foreground" />
+              </Link>
+            ))}
+          </div>
+          {personal.matches.length > 10 && (
+            <p className="text-xs text-muted-foreground">
+              Showing the 10 most recent of {personal.matches.length} matching games.
+            </p>
+          )}
+        </>
+      )}
+    </section>
   )
 }

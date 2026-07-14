@@ -1,14 +1,25 @@
 import type { AnalyzeResult, IpcResult } from '@ipc/contract'
-import type { MatchupStatsResponse } from '@api/types'
+import type { Game, MatchupStatsResponse } from '@api/types'
 import type { RelicRecentMatchHistoryResponse } from '@api/relicTypes'
 import type { StoredMatch } from '@store/historyStore'
-import type { AnalyzedGame, LocalGameStats, PerPlayerMatchStats, ResourceTotals } from '@domain/analysis'
-import { analyzeMatch, extractAnalyzedGame, opponentName, resultFromPerPlayer } from '@domain/analysis'
+import type {
+  AnalyzedGame,
+  LocalGameStats,
+  PerPlayerMatchStats,
+  ResourceTotals,
+} from '@domain/analysis'
+import {
+  analyzeMatch,
+  extractAnalyzedGame,
+  opponentName,
+  resultFromPerPlayer,
+} from '@domain/analysis'
 import { bracketFromRankLevel, getBenchmarks } from '@domain/benchmarks'
 import { checkGoals, generateGoals } from '@domain/goals'
 import { pickPrimaryMode } from '@domain/scouting'
 import { buildLocalAnalyzedGame } from '@domain/localGame'
 import { teamFormat } from '@domain/gameFormat'
+import { normalizePublicMatchIdentifiers } from '@domain/dataStudio'
 import { replayMatchup, type ReplayInfo, type ReplayMatchup } from '@domain/replay'
 import { perPlayerStatsFromMatch } from '@domain/relic'
 import { getClient, getHistory, getHistoryStore, getRelicClient, getSettings } from './appContext'
@@ -22,9 +33,19 @@ import {
 } from './localDataService'
 import { fetchRankedSummary, getSteamAuthStatus } from './relicAuthService'
 import { hasCachedSummary, hasUnavailableSummary, readCachedParsedSummary } from './summaryCache'
-import { landmarksBuilt, tallyLandmarkRecord, type LandmarkBuilt, type LandmarkRecordRow } from '@domain/landmarkRecord'
+import {
+  landmarksBuilt,
+  tallyLandmarkRecord,
+  type LandmarkBuilt,
+  type LandmarkRecordRow,
+} from '@domain/landmarkRecord'
 import { summaryPlayerForMe } from '@domain/summaryCoaching'
-import { civFromToken, type MatchSummary, type PlayerSummary, type ResourceAmounts } from '@domain/statsSummary'
+import {
+  civFromToken,
+  type MatchSummary,
+  type PlayerSummary,
+  type ResourceAmounts,
+} from '@domain/statsSummary'
 import { getSteamAccounts } from './steamService'
 import { err, errFrom, ok } from './result'
 import type { CreatedHistoryStore } from '@store/historyStoreFactory'
@@ -38,6 +59,25 @@ import type { CreatedHistoryStore } from '@store/historyStoreFactory'
 function needsRosterBackfill(m: StoredMatch): boolean {
   const isTeamFormat = m.format != null && m.format !== '1v1' && /\dv\d|FFA/.test(m.format)
   return isTeamFormat && (m.oppTeam?.length ?? 0) === 0
+}
+
+type PublicGameMetadata = Pick<StoredMatch, 'patch' | 'season'>
+
+/** Keeps upstream identifiers verbatim enough to filter while rejecting empty/invalid values. */
+function publicGameMetadata(game: Game): Partial<PublicGameMetadata> {
+  return normalizePublicMatchIdentifiers(game)
+}
+
+function mergePublicGameMetadata(match: StoredMatch, game: Game): StoredMatch {
+  const metadata = publicGameMetadata(game)
+  if (metadata.patch === undefined && metadata.season === undefined) return match
+  if (
+    (metadata.patch === undefined || metadata.patch === match.patch) &&
+    (metadata.season === undefined || metadata.season === match.season)
+  ) {
+    return match
+  }
+  return { ...match, ...metadata }
 }
 
 /**
@@ -132,10 +172,7 @@ function localStatsFromSummary(
   ).length
   if (!gathered && villagersProduced === 0) return null
   const gameTimeSec =
-    summary.gameLengthSec ??
-    [...player.resources].pop()?.timeSec ??
-    durationSec ??
-    undefined
+    summary.gameLengthSec ?? [...player.resources].pop()?.timeSec ?? durationSec ?? undefined
   return {
     gameTimeSec,
     ...(gathered ? { resourcesGathered: roundResources(gathered) } : {}),
@@ -181,10 +218,7 @@ function sameLocalStats(a: LocalGameStats | undefined, b: LocalGameStats | undef
   )
 }
 
-function enrichStoredMatchWithSummary(
-  match: StoredMatch,
-  profileId: number | null,
-): StoredMatch {
+function enrichStoredMatchWithSummary(match: StoredMatch, profileId: number | null): StoredMatch {
   const local = mergeLocalStats(
     match.local,
     localStatsFromSummary(readGameSummary(match.id), profileId, match.civ, match.durationSec),
@@ -231,10 +265,7 @@ function formatFromReplayMatchup(matchup: ReplayMatchup): string {
   const all = [matchup.me, ...matchup.opponents].filter(Boolean)
   if (all.length === 0) return ''
   if (all.every((p) => p && !p.ai)) return teamFormat(all.map(() => 1))
-  return teamFormat([
-    all.filter((p) => p && !p.ai).length,
-    all.filter((p) => p && p.ai).length,
-  ])
+  return teamFormat([all.filter((p) => p && !p.ai).length, all.filter((p) => p && p.ai).length])
 }
 
 /** Network budget for ranked-summary downloads within one sync (cache hits are free). */
@@ -397,7 +428,11 @@ async function analyzeRankedGames(
       // analysis and drop local-stats APM/grade on old games).
       const existing = store.getMatch(id)
       if (existing?.hidden) continue // user removed it — never resurrect
-      if (existing?.result != null && !needsRosterBackfill(existing)) continue
+      if (existing?.result != null && !needsRosterBackfill(existing)) {
+        const enriched = mergePublicGameMetadata(existing, game)
+        if (enriched !== existing) store.saveMatch(enriched)
+        continue
+      }
       const ag = extractAnalyzedGame(game, profileId)
       if (!ag) continue
       const perPlayer = perPlayerByGame.get(id)
@@ -446,6 +481,7 @@ async function analyzeRankedGames(
         local,
         createdAt: game.started_at,
         format: teamFormat(game.teams.map((t) => t.length)),
+        ...publicGameMetadata(game),
         myTeam: analyzedGame.myTeam,
         oppTeam: analyzedGame.oppTeam,
         perPlayer,
@@ -521,9 +557,7 @@ async function analyzeLocalGames(context: SyncContext): Promise<number> {
     const bench = getBenchmarks(bracket)
     const localStats = getLatestLocalStats(profileId)
     // Relic keeps counters for custom/AI games too (folder id == Relic match id).
-    const perPlayerByGame = relicPerPlayerStatsByGameId(
-      await getRecentRelicMatchHistory(profileId),
-    )
+    const perPlayerByGame = relicPerPlayerStatsByGameId(await getRecentRelicMatchHistory(profileId))
 
     // Oldest first so goals chain correctly; skip already-stored folders. The
     // warnings.log economy stats (gt, totalCommands, …) describe only the LATEST
@@ -542,7 +576,8 @@ async function analyzeLocalGames(context: SyncContext): Promise<number> {
       // as the duration. match_history.jsn only records wall-clock start/end, which
       // badly over-counts a paused game (e.g. 36:50 wall-clock for an 11:13 game) and
       // would otherwise discard the economy stats via a duration-mismatch check.
-      const warningStats = g.id === newestId && localStats?.gameTimeSec != null ? localStats : undefined
+      const warningStats =
+        g.id === newestId && localStats?.gameTimeSec != null ? localStats : undefined
       const summaryStats = localStatsFromSummary(
         readGameSummary(g.id),
         profileId,
@@ -642,7 +677,10 @@ async function analyzeLocalGames(context: SyncContext): Promise<number> {
         const playedAt = new Date(tempReplay.recordedAtMs).toISOString()
         const prev = store.listMatches(1)[0]
         const priorGoalChecks = prev ? checkGoals(prev.goals, { result }) : []
-        const goals = generateGoals(analysis, bench, { nowIso: playedAt, matchId: tempResult.matchId })
+        const goals = generateGoals(analysis, bench, {
+          nowIso: playedAt,
+          matchId: tempResult.matchId,
+        })
         store.saveMatch({
           id: tempResult.matchId,
           playedAt,
@@ -661,7 +699,9 @@ async function analyzeLocalGames(context: SyncContext): Promise<number> {
           createdAt: playedAt,
           custom: true,
           vsAI: matchup.opponents.some((p) => p.ai),
-          format: live ? teamFormat(live.teams.map((t) => t.length)) : formatFromReplayMatchup(matchup),
+          format: live
+            ? teamFormat(live.teams.map((t) => t.length))
+            : formatFromReplayMatchup(matchup),
           myTeam: game.myTeam,
           oppTeam: game.oppTeam,
           perPlayer,
@@ -757,19 +797,19 @@ export async function getLandmarkRecord(civ: string): Promise<IpcResult<Landmark
   }
 }
 
-/** Lists stored analyzed matches, newest first. */
-export async function listHistory(limit = 50): Promise<IpcResult<StoredMatch[]>> {
+/** Lists stored analyzed matches, newest first. An omitted limit requests all visible rows. */
+export async function listHistory(limit?: number): Promise<IpcResult<StoredMatch[]>> {
+  if (limit != null && (!Number.isSafeInteger(limit) || limit <= 0 || limit > 5_000)) {
+    return err('validation', 'History limit must be a positive integer up to 5000.')
+  }
   try {
     const store = await getHistoryStore()
     const profileId = getSettings().getAll().profileId
-    const matches = store
-      .listMatches(limit)
-      .filter((m) => !m.hidden)
-      .map((match) => {
-        const enriched = enrichStoredMatchWithSummary(match, profileId)
-        if (enriched !== match) store.saveMatch(enriched)
-        return enriched
-      })
+    const matches = store.listVisibleMatches(limit).map((match) => {
+      const enriched = enrichStoredMatchWithSummary(match, profileId)
+      if (enriched !== match) store.saveMatch(enriched)
+      return enriched
+    })
     return ok(matches)
   } catch (e) {
     return errFrom(e)

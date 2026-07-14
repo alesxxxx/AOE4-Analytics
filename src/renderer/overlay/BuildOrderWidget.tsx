@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import type { BuildOrder } from '@domain/buildOrderSchema'
 import { parseNote } from '@domain/buildOrderSchema'
+import { liveBuildForkPlan } from '@domain/adaptiveBuild'
 import { formatDuration } from '@domain/format'
 import { AGE_ROMAN, RES_GLYPH, TIME_GLYPH, noteTokenGlyph } from './resourceGlyphs'
 import { extractBuildTargets, type BuildTarget } from './buildIcons'
@@ -77,6 +78,7 @@ export function BuildOrderWidget({
   elapsedSec,
   auto,
   noBuildCiv,
+  opponentCivs = [],
 }: {
   bo: BuildOrder
   stepIndex: number
@@ -84,12 +86,15 @@ export function BuildOrderWidget({
   auto: boolean
   /** Player's civ name when no bundled build matches it — the shown build is a reference. */
   noBuildCiv?: string | null
+  /** Known lobby civilizations only; null entries preserve honest team coverage. */
+  opponentCivs?: (string | null | undefined)[]
 }) {
   const step = bo.build_order[stepIndex]
   const next = bo.build_order[stepIndex + 1]
   const r = step?.resources
   const targets = extractBuildTargets(step?.notes)
   const nextTargets = extractBuildTargets(next?.notes, 3)
+  const responsePlan = liveBuildForkPlan({ reference: bo, opponentCivs })
 
   return (
     <div className="flex h-full flex-col justify-center px-2.5 py-1 text-white">
@@ -159,6 +164,24 @@ export function BuildOrderWidget({
           ) : (
             <span className="truncate">{firstClause(next.notes[0])}</span>
           )}
+        </div>
+      )}
+
+      {(responsePlan.forks.length > 0 || responsePlan.coverageNote) && (
+        <div className="mt-1 border-t border-white/10 px-1 pt-1">
+          <div className="text-[9px] font-semibold uppercase tracking-wider text-cyan-300/70">
+            Response forks · scout first
+          </div>
+          <div className="mt-0.5 space-y-0.5 text-[10px] leading-tight text-white/65">
+            {responsePlan.forks.map((fork) => (
+              <p key={`${fork.source}-${fork.condition}`}>
+                <span className="font-semibold text-white/85">{fork.condition}</span> {fork.advice}
+              </p>
+            ))}
+            {responsePlan.coverageNote && (
+              <p className="text-white/40">{responsePlan.coverageNote}</p>
+            )}
+          </div>
         </div>
       )}
     </div>

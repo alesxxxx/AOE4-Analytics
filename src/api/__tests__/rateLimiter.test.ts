@@ -17,7 +17,7 @@ function virtualClock() {
 }
 
 describe('RateLimiter', () => {
-  it('serializes tasks and spaces their starts by at least minIntervalMs', async () => {
+  it('spaces task starts by at least minIntervalMs', async () => {
     const clock = virtualClock()
     const limiter = new RateLimiter({ minIntervalMs: 250, now: clock.now, delay: clock.delay })
     const startTimes: number[] = []
@@ -32,6 +32,33 @@ describe('RateLimiter', () => {
     const results = await Promise.all(tasks)
     expect(results).toEqual([0, 1, 2])
     expect(startTimes).toEqual([0, 250, 500])
+  })
+
+  it('starts the next task without waiting for the previous response', async () => {
+    const clock = virtualClock()
+    const limiter = new RateLimiter({ minIntervalMs: 250, now: clock.now, delay: clock.delay })
+    const starts: { name: string; at: number }[] = []
+    let finishFirst!: () => void
+
+    const first = limiter.schedule(
+      () =>
+        new Promise<void>((resolve) => {
+          starts.push({ name: 'first', at: clock.now() })
+          finishFirst = resolve
+        }),
+    )
+    const second = limiter.schedule(async () => {
+      starts.push({ name: 'second', at: clock.now() })
+      return 'done'
+    })
+
+    await expect(second).resolves.toBe('done')
+    expect(starts).toEqual([
+      { name: 'first', at: 0 },
+      { name: 'second', at: 250 },
+    ])
+    finishFirst()
+    await first
   })
 
   it('runs tasks in FIFO order', async () => {

@@ -4,6 +4,7 @@ import {
   LayoutDashboard,
   Search,
   BarChart3,
+  Database,
   Globe2,
   BookOpen,
   Settings as SettingsIcon,
@@ -16,6 +17,9 @@ import {
 const Dashboard = lazy(() => import('./screens/Dashboard').then((m) => ({ default: m.Dashboard })))
 const Scout = lazy(() => import('./screens/Scout').then((m) => ({ default: m.Scout })))
 const Stats = lazy(() => import('./screens/Stats').then((m) => ({ default: m.Stats })))
+const DataStudio = lazy(() =>
+  import('./screens/DataStudio').then((m) => ({ default: m.DataStudio })),
+)
 const CivMeta = lazy(() => import('./screens/CivMeta').then((m) => ({ default: m.CivMeta })))
 const Guides = lazy(() => import('./screens/Guides').then((m) => ({ default: m.Guides })))
 const Settings = lazy(() => import('./screens/Settings').then((m) => ({ default: m.Settings })))
@@ -33,6 +37,13 @@ export interface NavItem {
 export const navItems: NavItem[] = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard, element: <Dashboard />, group: 'main' },
   { path: '/stats', label: 'My Stats', icon: BarChart3, element: <Stats />, group: 'main' },
+  {
+    path: '/data-studio',
+    label: 'Data Studio',
+    icon: Database,
+    element: <DataStudio />,
+    group: 'main',
+  },
   { path: '/scout', label: 'Scout', icon: Search, element: <Scout />, group: 'main' },
   { path: '/civ-meta', label: 'Civ Meta', icon: Globe2, element: <CivMeta />, group: 'main' },
   { path: '/guides', label: 'Guides', icon: BookOpen, element: <Guides />, group: 'main' },

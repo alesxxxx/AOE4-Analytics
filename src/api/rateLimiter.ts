@@ -10,9 +10,10 @@ export interface RateLimiterOptions {
 const defaultDelay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms))
 
 /**
- * A serialized, min-interval rate limiter. Tasks run one at a time in FIFO
- * order, with each task's start spaced at least `minIntervalMs` after the
- * previous one. Used by the AoE4World client to stay polite (D9):
+ * A min-interval rate limiter. Tasks start in FIFO order, with each start
+ * spaced at least `minIntervalMs` after the previous one. A slow response does
+ * not block later request starts once their interval has elapsed. Used by the
+ * AoE4World client to stay polite (D9):
  * cheap to construct, deterministic under an injected clock for tests.
  */
 export class RateLimiter {
@@ -20,7 +21,7 @@ export class RateLimiter {
   private readonly now: () => number
   private readonly delay: (ms: number) => Promise<void>
   private last = Number.NEGATIVE_INFINITY
-  private tail: Promise<unknown> = Promise.resolve()
+  private tail: Promise<void> = Promise.resolve()
 
   constructor(options: RateLimiterOptions) {
     this.minIntervalMs = options.minIntervalMs
@@ -29,16 +30,17 @@ export class RateLimiter {
   }
 
   schedule<T>(task: () => Promise<T>): Promise<T> {
-    const run = async (): Promise<T> => {
+    const waitForStart = async (): Promise<void> => {
       const wait = this.last + this.minIntervalMs - this.now()
       if (wait > 0) await this.delay(wait)
       this.last = this.now()
-      return task()
     }
-    // Chain on the tail so tasks serialize; swallow errors on the tail copy so
-    // one failure never stalls subsequent tasks, but propagate to the caller.
-    const result = this.tail.then(run, run)
-    this.tail = result.then(
+
+    // Serialize only the start gates. The caller's result follows the task,
+    // while the queue advances as soon as that task has started.
+    const start = this.tail.then(waitForStart, waitForStart)
+    const result = start.then(task)
+    this.tail = start.then(
       () => undefined,
       () => undefined,
     )

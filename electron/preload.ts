@@ -31,10 +31,12 @@ const api: RtslyticsApi = {
   removeAccount: (profileId) => ipcRenderer.invoke(IpcChannels.profileRemove, profileId),
   getDashboard: () => ipcRenderer.invoke(IpcChannels.profileDashboard),
   scoutPlayer: (profileId) => ipcRenderer.invoke(IpcChannels.scoutGet, profileId),
+  getScoutHistory: (profileId) => ipcRenderer.invoke(IpcChannels.scoutHistoryGet, profileId),
   getSettings: () => ipcRenderer.invoke(IpcChannels.settingsGet),
   updateSettings: (patch) => ipcRenderer.invoke(IpcChannels.settingsUpdate, patch),
 
   getCivMeta: (query) => ipcRenderer.invoke(IpcChannels.civMetaGet, query),
+  getMatchupLab: (query) => ipcRenderer.invoke(IpcChannels.matchupLabGet, query),
   getCivDetailStats: (civ) => ipcRenderer.invoke(IpcChannels.civDetailGet, civ),
   getLeaderboard: (query) => ipcRenderer.invoke(IpcChannels.leaderboardGet, query),
 

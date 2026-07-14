@@ -14,6 +14,7 @@ function refetchForAccount(qc: ReturnType<typeof useQueryClient>, settings: AppS
   qc.invalidateQueries({ queryKey: ['history'] })
   qc.invalidateQueries({ queryKey: ['liveMatch'] })
   qc.invalidateQueries({ queryKey: ['latestReplay'] })
+  qc.invalidateQueries({ queryKey: ['scoutHistory'] })
 }
 
 /** Adds an account (if new) and makes it active. */
@@ -67,8 +68,11 @@ export function useDashboard(enabled: boolean) {
  */
 export function useSteamAvatar() {
   const { data: settings } = useSettings()
-  const { data: dash } = useDashboard(settings?.profileId != null)
-  const steamId = settings?.steamId ?? (dash?.ok ? dash.data.steamId : null)
+  const needsDashboardFallback = settings?.profileId != null && settings.steamId == null
+  const { data: dash } = useDashboard(needsDashboardFallback)
+  const fallbackSteamId =
+    dash?.ok && dash.data.profileId === settings?.profileId ? dash.data.steamId : null
+  const steamId = settings?.steamId ?? fallbackSteamId
   return useQuery({
     queryKey: ['steamAvatar', steamId],
     queryFn: () => ipc.getSteamAvatar(steamId!),
@@ -83,6 +87,18 @@ export function usePlayerSearch(query: string) {
     queryKey: ['search', q],
     queryFn: () => ipc.searchPlayers(q),
     enabled: q.length >= 3,
+    staleTime: 5 * 60_000,
+  })
+}
+
+/** Public recent matches plus head-to-head scoped to the active account. */
+export function useScoutHistory(profileId: number | null) {
+  const settings = useSettings()
+  const activeProfileId = settings.data?.profileId ?? null
+  return useQuery({
+    queryKey: ['scoutHistory', profileId, activeProfileId],
+    queryFn: () => ipc.getScoutHistory(profileId as number),
+    enabled: profileId != null && settings.isSuccess,
     staleTime: 5 * 60_000,
   })
 }

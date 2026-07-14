@@ -120,6 +120,19 @@ describe.each(backends)('%s', (_name, make) => {
     store.close()
   })
 
+  it('applies the visible-match limit after hidden tombstones are excluded', () => {
+    const store = make()
+    store.saveMatch(makeMatch('visible-old', '2026-06-26T10:00:00.000Z'))
+    store.saveMatch(makeMatch('visible-new', '2026-06-26T11:00:00.000Z'))
+    const hidden = makeMatch('hidden-newest', '2026-06-26T12:00:00.000Z')
+    hidden.hidden = true
+    store.saveMatch(hidden)
+
+    expect(store.listVisibleMatches(1).map((m) => m.id)).toEqual(['visible-new'])
+    expect(store.listVisibleMatches(2).map((m) => m.id)).toEqual(['visible-new', 'visible-old'])
+    store.close()
+  })
+
   it('upserts on duplicate id and exposes the latest match goals as active', () => {
     const store = make()
     store.saveMatch(makeMatch('a', '2026-06-26T10:00:00.000Z'))

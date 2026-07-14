@@ -11,20 +11,14 @@
  * `isLive` = process-not-closed AND (`ongoing` OR local-in-match). A game from
  * two nights ago is neither ongoing nor local-in-match → never treated as live.
  */
-import { allPlayers, normalizeTeams, type Game } from '../api/types'
+import { normalizeTeams, type Game } from '../api/types'
 import type { RankInfo } from './types'
 import { pickPrimaryMode } from './scouting'
 import type { LiveMatchupPlayer } from './localStats'
 import { resolveReplayCiv } from './replay'
 
 export type LiveSource =
-  | 'ongoing'
-  | 'local'
-  | 'just_finished'
-  | 'recent'
-  | 'stale'
-  | 'no-game'
-  | 'process-closed'
+  'ongoing' | 'local' | 'just_finished' | 'recent' | 'stale' | 'no-game' | 'process-closed'
 
 export interface LiveEvalInput {
   /** The `games/last` result, or null if none. */
@@ -77,6 +71,14 @@ export interface LiveOpponent {
   civ: string
   rankLevel: string | null
   rating: number | null
+}
+
+/** A public live-game roster row. No per-player requests are needed to build it. */
+export interface LiveTeamRosterPlayer {
+  profileId: number
+  name: string
+  civ: string | null
+  isMe: boolean
 }
 
 /** One player in the full-matchup bar (both teams, all players). */
@@ -179,9 +181,7 @@ export function buildLocalLiveMatchup(
   const teams = [...byTeam.entries()]
     .sort(([a], [b]) => a - b)
     .map(([, team]) =>
-      team
-        .sort((a, b) => a.slot - b.slot)
-        .map(({ team: _team, slot: _slot, ...player }) => player),
+      team.sort((a, b) => a.slot - b.slot).map(({ team: _team, slot: _slot, ...player }) => player),
     )
 
   const mineIdx = teams.findIndex((t) => t.some((p) => p.isMe))
@@ -207,6 +207,11 @@ export interface LiveMatchInfo {
   custom: boolean
   myCiv: string | null
   opponent: LiveOpponent | null
+  /**
+   * Full public-game roster, with the user's side at index 0. Null for custom
+   * matches or when the current user cannot be located in the upstream roster.
+   */
+  teams?: LiveTeamRosterPlayer[][] | null
   map: string | null
   startedAt: string | null
 }
@@ -235,18 +240,48 @@ export function buildLiveMatchInfo(
     custom: live.isLive && live.source !== 'ongoing',
     myCiv: null,
     opponent: null,
+    teams: null,
     map: null,
     startedAt: null,
   }
   if (!live.isLive || live.source !== 'ongoing' || !game) return base
 
-  const players = allPlayers(game)
+  const normalized = normalizeTeams(game)
+  const myTeamIdx =
+    myId == null ? -1 : normalized.findIndex((team) => team.some((p) => p.profile_id === myId))
+  const hasCompleteRoster =
+    myTeamIdx >= 0 && normalized.length >= 2 && normalized.every((team) => team.length > 0)
+  const teams = hasCompleteRoster
+    ? normalized.map((team) =>
+        team.map((player): LiveTeamRosterPlayer => ({
+          profileId: player.profile_id,
+          name: player.name,
+          civ: player.civilization || null,
+          isMe: player.profile_id === myId,
+        })),
+      )
+    : null
+  if (teams && myTeamIdx > 0) {
+    const [mine] = teams.splice(myTeamIdx, 1)
+    if (mine) teams.unshift(mine)
+  }
+
+  const players = normalized.flat()
   const me = myId != null ? players.find((p) => p.profile_id === myId) : undefined
-  const opp = (myId != null ? players.find((p) => p.profile_id !== myId) : players[1]) ?? null
+  // In team formats, the first non-self player may be an ally. Prefer the first
+  // player outside the user's team, then retain the old 1v1/malformed fallback.
+  const enemyProfileId = teams?.slice(1).flat()[0]?.profileId ?? null
+  const opp =
+    (enemyProfileId != null
+      ? players.find((player) => player.profile_id === enemyProfileId)
+      : undefined) ??
+    (myId != null ? players.find((p) => p.profile_id !== myId) : players[1]) ??
+    null
   const primary = opp?.modes ? pickPrimaryMode(opp.modes) : null
   return {
     ...base,
     myCiv: me?.civilization ?? null,
+    teams,
     map: game.map,
     startedAt: game.started_at,
     opponent: opp

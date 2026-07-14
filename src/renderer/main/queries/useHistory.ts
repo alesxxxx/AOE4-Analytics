@@ -1,8 +1,27 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { ipc } from '@shared/ipc'
+import { historyQueryKey, type HistoryQueryScope } from './historyQueryKey'
+import { useSettings } from './useProfile'
 
+function useAccountHistory(scope: HistoryQueryScope, limit?: number) {
+  const settings = useSettings()
+  const profileId = settings.data?.profileId ?? null
+  return useQuery({
+    queryKey: historyQueryKey(profileId, scope),
+    queryFn: () => (limit == null ? ipc.getHistory() : ipc.getHistory(limit)),
+    enabled: settings.isSuccess,
+    staleTime: 60_000,
+  })
+}
+
+/** Recent sample used by dashboard and overview screens. */
 export function useHistory() {
-  return useQuery({ queryKey: ['history'], queryFn: () => ipc.getHistory(100), staleTime: 60_000 })
+  return useAccountHistory('recent-100', 100)
+}
+
+/** Complete visible local history used by filterable personal analytics. */
+export function useFullHistory() {
+  return useAccountHistory('all')
 }
 
 /** The full stat summary (build order + economy/score) for a game, or null. */

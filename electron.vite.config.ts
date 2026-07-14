@@ -17,6 +17,7 @@ export default defineConfig({
     plugins: [externalizeDepsPlugin()],
     resolve: { alias },
     build: {
+      minify: 'esbuild',
       rollupOptions: { input: { index: resolve('electron/main.ts') } },
     },
   },
@@ -24,6 +25,7 @@ export default defineConfig({
     plugins: [externalizeDepsPlugin()],
     resolve: { alias },
     build: {
+      minify: 'esbuild',
       rollupOptions: { input: { index: resolve('electron/preload.ts') } },
     },
   },
@@ -32,6 +34,7 @@ export default defineConfig({
     resolve: { alias },
     plugins: [react()],
     build: {
+      minify: 'esbuild',
       rollupOptions: {
         input: {
           index: resolve('index.html'),

@@ -31,6 +31,13 @@ import { civFromToken } from '@domain/statsSummary'
 import { villagerGaps, type VillagerProductionRhythm } from '@domain/summaryCoaching'
 import { civDisplayName } from '@domain/civ'
 import { landmarksForCiv } from '@domain/landmarks'
+import {
+  buildTeamContributionBreakdown,
+  type MetricCoverage,
+  type NormalizedTeamMetric,
+  type TeamContributionBreakdown,
+  type TeamContributionPlayer,
+} from '@domain/teamInsights'
 import { formatDurationShort } from '@shared/format'
 import { cn } from '@shared/lib/utils'
 import { Card, CardContent } from '@shared/components/ui/card'
@@ -107,6 +114,7 @@ export function GameSummaryPanel({
   const myTc = me ? villagerGaps(me) : null
   const myVillHigh = me?.totals?.villagerHigh ?? null
   const myAge = me ? ageTimings(me, myCiv) : new Map<2 | 3 | 4, number>()
+  const contribution = buildTeamContributionBreakdown(perPlayer ?? [], myProfileId ?? null)
 
   return (
     <div className="space-y-4">
@@ -148,8 +156,12 @@ export function GameSummaryPanel({
       )}
 
       <div className="grid gap-4 xl:grid-cols-2">
-        <ScoreTable players={players} />
-        <ResourceTable players={players} />
+        <div id="game-summary-score" className="scroll-mt-4">
+          <ScoreTable players={players} />
+        </div>
+        <div id="game-summary-resources" className="scroll-mt-4">
+          <ResourceTable players={players} />
+        </div>
         <AgeTable players={players} myProfileId={myProfileId ?? null} myCiv={myCiv} />
         <CombatTable
           perPlayer={perPlayer ?? []}
@@ -157,6 +169,9 @@ export function GameSummaryPanel({
           myProfileId={myProfileId ?? null}
         />
       </div>
+      {contribution.available && (
+        <TeamContributionCard breakdown={contribution} summaryPlayers={players} />
+      )}
       <p className="text-[11px] leading-relaxed text-muted-foreground">
         Scores are the game&apos;s last sampled values (up to ~20s before the end screen), so they
         can sit slightly under the score screen&apos;s finals. Resource totals count DELIVERED
@@ -193,7 +208,7 @@ export function GameSummaryPanel({
       )}
 
       {hasBuild && (
-        <Card>
+        <Card id="game-summary-build-order" className="scroll-mt-4">
           <CardContent className="p-4">
             <h3 className="mb-3 flex items-center gap-1.5 text-sm font-semibold">
               <Hammer className="h-4 w-4 text-primary" /> Build order timeline
@@ -624,6 +639,166 @@ function CombatTable({
       ]}
     />
   )
+}
+
+function TeamContributionCard({
+  breakdown,
+  summaryPlayers,
+}: {
+  breakdown: TeamContributionBreakdown
+  summaryPlayers: PlayerSummary[]
+}) {
+  const showPressure = breakdown.coverage.pressure.reported > 0
+  return (
+    <Card>
+      <CardContent className="p-4">
+        <div className="flex flex-wrap items-start justify-between gap-2">
+          <div>
+            <h3 className="flex items-center gap-1.5 text-sm font-semibold">
+              <Users className="h-4 w-4 text-primary" /> Team contribution breakdown
+            </h3>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Raw counters and teammate comparisons stay separate — there is no combined carry
+              score.
+            </p>
+          </div>
+          <span className="rounded bg-secondary px-2 py-1 text-[10px] text-muted-foreground">
+            {breakdown.basis}
+          </span>
+        </div>
+
+        <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1 text-[10px] text-muted-foreground">
+          <CoverageLabel label="Production" coverage={breakdown.coverage.production} />
+          <CoverageLabel label="Military" coverage={breakdown.coverage.military} />
+          <CoverageLabel label="Tech" coverage={breakdown.coverage.technology} />
+          <CoverageLabel label="APM" coverage={breakdown.coverage.activity} />
+          <CoverageLabel label="Pressure" coverage={breakdown.coverage.pressure} />
+          {breakdown.excludedUnknownTeamRows > 0 && (
+            <span>{breakdown.excludedUnknownTeamRows} row(s) excluded: team unknown</span>
+          )}
+        </div>
+
+        <div className="mt-3 overflow-x-auto rounded-md border border-border">
+          <table className="w-full min-w-[760px] text-xs">
+            <thead className="bg-secondary/60 text-[10px] uppercase tracking-wide text-muted-foreground">
+              <tr>
+                <th className="px-3 py-2 text-left">Player</th>
+                <th className="px-3 py-2 text-right">Production</th>
+                <th className="px-3 py-2 text-right">Military efficiency</th>
+                <th className="px-3 py-2 text-right">Technology</th>
+                <th className="px-3 py-2 text-right">Activity</th>
+                {showPressure && <th className="px-3 py-2 text-right">Pressure</th>}
+              </tr>
+            </thead>
+            <tbody>
+              {breakdown.players.map((row) => (
+                <tr
+                  key={row.profileId}
+                  className={cn(
+                    'border-t border-border/60 first:border-t-0',
+                    row.isMe && 'bg-primary/5',
+                  )}
+                >
+                  <td className="px-3 py-2 font-medium">
+                    {contributionPlayerLabel(row, summaryPlayers)}
+                  </td>
+                  <MetricCell
+                    raw={
+                      row.production.value == null ? '-' : `${fmtInt(row.production.value)} units`
+                    }
+                    detail={metricComparison(row.production, 'team total')}
+                  />
+                  <MetricCell raw={militaryRaw(row)} detail={militaryComparison(row)} />
+                  <MetricCell
+                    raw={
+                      row.technology.value == null ? '-' : `${fmtInt(row.technology.value)} techs`
+                    }
+                    detail={metricComparison(row.technology, 'team total')}
+                  />
+                  <MetricCell
+                    raw={row.activity.value == null ? '-' : `${row.activity.value} APM`}
+                    detail={metricComparison(row.activity, 'team average', false)}
+                  />
+                  {showPressure && (
+                    <MetricCell
+                      raw={row.pressure.value == null ? '-' : fmtK(row.pressure.value)}
+                      detail={metricComparison(row.pressure, 'team total')}
+                    />
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-2 text-[10px] leading-relaxed text-muted-foreground">
+          Shares and averages use reported values from your known team only. Structure damage is
+          shown as pressure when Relic supplies it; it is not the same as buildings razed.
+        </p>
+      </CardContent>
+    </Card>
+  )
+}
+
+function CoverageLabel({ label, coverage }: { label: string; coverage: MetricCoverage }) {
+  return (
+    <span>
+      {label} {coverage.reported}/{coverage.teamSize}
+    </span>
+  )
+}
+
+function MetricCell({ raw, detail }: { raw: string; detail: string }) {
+  return (
+    <td className="px-3 py-2 text-right tabular-nums">
+      <div className="font-medium">{raw}</div>
+      <div className="mt-0.5 text-[10px] text-muted-foreground">{detail}</div>
+    </td>
+  )
+}
+
+function contributionPlayerLabel(
+  row: TeamContributionPlayer,
+  summaryPlayers: PlayerSummary[],
+): string {
+  const summary = summaryPlayers.find((player) => player.profileId === row.profileId)
+  const civ = row.civ ? civDisplayName(row.civ) : null
+  if (row.isMe) return civ ? `You — ${civ}` : 'You'
+  if (summary) return playerLabel(summary)
+  return civ ?? `Profile ${row.profileId}`
+}
+
+function metricComparison(
+  metric: NormalizedTeamMetric,
+  denominator: 'team total' | 'team average',
+  includeShare = true,
+): string {
+  if (metric.value == null) return 'Not reported'
+  const parts: string[] = []
+  if (includeShare && metric.teamSharePct != null) {
+    parts.push(`${metric.teamSharePct}% of reported ${denominator}`)
+  }
+  if (metric.vsTeamAveragePct != null) {
+    const sign = metric.vsTeamAveragePct > 0 ? '+' : ''
+    parts.push(`${sign}${metric.vsTeamAveragePct}% vs reported team average`)
+  }
+  return parts.join(' · ') || 'Reported; comparison unavailable'
+}
+
+function militaryRaw(row: TeamContributionPlayer): string {
+  const { kills, deaths, kd, zeroDeaths } = row.military
+  if (kills == null && deaths == null) return '-'
+  const raw = `${kills == null ? '?' : fmtInt(kills)} kills · ${deaths == null ? '?' : fmtInt(deaths)} lost`
+  if (zeroDeaths) return raw
+  return kd == null ? raw : `${raw} · ${kd.toFixed(2)} K/D`
+}
+
+function militaryComparison(row: TeamContributionPlayer): string {
+  const parts: string[] = []
+  if (row.military.teamKillSharePct != null) {
+    parts.push(`${row.military.teamKillSharePct}% of reported team kills`)
+  }
+  if (row.military.zeroDeaths) parts.push('Zero losses; K/D is not divided by zero')
+  return parts.join(' · ') || 'Military efficiency unavailable'
 }
 
 function ChartCard({

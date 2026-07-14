@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { History } from 'lucide-react'
 import type { DashboardData } from '@ipc/contract'
+import { filterPersonalHistory } from '@domain/historyFilters'
 import {
   countryFlag,
   formatLeaderboard,
@@ -37,7 +38,7 @@ export function Dashboard() {
   const excludeAi = settings?.localData.excludeAiFromStats ?? false
   // Stable reference so MatchPrepCard's useMemo doesn't recompute every render.
   const matches = useMemo(
-    () => (history?.ok ? history.data : []).filter((m) => !excludeAi || (!m.vsAI && !m.custom)),
+    () => filterPersonalHistory(history?.ok ? history.data : [], excludeAi),
     [history, excludeAi],
   )
   const latestMatch = matches[0]

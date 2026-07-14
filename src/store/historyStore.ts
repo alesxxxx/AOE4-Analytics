@@ -37,6 +37,10 @@ export interface StoredMatch {
   vsAI?: boolean
   /** Team format label, e.g. "1v1", "2v2", "3v3v3", "2v2v2v2", "FFA (8)". */
   format?: string
+  /** AoE4World patch identifier when the public game record supplied one. */
+  patch?: string | null
+  /** AoE4World season identifier when the public game record supplied one. */
+  season?: number | null
   /** My teammates' civ + name (team formats only); absent for 1v1/unknown. */
   myTeam?: RosterPlayer[]
   /** All opponents across enemy team(s), civ + name; absent for 1v1/unknown. */
@@ -58,6 +62,8 @@ export interface HistoryStore {
   deleteMatch(id: string): void
   /** Newest first, optionally limited. */
   listMatches(limit?: number): StoredMatch[]
+  /** Newest non-hidden matches, limiting only after tombstones are excluded. */
+  listVisibleMatches(limit?: number): StoredMatch[]
   /** Goals from the most recent match (the current targets), or []. */
   activeGoals(): Goal[]
   close(): void

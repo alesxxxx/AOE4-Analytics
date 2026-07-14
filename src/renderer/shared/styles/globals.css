@@ -1,9 +1,29 @@
 /* AoE4-style incised titling serif (Trajan/Perpetua family look, OFL licence).
    Cinzel's lowercase renders as smaller capitals, so headings become the same
    small-caps ledger labels the game's own screens use. */
-@import '@fontsource/cinzel/400.css';
-@import '@fontsource/cinzel/600.css';
-@import '@fontsource/cinzel/700.css';
+@font-face {
+  font-family: 'Cinzel';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('@fontsource/cinzel/files/cinzel-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Cinzel';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 600;
+  src: url('@fontsource/cinzel/files/cinzel-latin-600-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Cinzel';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 700;
+  src: url('@fontsource/cinzel/files/cinzel-latin-700-normal.woff2') format('woff2');
+}
 
 @tailwind base;
 @tailwind components;
@@ -199,11 +219,11 @@
   .rts-app-backdrop {
     background-position: center;
     background-size: cover;
-    filter: grayscale(1) blur(1px) brightness(0.28) contrast(0.92);
+    filter: grayscale(1) blur(0.5px) brightness(0.42) contrast(1.05);
   }
 
   .rts-app-atmosphere {
-    background: linear-gradient(180deg, rgba(16, 19, 24, 0.82), rgba(16, 19, 24, 0.9));
+    background: linear-gradient(180deg, rgba(12, 15, 20, 0.72), rgba(12, 15, 20, 0.82));
   }
 
   .chronicle-main h1 {

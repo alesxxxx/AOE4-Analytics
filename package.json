@@ -20,10 +20,12 @@
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
     "dev": "electron-vite dev",
-    "build": "npm run typecheck && electron-vite build",
+    "build": "npm run typecheck && npm run bundle",
+    "bundle": "electron-vite build",
     "preview": "electron-vite preview",
     "start": "electron-vite preview",
     "dist": "npm run build && electron-builder --win",
+    "dist:verified": "npm run verify && npm run bundle && electron-builder --win",
     "pack": "npm run build && electron-builder --dir",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -40,12 +42,15 @@
     "steam-user": "^5.3.0",
     "uiohook-napi": "^1.5.5"
   },
+  "overrides": {
+    "steam-appticket": "2.0.1"
+  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@fontsource/cinzel": "^5.2.8",
     "@tanstack/react-query": "^5.101.2",
     "@types/better-sqlite3": "^7.6.13",
-    "@types/node": "^26.0.1",
+    "@types/node": "^24.13.3",
     "@types/qrcode": "^1.5.6",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",

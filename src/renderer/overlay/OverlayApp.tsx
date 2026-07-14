@@ -121,7 +121,6 @@ export function OverlayApp() {
   const [oppIsAI, setOppIsAI] = useState(false)
   const [matchup, setMatchup] = useState<LiveMatchup | null>(null)
   const [oppScout, setOppScout] = useState<ScoutReport | null>(null)
-  const [myScout, setMyScout] = useState<ScoutReport | null>(null)
   const [postGame, setPostGame] = useState<PostGameSummary | null>(null)
   const [apm, setApm] = useState<number | null>(null)
   const [session, setSession] = useState<SessionSummary | null>(null)
@@ -161,10 +160,6 @@ export function OverlayApp() {
         setAgeTargetsShown(s.overlay.showAgeTargets !== false)
         setSessionShown(s.overlay.showSession !== false)
         setBuildOrderId(s.overlay.buildOrderId ?? null)
-        if (s.profileId == null) return
-        return ipc.scoutPlayer(s.profileId).then((r) => {
-          if (r.ok) setMyScout(r.data)
-        })
       })
       .catch(() => {})
 
@@ -257,7 +252,12 @@ export function OverlayApp() {
   const showAgeTargets = ageTargetsShown && (inGame || placementMode)
   // Placement mode outside a match previews with a fake clock (like the other placeholders).
   const renderElapsed = elapsedSec ?? (placementMode && !inGame ? 312 : null)
-  const bracket = bracketFromRankLevel(myScout?.primary?.rankLevel)
+  // The overlay renderer loads at app boot while its window is hidden, so it
+  // must not scout the current profile just to prime this view. PollManager
+  // sends the enriched team matchup when a live game starts; until then the
+  // legacy fallback intentionally shows the civ-only pending state.
+  const matchupMe = renderMatchup?.teams.flat().find((p) => p.isMe) ?? null
+  const bracket = bracketFromRankLevel(matchupMe?.rankLevel)
 
   const troopMyCiv =
     renderMatchup?.teams[0]?.find((p) => p.isMe)?.civ ?? renderMatchup?.teams[0]?.[0]?.civ ?? myCiv
@@ -270,7 +270,15 @@ export function OverlayApp() {
   const troops =
     (inGame || placementMode) && troopsShown ? matchupTroopsForTeam(troopMyCiv, enemyCivs) : null
 
-  const me = sideFromScout(myScout, myCiv, false)
+  const me: MatchupSide = {
+    civ: matchupMe?.civ ?? myCiv,
+    name: matchupMe?.name ?? null,
+    rankLevel: matchupMe?.rankLevel ?? null,
+    rating: matchupMe?.rating ?? null,
+    winRate: null,
+    favoriteCivs: [],
+    isAI: matchupMe?.isAI ?? false,
+  }
   const opponent: MatchupSide = oppScout
     ? sideFromScout(oppScout, oppCiv, false)
     : {
@@ -390,6 +398,7 @@ export function OverlayApp() {
               }
               elapsedSec={renderElapsed}
               auto={renderElapsed != null}
+              opponentCivs={enemyCivs}
             />
           </div>
         </PlacedWidget>

@@ -12,8 +12,8 @@ import { launchGame } from '../services/gameProcess'
 import { getSteamAccounts, getSteamAvatar } from '../services/steamService'
 import type { LiveMatchInfo } from './contract'
 import { getDashboard, searchPlayers } from '../services/profileService'
-import { scoutPlayer } from '../services/scoutService'
-import { getCivMeta } from '../services/civMetaService'
+import { getScoutHistory, scoutPlayer } from '../services/scoutService'
+import { getCivMeta, getMatchupLab } from '../services/civMetaService'
 import { getCivDetailStats, getLandmarkStats } from '../services/civDetailService'
 import { getLeaderboardPage } from '../services/leaderboardService'
 import {
@@ -54,6 +54,9 @@ export function registerIpcHandlers(): void {
   ipcMain.handle(IpcChannels.profileSearch, (_e, query: string) => searchPlayers(query))
   ipcMain.handle(IpcChannels.profileDashboard, () => getDashboard())
   ipcMain.handle(IpcChannels.scoutGet, (_e, profileId: number) => scoutPlayer(profileId))
+  ipcMain.handle(IpcChannels.scoutHistoryGet, (_e, profileId: unknown) =>
+    getScoutHistory(profileId),
+  )
 
   ipcMain.handle(IpcChannels.profileSetCurrent, (_e, profileId: number, name: string) =>
     getSettings().setProfile(profileId, name),
@@ -77,6 +80,7 @@ export function registerIpcHandlers(): void {
   })
 
   ipcMain.handle(IpcChannels.civMetaGet, (_e, query: CivMetaQuery) => getCivMeta(query))
+  ipcMain.handle(IpcChannels.matchupLabGet, (_e, query: unknown) => getMatchupLab(query))
   ipcMain.handle(IpcChannels.civDetailGet, (_e, civ: string) => getCivDetailStats(civ))
   ipcMain.handle(IpcChannels.leaderboardGet, (_e, query: LeaderboardQuery) =>
     getLeaderboardPage(query),

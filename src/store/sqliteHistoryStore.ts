@@ -23,6 +23,8 @@ export class SqliteHistoryStore implements HistoryStore {
   private readonly deleteStmt: Stmt
   private readonly listStmt: Stmt
   private readonly listAllStmt: Stmt
+  private readonly listVisibleStmt: Stmt
+  private readonly listAllVisibleStmt: Stmt
 
   constructor(filePath: string) {
     this.db = new Database(filePath)
@@ -43,6 +45,12 @@ export class SqliteHistoryStore implements HistoryStore {
     this.deleteStmt = this.db.prepare('DELETE FROM matches WHERE id = ?')
     this.listStmt = this.db.prepare('SELECT data FROM matches ORDER BY played_at DESC LIMIT ?')
     this.listAllStmt = this.db.prepare('SELECT data FROM matches ORDER BY played_at DESC')
+    this.listVisibleStmt = this.db.prepare(
+      "SELECT data FROM matches WHERE json_extract(data, '$.hidden') IS NOT 1 ORDER BY played_at DESC LIMIT ?",
+    )
+    this.listAllVisibleStmt = this.db.prepare(
+      "SELECT data FROM matches WHERE json_extract(data, '$.hidden') IS NOT 1 ORDER BY played_at DESC",
+    )
   }
 
   saveMatch(match: StoredMatch): void {
@@ -64,6 +72,13 @@ export class SqliteHistoryStore implements HistoryStore {
 
   listMatches(limit?: number): StoredMatch[] {
     const rows = (limit != null ? this.listStmt.all(limit) : this.listAllStmt.all()) as Row[]
+    return rows.map((r) => JSON.parse(r.data) as StoredMatch)
+  }
+
+  listVisibleMatches(limit?: number): StoredMatch[] {
+    const rows = (
+      limit != null ? this.listVisibleStmt.all(limit) : this.listAllVisibleStmt.all()
+    ) as Row[]
     return rows.map((r) => JSON.parse(r.data) as StoredMatch)
   }
 
