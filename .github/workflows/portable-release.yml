@@ -54,6 +54,10 @@ jobs:
             "should_build=true" >> $env:GITHUB_OUTPUT
           }
 
+          # A missing release is the expected build path. Do not carry the
+          # probe's non-zero exit code into the completed workflow step.
+          exit 0
+
       - name: Set up Node.js
         if: ${{ steps.gate.outputs.should_build == 'true' }}
         uses: actions/setup-node@v4
